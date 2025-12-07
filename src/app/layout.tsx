@@ -52,10 +52,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased bg-white text-black">
+      <body className="font-sans antialiased bg-[var(--background)] text-[var(--foreground)]">
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <div className="noise-overlay" aria-hidden="true" />
       </body>
     </html>
   );

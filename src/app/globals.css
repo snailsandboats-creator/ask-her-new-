@@ -1,19 +1,27 @@
 @import "tailwindcss";
 
 /* ============================================
-   ASK HER MARKETING - Design System Tokens
+   ASK HER MARKETING - 2030 Design System
    ============================================ */
 
+:root {
+  --background: #050505;
+  --foreground: #ffffff;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-surface: rgba(255, 255, 255, 0.03);
+  --glass-hover: rgba(255, 255, 255, 0.05);
+}
+
 @theme inline {
-  /* Colors */
+  /* Colors - 2030 Dark Mode Palette */
   --color-pink: #FF1E9B;
   --color-pink-light: #FF6EC7;
-  --color-pink-glow: rgba(255, 30, 155, 0.3);
-  --color-black: #000000;
+  --color-pink-glow: rgba(255, 30, 155, 0.4);
+  --color-black: #050505;
   --color-white: #FFFFFF;
-  --color-offwhite: #F7F7F7;
-  --color-slate: #8A8A8A;
-  --color-lightgray: #E5E5E5;
+  --color-offwhite: #0A0A0A;
+  --color-slate: #888888;
+  --color-lightgray: rgba(255, 255, 255, 0.1);
 
   /* Fonts */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -102,8 +110,8 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: var(--color-offwhite);
-    color: var(--color-black);
+    background-color: var(--background);
+    color: var(--foreground);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -111,19 +119,19 @@
   /* Focus styles */
   *:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-pink), 0 0 0 4px var(--color-white);
+    box-shadow: 0 0 0 2px var(--color-pink), 0 0 0 4px rgba(255, 255, 255, 0.1);
   }
 
   /* Selection */
   ::selection {
-    background-color: rgba(255, 30, 155, 0.2);
-    color: var(--color-black);
+    background-color: rgba(255, 30, 155, 0.3);
+    color: var(--foreground);
   }
 
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
-    color: var(--color-black);
+    color: var(--foreground);
   }
 }
 
@@ -309,6 +317,35 @@
     white-space: nowrap;
     border-width: 0;
   }
+
+  /* Glassmorphism utilities */
+  .glass {
+    background: var(--glass-surface);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-hover:hover {
+    background: var(--glass-hover);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ============================================
+   Cinematic Grain Overlay
+   ============================================ */
+
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 /* ============================================
