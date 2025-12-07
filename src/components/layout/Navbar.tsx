@@ -50,15 +50,15 @@ export function Navbar() {
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           isScrolled
-            ? 'bg-white shadow-md'
-            : 'bg-white/80 backdrop-blur-md'
+            ? 'bg-[var(--glass-surface)] backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
+            : 'bg-transparent backdrop-blur-md border-b border-white/5'
         )}
       >
         <Container size="full">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="relative z-10">
-              <Logo variant="dark" />
+              <Logo variant="light" />
             </Link>
 
             {/* Desktop Navigation */}
@@ -72,7 +72,7 @@ export function Navbar() {
                     'hover:text-pink',
                     pathname === link.href
                       ? 'text-pink'
-                      : 'text-black'
+                      : 'text-white'
                   )}
                 >
                   {link.label}
@@ -119,7 +119,7 @@ export function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed inset-0 bg-white z-40 md:hidden pt-20"
+            className="fixed inset-0 bg-[var(--background)] z-40 md:hidden pt-20"
           >
             <div className="flex flex-col items-center justify-center h-full gap-8 -mt-20">
               {navLinks.map((link, i) => (
@@ -133,7 +133,7 @@ export function Navbar() {
                     href={link.href}
                     className={cn(
                       'text-2xl font-semibold transition-colors',
-                      pathname === link.href ? 'text-pink' : 'text-black hover:text-pink'
+                      pathname === link.href ? 'text-pink' : 'text-white hover:text-pink'
                     )}
                   >
                     {link.label}
@@ -149,7 +149,7 @@ export function Navbar() {
                   href="/contact"
                   className={cn(
                     'text-2xl font-semibold transition-colors',
-                    pathname === '/contact' ? 'text-pink' : 'text-black hover:text-pink'
+                    pathname === '/contact' ? 'text-pink' : 'text-white hover:text-pink'
                   )}
                 >
                   Contact

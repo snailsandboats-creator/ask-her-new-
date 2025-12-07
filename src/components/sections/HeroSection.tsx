@@ -140,7 +140,7 @@ export function HeroSection({
 
           <motion.p
             variants={itemVariants}
-            className="text-body-lg text-slate mb-12 max-w-2xl mx-auto"
+            className="text-body-lg text-gray-300 mb-12 max-w-2xl mx-auto"
           >
             {subheadline}
           </motion.p>
