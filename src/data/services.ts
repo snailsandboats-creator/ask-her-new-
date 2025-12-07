@@ -1,0 +1,68 @@
+import { Service } from '@/types';
+
+export const services: Service[] = [
+  {
+    id: 'social-media',
+    icon: 'megaphone',
+    title: 'Social Media Marketing',
+    headline: 'Get seen by the right people, in the right places, at the right time.',
+    shortDescription: 'Build relationships, create conversations, and turn followers into paying customers with scroll-stopping content.',
+    description: "Social media isn't just about posting pretty pictures. It's about building relationships, creating conversations, and turning followers into paying customers.",
+    fullDescription: "Social media isn't just about posting pretty pictures. It's about building relationships, creating conversations, and turning followers into paying customers. We create scroll-stopping content that gets your brand noticed—and remembered.",
+    features: [
+      'Content Creation & Scheduling',
+      'Community Management',
+      'Paid Social Advertising',
+      'Analytics & Monthly Reporting',
+    ],
+    image: '/images/services/social-media.jpg',
+  },
+  {
+    id: 'branding',
+    icon: 'palette',
+    title: 'Branding & Identity',
+    headline: "Stand out with a brand that's impossible to ignore.",
+    shortDescription: "Build a brand that connects—visually and emotionally. More than a logo, it's why people choose you.",
+    description: "Your brand is more than a logo. It's how people feel about you. It's what they remember. It's why they choose you over everyone else.",
+    fullDescription: "Your brand is more than a logo. It's how people feel about you. It's what they remember. It's why they choose you over everyone else. We build brands that connect—visually and emotionally.",
+    features: [
+      'Logo Design',
+      'Brand Strategy & Positioning',
+      'Visual Identity Systems',
+      'Brand Guidelines',
+    ],
+    image: '/images/services/branding.jpg',
+  },
+  {
+    id: 'web-design',
+    icon: 'monitor',
+    title: 'Web Design & Development',
+    headline: 'Convert visitors into paying customers.',
+    shortDescription: 'Websites that look stunning, load fast, and turn visitors into leads—24/7. Design that performs.',
+    description: "Your website is your hardest-working employee. It should look stunning, load fast, and turn visitors into leads—24/7.",
+    fullDescription: "Your website is your hardest-working employee. It should look stunning, load fast, and turn visitors into leads—24/7. We design and build websites that don't just look good—they perform.",
+    features: [
+      'Custom Website Design',
+      'Mobile-First Development',
+      'SEO Optimization',
+      'Conversion Rate Optimization',
+    ],
+    image: '/images/services/web-design.jpg',
+  },
+  {
+    id: 'content',
+    icon: 'pencil',
+    title: 'Content Marketing',
+    headline: 'Content that educates, entertains, and converts.',
+    shortDescription: 'Give value first, sales follow naturally. Position yourself as the expert and build trust with your audience.',
+    description: "Great content isn't about selling—it's about helping. When you give value first, sales follow naturally.",
+    fullDescription: "Great content isn't about selling—it's about helping. When you give value first, sales follow naturally. We create content that positions you as the expert, builds trust with your audience, and keeps your brand top of mind.",
+    features: [
+      'Blog Writing & Strategy',
+      'Email Marketing Campaigns',
+      'Video Content Production',
+      'Lead Magnets & Downloads',
+    ],
+    image: '/images/services/content.jpg',
+  },
+];

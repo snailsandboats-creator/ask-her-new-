@@ -1,0 +1,327 @@
+@import "tailwindcss";
+
+/* ============================================
+   ASK HER MARKETING - Design System Tokens
+   ============================================ */
+
+@theme inline {
+  /* Colors */
+  --color-pink: #FF1E9B;
+  --color-pink-light: #FF6EC7;
+  --color-pink-glow: rgba(255, 30, 155, 0.3);
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  --color-offwhite: #F7F7F7;
+  --color-slate: #8A8A8A;
+  --color-lightgray: #E5E5E5;
+
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Font Sizes */
+  --text-display: 4.5rem;
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-h1: 3.5rem;
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
+
+  --text-h2: 3rem;
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+
+  --text-h3: 2.25rem;
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.01em;
+
+  --text-h4: 1.75rem;
+  --text-h4--line-height: 1.25;
+
+  --text-h5: 1.5rem;
+  --text-h5--line-height: 1.3;
+
+  --text-body-lg: 1.25rem;
+  --text-body-lg--line-height: 1.6;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.5;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.02em;
+
+  --text-overline: 0.75rem;
+  --text-overline--line-height: 1.4;
+  --text-overline--letter-spacing: 0.1em;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-pink: 0 0 40px rgba(255, 30, 155, 0.3);
+  --shadow-lifted: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Container widths */
+  --container-narrow: 680px;
+  --container-medium: 960px;
+  --container-wide: 1200px;
+  --container-full: 1440px;
+
+  /* Animations */
+  --animate-fade-up: fadeUp 0.6s var(--ease-out);
+  --animate-fade-in: fadeIn 0.4s var(--ease-out);
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-offwhite);
+    color: var(--color-black);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-pink), 0 0 0 4px var(--color-white);
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: rgba(255, 30, 155, 0.2);
+    color: var(--color-black);
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--color-black);
+  }
+}
+
+/* ============================================
+   Component Utilities
+   ============================================ */
+
+@layer components {
+  /* Typography classes */
+  .text-display {
+    font-size: clamp(3rem, 8vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  .text-h1 {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  .text-h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+
+  .text-h3 {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+
+  .text-h4 {
+    font-size: clamp(1.5rem, 3vw, 1.75rem);
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  .text-h5 {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  .text-body-lg {
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
+
+  .text-body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .text-body-sm {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .text-overline {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Container classes */
+  .container-narrow {
+    max-width: var(--container-narrow);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .container-medium {
+    max-width: var(--container-medium);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .container-wide {
+    max-width: var(--container-wide);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .container-full {
+    max-width: var(--container-full);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-narrow,
+    .container-medium,
+    .container-wide,
+    .container-full {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-narrow,
+    .container-medium,
+    .container-wide,
+    .container-full {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+}
+
+/* ============================================
+   Keyframe Animations
+   ============================================ */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+@layer utilities {
+  /* Hide scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
