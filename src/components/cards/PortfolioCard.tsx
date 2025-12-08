@@ -4,29 +4,20 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Briefcase, ArrowUpRight } from 'lucide-react';
+import { getCardGradientClass, cn } from '@/lib/utils';
 
 interface PortfolioCardProps {
   client: string;
   service: string;
   image: string;
+  index?: number;
 }
 
-export function PortfolioCard({ client, service, image }: PortfolioCardProps) {
+export function PortfolioCard({ client, service, image, index = 0 }: PortfolioCardProps) {
   const [imageError, setImageError] = useState(false);
 
-  // Generate a gradient based on client name for variety
-  const getGradient = (name: string) => {
-    const gradients = [
-      'from-pink via-pink-light to-purple-400',
-      'from-purple-500 via-pink to-pink-light',
-      'from-pink-light via-pink to-rose-500',
-      'from-fuchsia-500 via-pink to-pink-light',
-      'from-pink via-rose-400 to-orange-300',
-      'from-violet-500 via-pink to-pink-light',
-    ];
-    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % gradients.length;
-    return gradients[index];
-  };
+  // Get deterministic gradient class based on index
+  const gradientClass = getCardGradientClass(index);
 
   return (
     <motion.div
@@ -54,7 +45,7 @@ export function PortfolioCard({ client, service, image }: PortfolioCardProps) {
               onError={() => setImageError(true)}
             />
           ) : (
-            <div className={`w-full h-full bg-gradient-to-br ${getGradient(client)} flex items-center justify-center`}>
+            <div className={cn("w-full h-full flex items-center justify-center", gradientClass)}>
               <div className="text-center text-white">
                 <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-80" />
                 <span className="text-lg font-medium opacity-90">{client}</span>
@@ -80,7 +71,7 @@ export function PortfolioCard({ client, service, image }: PortfolioCardProps) {
 
       {/* Info */}
       <div className="p-6 bg-white">
-        <h3 className="text-h5 text-black group-hover:text-pink transition-colors">{client}</h3>
+        <h3 className="text-h5 text-black group-hover:text-brand-pink transition-colors">{client}</h3>
         <p className="text-body-sm text-slate">{service}</p>
       </div>
     </motion.div>

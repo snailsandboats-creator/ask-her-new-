@@ -74,7 +74,7 @@ export function SplitSection({
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-pink via-pink-light to-purple-400 flex items-center justify-center relative overflow-hidden">
+                <div className="w-full h-full bg-gradient-to-br from-[#FF2E93] via-[#FFB3D9] to-white flex items-center justify-center relative overflow-hidden">
                   {/* Pattern overlay */}
                   <div
                     className="absolute inset-0 opacity-10"

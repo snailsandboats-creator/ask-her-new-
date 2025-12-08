@@ -43,12 +43,13 @@ export function AboutPageClient() {
             />
           </FadeUp>
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16">
-            {values.map((value) => (
-              <StaggerItem key={value.id}>
+            {values.map((value, index) => (
+              <StaggerItem key={`value-${index}`}>
                 <ValueCard
                   icon={value.icon}
                   title={value.title}
                   description={value.description}
+                  index={index}
                 />
               </StaggerItem>
             ))}

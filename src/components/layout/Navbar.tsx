@@ -69,9 +69,9 @@ export function Navbar() {
                   href={link.href}
                   className={cn(
                     'text-base font-medium transition-colors duration-200 relative py-2',
-                    'hover:text-pink',
+                    'hover:text-brand-pink',
                     pathname === link.href
-                      ? 'text-pink'
+                      ? 'text-brand-pink'
                       : 'text-white'
                   )}
                 >
@@ -79,7 +79,7 @@ export function Navbar() {
                   {pathname === link.href && (
                     <motion.div
                       layoutId="navbar-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-pink"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-pink"
                       transition={{ duration: 0.3 }}
                     />
                   )}
@@ -133,7 +133,7 @@ export function Navbar() {
                     href={link.href}
                     className={cn(
                       'text-2xl font-semibold transition-colors',
-                      pathname === link.href ? 'text-pink' : 'text-white hover:text-pink'
+                      pathname === link.href ? 'text-brand-pink' : 'text-white hover:text-brand-pink'
                     )}
                   >
                     {link.label}
@@ -149,7 +149,7 @@ export function Navbar() {
                   href="/contact"
                   className={cn(
                     'text-2xl font-semibold transition-colors',
-                    pathname === '/contact' ? 'text-pink' : 'text-white hover:text-pink'
+                    pathname === '/contact' ? 'text-brand-pink' : 'text-white hover:text-brand-pink'
                   )}
                 >
                   Contact
@@ -170,7 +170,7 @@ export function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.3 }}
-                className="text-slate mt-4 hover:text-pink transition-colors"
+                className="text-slate mt-4 hover:text-brand-pink transition-colors"
               >
                 {siteConfig.phone}
               </motion.a>

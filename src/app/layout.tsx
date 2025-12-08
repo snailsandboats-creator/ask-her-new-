@@ -52,9 +52,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased bg-[var(--background)] text-[var(--foreground)]">
+      <body className="font-sans antialiased bg-[var(--background)] text-[var(--foreground)] flex flex-col min-h-dvh w-full max-w-[100vw] overflow-x-hidden m-0 p-0">
         <Navbar />
-        <main>{children}</main>
+        <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden">{children}</main>
         <Footer />
         <div className="noise-overlay" aria-hidden="true" />
       </body>

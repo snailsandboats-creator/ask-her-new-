@@ -1,53 +1,86 @@
 @import "tailwindcss";
 
 /* ============================================
-   ASK HER MARKETING - 2030 Design System
+   ASK HER MARKETING - 2030 HOLOGRAPHIC SYSTEM
+   "Holographic Luxury" Design Language
    ============================================ */
 
 :root {
-  --background: #050505;
-  --foreground: #ffffff;
+  /* === CORE BRAND COLORS === */
+  --pink-deep: #C91C6F;
+  --pink-hot: #FF2E93;
+  --pink-pale: #FFB3D9;
+  --bg-void: #050505;
+  
+  /* === THE "VAST ARRAY" PASTELS === */
+  /* High-luminosity gemstone palette */
+  --gem-mint: #5eead4;
+  --gem-sky: #7dd3fc;
+  --gem-lemon: #fde047;
+  --gem-lavender: #d8b4fe;
+  --gem-peach: #fda4af;
+  
+  /* === GLASS MATERIALS === */
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-surface: rgba(255, 255, 255, 0.03);
   --glass-hover: rgba(255, 255, 255, 0.05);
+  --obsidian: rgba(0, 0, 0, 0.6);
+  
+  /* === LEGACY COMPAT === */
+  --background: #050505;
+  --foreground: #ffffff;
+  
+  /* === BUTTON FOUNTAIN VARIABLES === */
+  --x: 50%;
+  --y: 50%;
+  --btn-accent-1: var(--gem-mint);
+  --btn-accent-2: var(--gem-sky);
+  --btn-accent-3: var(--pink-hot);
 }
 
 @theme inline {
   /* Colors - 2030 Dark Mode Palette */
-  --color-pink: #FF1E9B;
+  --color-pink: #FF2E93;
+  --color-pink-deep: #C91C6F;
   --color-pink-light: #FF6EC7;
-  --color-pink-glow: rgba(255, 30, 155, 0.4);
+  --color-pink-pale: #FFB3D9;
+  --color-pink-glow: rgba(255, 46, 147, 0.4);
   --color-black: #050505;
   --color-white: #FFFFFF;
   --color-offwhite: #0A0A0A;
   --color-slate: #888888;
   --color-lightgray: rgba(255, 255, 255, 0.1);
+  
+  /* Brand Pink Tints */
+  --color-pink-tint-10: rgba(255, 46, 147, 0.1);
+  --color-pink-tint-20: rgba(255, 46, 147, 0.2);
 
-  /* Fonts */
+  /* Fonts - Fluid Sans-Serif */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  /* Font Sizes */
+  /* Font Sizes - Massive with Tight Tracking */
   --text-display: 4.5rem;
-  --text-display--line-height: 1;
-  --text-display--letter-spacing: -0.02em;
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.04em;
 
   --text-h1: 3.5rem;
-  --text-h1--line-height: 1.1;
-  --text-h1--letter-spacing: -0.02em;
+  --text-h1--line-height: 1;
+  --text-h1--letter-spacing: -0.03em;
 
   --text-h2: 3rem;
-  --text-h2--line-height: 1.15;
-  --text-h2--letter-spacing: -0.01em;
+  --text-h2--line-height: 1.05;
+  --text-h2--letter-spacing: -0.02em;
 
   --text-h3: 2.25rem;
-  --text-h3--line-height: 1.2;
-  --text-h3--letter-spacing: -0.01em;
+  --text-h3--line-height: 1.1;
+  --text-h3--letter-spacing: -0.02em;
 
   --text-h4: 1.75rem;
-  --text-h4--line-height: 1.25;
+  --text-h4--line-height: 1.15;
+  --text-h4--letter-spacing: -0.01em;
 
   --text-h5: 1.5rem;
-  --text-h5--line-height: 1.3;
+  --text-h5--line-height: 1.2;
 
   --text-body-lg: 1.25rem;
   --text-body-lg--line-height: 1.6;
@@ -71,7 +104,9 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-pink: 0 0 40px rgba(255, 30, 155, 0.3);
+  --shadow-pink: 0 0 40px rgba(255, 46, 147, 0.3);
+  --shadow-pink-glow: 0 0 30px rgba(255, 46, 147, 0.4);
+  --shadow-pink-glow-strong: 0 0 50px rgba(255, 46, 147, 0.6);
   --shadow-lifted: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
 
   /* Border Radius */
@@ -110,7 +145,7 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: var(--background);
+    background-color: var(--bg-void);
     color: var(--foreground);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -119,20 +154,133 @@
   /* Focus styles */
   *:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-pink), 0 0 0 4px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px var(--pink-hot), 0 0 0 4px rgba(255, 255, 255, 0.1);
   }
 
   /* Selection */
   ::selection {
-    background-color: rgba(255, 30, 155, 0.3);
+    background-color: rgba(255, 46, 147, 0.3);
     color: var(--foreground);
   }
 
-  /* Headings */
+  /* Headings - Tight tracking */
   h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     color: var(--foreground);
+    letter-spacing: -0.02em;
   }
+}
+
+/* ============================================
+   THE "FOUNTAIN" ANIMATION KEYFRAMES
+   ============================================ */
+
+/* Wave cycle for button fountain effect */
+@keyframes wave-cycle {
+  0% {
+    background-size: 0px 0px;
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    background-size: 900px 900px;
+    opacity: 0;
+  }
+}
+
+/* Infinite ticker animations */
+@keyframes ticker-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ticker-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Standard animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(255, 46, 147, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 46, 147, 0.6);
+  }
+}
+
+/* ============================================
+   THE ".btn-alive" CLASS - SLEEK PINK BUTTON
+   ============================================ */
+
+@keyframes sleek-glow {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(255, 46, 147, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(255, 46, 147, 0.6), 0 0 80px rgba(255, 46, 147, 0.3);
+  }
+}
+
+.btn-alive {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 30px rgba(255, 46, 147, 0.3);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  
+  /* Solid Pink Gradient */
+  background: linear-gradient(135deg, #C91C6F 0%, #FF2E93 100%) !important;
+}
+
+/* Hover state - Sleek Glow */
+.btn-alive:hover {
+  animation: sleek-glow 2s ease-in-out infinite;
+  transform: translateY(-2px);
+}
+
+/* Active state */
+.btn-alive:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* ============================================
@@ -140,44 +288,45 @@
    ============================================ */
 
 @layer components {
-  /* Typography classes */
+  /* Typography classes - Tight tracking */
   .text-display {
     font-size: clamp(3rem, 8vw, 4.5rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
     font-weight: 700;
   }
 
   .text-h1 {
     font-size: clamp(2.25rem, 6vw, 3.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1;
+    letter-spacing: -0.03em;
     font-weight: 700;
   }
 
   .text-h2 {
     font-size: clamp(2rem, 5vw, 3rem);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
     font-weight: 600;
   }
 
   .text-h3 {
     font-size: clamp(1.75rem, 4vw, 2.25rem);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
     font-weight: 600;
   }
 
   .text-h4 {
     font-size: clamp(1.5rem, 3vw, 1.75rem);
-    line-height: 1.25;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
     font-weight: 600;
   }
 
   .text-h5 {
     font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-    line-height: 1.3;
+    line-height: 1.2;
     font-weight: 600;
   }
 
@@ -259,43 +408,19 @@
 }
 
 /* ============================================
-   Keyframe Animations
-   ============================================ */
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ============================================
    Utility Classes
    ============================================ */
 
 @layer utilities {
+  /* Ticker utilities */
+  .animate-ticker-left {
+    animation: ticker-left 30s linear infinite;
+  }
+  
+  .animate-ticker-right {
+    animation: ticker-right 30s linear infinite;
+  }
+
   /* Hide scrollbar */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -330,6 +455,55 @@
     background: var(--glass-hover);
     border-color: rgba(255, 255, 255, 0.12);
   }
+  
+  /* Obsidian Glass (Dark transparency) */
+  .obsidian-glass {
+    background: var(--obsidian);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+  }
+  
+  /* Pink glow text shadow */
+  .text-glow-pink {
+    text-shadow: 0 0 30px rgba(255, 46, 147, 0.5);
+  }
+  
+  /* Gemstone gradients for text */
+  .text-gradient-mint {
+    background: linear-gradient(135deg, var(--gem-mint) 0%, var(--pink-hot) 50%, white 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-sky {
+    background: linear-gradient(135deg, var(--gem-sky) 0%, var(--pink-hot) 50%, white 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-lemon {
+    background: linear-gradient(135deg, var(--gem-lemon) 0%, var(--pink-hot) 50%, white 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-lavender {
+    background: linear-gradient(135deg, var(--gem-lavender) 0%, var(--pink-hot) 50%, white 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-peach {
+    background: linear-gradient(135deg, var(--gem-peach) 0%, var(--pink-hot) 50%, white 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 /* ============================================
@@ -361,4 +535,119 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ============================================
+   SPLOTCHY GRADIENT ANIMATIONS
+   ============================================ */
+
+@keyframes splotch-drift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 100%;
+  }
+}
+
+@keyframes icon-drift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+}
+
+/* ============================================
+   ICON SPLOTCHY GRADIENTS - Each with unique positions
+   ============================================ */
+
+.icon-gradient {
+  background: 
+    radial-gradient(ellipse 70% 60% at 30% 40%, rgba(94, 234, 212, 0.9) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 70% at 70% 60%, rgba(255, 46, 147, 0.85) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 50% 30%, rgba(253, 224, 71, 0.7) 0%, transparent 45%),
+    radial-gradient(ellipse 40% 40% at 20% 70%, rgba(253, 164, 175, 0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 35% 35% at 80% 25%, rgba(255, 255, 255, 0.6) 0%, transparent 40%),
+    linear-gradient(135deg, #FF2E93 0%, #C91C6F 100%);
+  background-size: 200% 200%;
+  animation: icon-drift 6s ease-in-out infinite;
+}
+
+.icon-gradient-alt {
+  background: 
+    radial-gradient(ellipse 65% 55% at 75% 35%, rgba(125, 211, 252, 0.9) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 65% at 25% 65%, rgba(255, 46, 147, 0.85) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 45% at 60% 80%, rgba(253, 224, 71, 0.7) 0%, transparent 45%),
+    radial-gradient(ellipse 40% 40% at 40% 20%, rgba(253, 164, 175, 0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 30% at 15% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 40%),
+    linear-gradient(135deg, #FF2E93 0%, #C91C6F 100%);
+  background-size: 200% 200%;
+  animation: icon-drift 6s ease-in-out infinite;
+  animation-delay: -1.5s;
+}
+
+.icon-gradient-lemon {
+  background: 
+    radial-gradient(ellipse 60% 70% at 20% 75%, rgba(253, 224, 71, 0.95) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 60% at 80% 30%, rgba(255, 46, 147, 0.85) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 45% 45%, rgba(253, 164, 175, 0.8) 0%, transparent 45%),
+    radial-gradient(ellipse 35% 35% at 65% 75%, rgba(94, 234, 212, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 30% at 30% 25%, rgba(255, 255, 255, 0.6) 0%, transparent 40%),
+    linear-gradient(135deg, #FF2E93 0%, #C91C6F 100%);
+  background-size: 200% 200%;
+  animation: icon-drift 6s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.icon-gradient-peach {
+  background: 
+    radial-gradient(ellipse 55% 65% at 85% 45%, rgba(253, 164, 175, 0.95) 0%, transparent 50%),
+    radial-gradient(ellipse 65% 55% at 15% 55%, rgba(255, 46, 147, 0.85) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 55% at 55% 20%, rgba(253, 224, 71, 0.7) 0%, transparent 45%),
+    radial-gradient(ellipse 40% 40% at 35% 80%, rgba(125, 211, 252, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 35% 35% at 70% 70%, rgba(255, 255, 255, 0.6) 0%, transparent 40%),
+    linear-gradient(135deg, #FF2E93 0%, #C91C6F 100%);
+  background-size: 200% 200%;
+  animation: icon-drift 6s ease-in-out infinite;
+  animation-delay: -4.5s;
+}
+
+.icon-gradient-cyan {
+  background: 
+    radial-gradient(ellipse 70% 55% at 25% 30%, rgba(94, 234, 212, 0.95) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 70% at 75% 70%, rgba(255, 46, 147, 0.85) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 45% at 50% 85%, rgba(253, 224, 71, 0.7) 0%, transparent 45%),
+    radial-gradient(ellipse 40% 35% at 85% 35%, rgba(253, 164, 175, 0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 30% at 40% 55%, rgba(255, 255, 255, 0.6) 0%, transparent 40%),
+    linear-gradient(135deg, #FF2E93 0%, #C91C6F 100%);
+  background-size: 200% 200%;
+  animation: icon-drift 6s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.icon-gradient-violet {
+  background: 
+    radial-gradient(ellipse 60% 60% at 70% 25%, rgba(216, 180, 254, 0.95) 0%, transparent 50%),
+    radial-gradient(ellipse 65% 65% at 30% 75%, rgba(255, 46, 147, 0.85) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 50% at 20% 40%, rgba(253, 224, 71, 0.7) 0%, transparent 45%),
+    radial-gradient(ellipse 35% 40% at 80% 60%, rgba(94, 234, 212, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 30% at 55% 15%, rgba(255, 255, 255, 0.6) 0%, transparent 40%),
+    linear-gradient(135deg, #FF2E93 0%, #C91C6F 100%);
+  background-size: 200% 200%;
+  animation: icon-drift 6s ease-in-out infinite;
+  animation-delay: -5s;
 }

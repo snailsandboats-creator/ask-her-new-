@@ -30,8 +30,8 @@ export function TestimonialCard({
       whileHover={{ y: featured ? 0 : -4 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Gradient accent on top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink via-pink-light to-pink" />
+      {/* Gradient accent on top - using hard brand class */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-brand-pink" />
 
       {/* Background quote decoration */}
       <Quote
@@ -62,7 +62,8 @@ export function TestimonialCard({
 
       <div className="flex items-center justify-center gap-4">
         <div className="relative">
-          <div className="w-14 h-14 rounded-full overflow-hidden bg-gradient-to-br from-pink to-pink-light relative flex-shrink-0 ring-2 ring-pink/20 flex items-center justify-center">
+          {/* Avatar with hard gradient class */}
+          <div className="w-14 h-14 rounded-full overflow-hidden icon-gradient relative flex-shrink-0 ring-2 ring-pink/20 flex items-center justify-center">
             <span className="text-xl font-bold text-white">{name.split(' ').map(n => n[0]).join('')}</span>
           </div>
           {/* Decorative ring */}
@@ -75,7 +76,7 @@ export function TestimonialCard({
       </div>
 
       {/* Hover glow effect */}
-      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-pink/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-pink-tint-5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </motion.div>
   );
 }

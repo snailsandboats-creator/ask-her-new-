@@ -23,7 +23,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <HeroSection
         overline="Ask Her Marketing"
-        headline="Marketing that actually works for local businesses."
+        headline="brand vision blurry? ASK HER for clarity"
         subheadline="We help service-based businesses get more calls, more clients, and more growth—without the agency BS."
         primaryCTA={{ label: "Book a Free Strategy Call", href: "/contact" }}
         secondaryCTA={{ label: "See Our Work", href: "/portfolio" }}

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TeamCardProps {
   name: string;
@@ -17,16 +18,16 @@ export function TeamCard({ name, title, image }: TeamCardProps) {
   // Get initials from name
   const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2);
 
-  // Generate a gradient based on name
-  const getGradient = (name: string) => {
-    const gradients = [
-      'from-pink to-pink-light',
-      'from-purple-500 to-pink',
-      'from-pink-light to-rose-400',
-      'from-fuchsia-500 to-pink',
+  // Get gradient class based on name hash
+  const getGradientClass = (name: string) => {
+    const classes = [
+      'icon-gradient',
+      'icon-gradient-alt',
+      'card-gradient',
+      'card-gradient-metallic',
     ];
-    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % gradients.length;
-    return gradients[index];
+    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % classes.length;
+    return classes[index];
   };
 
   return (
@@ -46,16 +47,16 @@ export function TeamCard({ name, title, image }: TeamCardProps) {
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className={`w-full h-full bg-gradient-to-br ${getGradient(name)} flex items-center justify-center`}>
+          <div className={cn("w-full h-full flex items-center justify-center", getGradientClass(name))}>
             <span className="text-4xl font-bold text-white/90">{initials}</span>
           </div>
         )}
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-pink/0 group-hover:bg-pink/10 transition-colors duration-300" />
+        <div className="absolute inset-0 bg-pink-tint-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
-      <h3 className="text-h5 text-black group-hover:text-pink transition-colors">{name}</h3>
+      <h3 className="text-h5 text-black group-hover:text-brand-pink transition-colors">{name}</h3>
       <p className="text-body-sm text-slate">{title}</p>
     </motion.div>
   );

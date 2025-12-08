@@ -27,12 +27,13 @@ export function PortfolioPageClient() {
       <Section background="white" padding="lg">
         <Container size="wide">
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {portfolioItems.map((item) => (
+            {portfolioItems.map((item, index) => (
               <StaggerItem key={item.id}>
                 <PortfolioCard
                   client={item.client}
                   service={item.service}
                   image={item.image}
+                  index={index}
                 />
               </StaggerItem>
             ))}
