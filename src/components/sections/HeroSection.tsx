@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { HeroVisuals } from './HeroVisuals';
@@ -80,6 +80,17 @@ function generateParticles(count: number) {
   }));
 }
 
+// Generate floating dust particles
+function generateDust(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    delay: Math.random() * 15,
+    duration: 8 + Math.random() * 12,
+    size: 1 + Math.random() * 2,
+  }));
+}
+
 export function HeroSection({
   overline,
   headline,
@@ -91,13 +102,28 @@ export function HeroSection({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isInRightZone, setIsInRightZone] = useState(false);
   
+  // Refs for particle containers (for eraser mask)
+  const dustContainerRef = useRef<HTMLDivElement>(null);
+  const particleContainerRef = useRef<HTMLDivElement>(null);
+  
   // Generate particles once on mount
   const particles = useMemo(() => generateParticles(18), []);
+  const dustParticles = useMemo(() => generateDust(25), []);
   
-  // Callback to sync spotlight with lens
+  // Callback to sync spotlight with lens AND update particle eraser
   const handleMousePosition = useCallback((x: number, y: number, inRightZone: boolean) => {
     setMousePos({ x, y });
     setIsInRightZone(inRightZone);
+    
+    // Update particle eraser mask position via CSS vars
+    if (dustContainerRef.current) {
+      dustContainerRef.current.style.setProperty('--eraser-x', `${x}px`);
+      dustContainerRef.current.style.setProperty('--eraser-y', `${y}px`);
+    }
+    if (particleContainerRef.current) {
+      particleContainerRef.current.style.setProperty('--eraser-x', `${x}px`);
+      particleContainerRef.current.style.setProperty('--eraser-y', `${y}px`);
+    }
   }, []);
 
   // Render word with special styling
@@ -146,58 +172,89 @@ export function HeroSection({
   return (
     <section 
       className="relative w-full min-h-[100dvh] bg-[#050505]"
-      style={{ overflow: 'hidden' }}
     >
       
-      {/* === Z-0: FUTURISTIC TECH GRID === */}
+      {/* === Z-[-1]: FUTURISTIC TECH GRID (TIGHTER 30px) === */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none"
+        className="absolute inset-0 z-[-1] pointer-events-none"
         style={{ overflow: 'hidden' }}
       >
-        {/* Primary grid - larger squares */}
+        {/* Primary grid - dense technical squares */}
         <div
           className="absolute inset-0"
           style={{
-            opacity: 0.025,
+            opacity: 0.08,
             backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+              linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)
             `,
-            backgroundSize: '80px 80px',
+            backgroundSize: '30px 30px',
           }}
         />
-        {/* Secondary grid - smaller squares */}
+        {/* Secondary grid - micro detail */}
         <div
           className="absolute inset-0"
           style={{
-            opacity: 0.012,
+            opacity: 0.04,
             backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
             `,
-            backgroundSize: '20px 20px',
+            backgroundSize: '6px 6px',
           }}
         />
         {/* Diagonal accent lines */}
         <div
           className="absolute inset-0"
           style={{
-            opacity: 0.015,
+            opacity: 0.025,
             backgroundImage: `
               repeating-linear-gradient(
                 45deg,
                 transparent,
-                transparent 120px,
-                rgba(255,46,147,0.4) 120px,
-                rgba(255,46,147,0.4) 121px
+                transparent 100px,
+                rgba(255,46,147,0.5) 100px,
+                rgba(255,46,147,0.5) 101px
               )
             `,
           }}
         />
       </div>
 
-      {/* === Z-2: FLOATING PARTICLES === */}
-      <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+      {/* === Z-0: FLOATING DUST (Full screen, with particle eraser) === */}
+      <div 
+        ref={dustContainerRef}
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-hidden particle-eraser"
+        style={{
+          '--eraser-x': '-1000px',
+          '--eraser-y': '-1000px',
+        } as React.CSSProperties}
+      >
+        {dustParticles.map((dust) => (
+          <div
+            key={`dust-${dust.id}`}
+            className="absolute rounded-full bg-white animate-float-up"
+            style={{
+              left: dust.left,
+              bottom: '-10px',
+              width: dust.size,
+              height: dust.size,
+              animationDuration: `${dust.duration}s`,
+              animationDelay: `${dust.delay}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* === Z-[1]: FLOATING COLOR PARTICLES (Full screen, with particle eraser) === */}
+      <div 
+        ref={particleContainerRef}
+        className="absolute inset-0 w-full h-full z-[1] pointer-events-none overflow-hidden particle-eraser"
+        style={{
+          '--eraser-x': '-1000px',
+          '--eraser-y': '-1000px',
+        } as React.CSSProperties}
+      >
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
@@ -209,8 +266,7 @@ export function HeroSection({
               height: particle.size,
               background: particle.color,
               filter: `blur(${particle.size * 0.4}px)`,
-              opacity: isInRightZone ? 0 : particle.opacity,
-              transition: 'opacity 0.3s ease',
+              opacity: particle.opacity,
             }}
             animate={{
               y: [0, -30, 0],
@@ -278,11 +334,12 @@ export function HeroSection({
       </div>
 
       {/* === Z-15: SYNCED SPOTLIGHT (follows lens, only in right zone) === */}
+      {/* Spotlight size matches lens: 35vmin capped at 756px */}
       <div
         className="pointer-events-none absolute inset-0 z-[15] transition-opacity duration-500"
         style={{
           background: isInRightZone 
-            ? `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,46,147,0.06), transparent 40%)`
+            ? `radial-gradient(clamp(0px, 35vmin, 756px) circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,46,147,0.06), transparent 40%)`
             : 'none',
           opacity: isInRightZone ? 1 : 0,
         }}
@@ -305,7 +362,7 @@ export function HeroSection({
             <motion.div variants={itemVariants}>
               <Badge 
                 variant="pink" 
-                className="backdrop-blur-md bg-[#C91C6F]/10 border border-[#FF2E93]/30 px-3 sm:px-4 py-1.5 sm:py-2 text-[#FF2E93] text-xs sm:text-sm"
+                className="bg-[#C91C6F]/20 border border-[#FF2E93]/30 px-3 sm:px-4 py-1.5 sm:py-2 text-[#FF2E93] text-xs sm:text-sm"
               >
                 {overline}
               </Badge>
