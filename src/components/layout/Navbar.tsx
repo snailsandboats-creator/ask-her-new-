@@ -14,13 +14,33 @@ import { Logo } from '@/components/shared/Logo';
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [navOpacity, setNavOpacity] = useState(0);
   const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const scrolled = window.scrollY;
+      const vh = window.innerHeight;
+
+      setIsScrolled(scrolled > 50);
+
+      // Fade in navbar as user approaches "What We Do" section
+      // Hero is 395vh tall, start fading at 355vh, fully visible at 395vh
+      const fadeStart = vh * 3.55; // 355vh
+      const fadeEnd = vh * 3.95;   // 395vh
+
+      if (scrolled < fadeStart) {
+        setNavOpacity(0);
+      } else if (scrolled >= fadeEnd) {
+        setNavOpacity(1);
+      } else {
+        const progress = (scrolled - fadeStart) / (fadeEnd - fadeStart);
+        setNavOpacity(progress);
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+
+    handleScroll(); // Initial call
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -44,15 +64,19 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: navOpacity }}
         transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+          'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
           isScrolled
-            ? 'bg-[var(--glass-surface)] backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
-            : 'bg-transparent backdrop-blur-md border-b border-white/5'
+            ? 'bg-[#0a0a0a]/95 border-b border-white/10'
+            : 'bg-transparent border-b border-white/5'
         )}
+        style={{
+          willChange: 'background-color, opacity',
+          pointerEvents: navOpacity > 0.1 ? 'auto' : 'none'
+        }}
       >
         <Container size="full">
           <div className="flex items-center justify-between h-20">
@@ -77,11 +101,7 @@ export function Navbar() {
                 >
                   {link.label}
                   {pathname === link.href && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-pink"
-                      transition={{ duration: 0.3 }}
-                    />
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-pink" />
                   )}
                 </Link>
               ))}

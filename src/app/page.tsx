@@ -1,6 +1,6 @@
 'use client';
 
-import { HeroSection } from '@/components/sections/HeroSection';
+import { HeroWrapper } from '@/components/sections/HeroWrapper';
 import { Section } from '@/components/layout/Section';
 import { Container } from '@/components/layout/Container';
 import { SectionHeader } from '@/components/shared/SectionHeader';
@@ -20,11 +20,11 @@ import { processSteps } from '@/data/process';
 export default function HomePage() {
   return (
     <>
-      {/* Hero Section */}
-      <HeroSection
+      {/* Hero Section - Uses HeroWrapper to switch between desktop/mobile */}
+      <HeroWrapper
         overline="Ask Her Marketing"
-        headline="brand vision blurry? ASK HER for clarity"
-        subheadline="We help service-based businesses get more calls, more clients, and more growth—without the agency BS."
+        headline="Need Help Marketing? ASK HER"
+        subheadline="We Help Service-Based Businesses Get More Calls, More Clients, and More Growth—Without the Agency BS."
         primaryCTA={{ label: "Book a Free Strategy Call", href: "/contact" }}
         secondaryCTA={{ label: "See Our Work", href: "/portfolio" }}
       />
@@ -40,7 +40,7 @@ export default function HomePage() {
               centered
             />
           </FadeUp>
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-12 md:mt-16">
             {services.map((service) => (
               <StaggerItem key={service.id}>
                 <ServiceCard
