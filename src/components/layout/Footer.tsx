@@ -5,7 +5,7 @@ import { navLinks, siteConfig } from '@/lib/constants';
 
 export function Footer() {
   return (
-    <footer className="bg-black text-white py-16 md:py-20">
+    <footer className="bg-black text-white py-16 md:py-20" style={{ width: '100%' }}>
       <Container size="wide">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
           {/* Column 1: Logo & Info */}

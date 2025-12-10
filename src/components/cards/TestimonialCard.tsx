@@ -53,7 +53,7 @@ export function TestimonialCard({
 
       <blockquote
         className={cn(
-          "text-black italic mb-8 relative z-10",
+          "text-white italic mb-8 relative z-10",
           featured ? "text-h3 leading-relaxed" : "text-h4"
         )}
       >
@@ -70,7 +70,7 @@ export function TestimonialCard({
           <div className="absolute -inset-1 rounded-full border-2 border-pink/10 group-hover:border-pink/30 transition-colors duration-300" />
         </div>
         <div className="text-left">
-          <div className="text-body font-semibold text-black">{name}</div>
+          <div className="text-body font-semibold text-white">{name}</div>
           <div className="text-body-sm text-slate">{title}</div>
         </div>
       </div>

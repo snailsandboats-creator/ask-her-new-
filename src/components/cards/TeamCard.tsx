@@ -56,7 +56,7 @@ export function TeamCard({ name, title, image }: TeamCardProps) {
         <div className="absolute inset-0 bg-pink-tint-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
-      <h3 className="text-h5 text-black group-hover:text-brand-pink transition-colors">{name}</h3>
+      <h3 className="text-h5 text-white group-hover:text-brand-pink transition-colors">{name}</h3>
       <p className="text-body-sm text-slate">{title}</p>
     </motion.div>
   );

@@ -52,3 +52,5 @@ export function HeroWrapper(props: HeroWrapperProps) {
   return isMobile ? <HeroSectionMobile {...props} /> : <HeroSection {...props} />;
 }
 
+
+

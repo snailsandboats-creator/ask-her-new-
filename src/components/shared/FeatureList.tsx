@@ -19,7 +19,7 @@ export function FeatureList({ items, columns = 1, className }: FeatureListProps)
       {items.map((item, index) => (
         <li key={index} className="flex items-start gap-3">
           <Check className="w-5 h-5 text-pink mt-0.5 flex-shrink-0" />
-          <span className="text-body text-slate">{item}</span>
+          <span className="text-body text-gray-400">{item}</span>
         </li>
       ))}
     </ul>

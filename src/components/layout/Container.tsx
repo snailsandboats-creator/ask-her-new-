@@ -6,11 +6,11 @@ interface ContainerProps {
   className?: string;
 }
 
-const sizes = {
-  narrow: 'container-narrow',
-  medium: 'container-medium',
-  wide: 'container-wide',
-  full: 'container-full',
+const maxWidths: Record<string, string> = {
+  narrow: '768px',
+  medium: '1024px',
+  wide: '1280px',
+  full: '1600px',
 };
 
 export function Container({
@@ -19,7 +19,15 @@ export function Container({
   className,
 }: ContainerProps) {
   return (
-    <div className={cn(sizes[size], className)}>
+    <div 
+      className={cn('px-4 md:px-8 lg:px-12', className)}
+      style={{
+        maxWidth: maxWidths[size],
+        width: '100%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      }}
+    >
       {children}
     </div>
   );

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Briefcase, ArrowUpRight } from 'lucide-react';
-import { getCardGradientClass, cn } from '@/lib/utils';
+import { getIconGradientClass, cn } from '@/lib/utils';
 
 interface PortfolioCardProps {
   client: string;
@@ -17,7 +17,7 @@ export function PortfolioCard({ client, service, image, index = 0 }: PortfolioCa
   const [imageError, setImageError] = useState(false);
 
   // Get deterministic gradient class based on index
-  const gradientClass = getCardGradientClass(index);
+  const gradientClass = getIconGradientClass(index);
 
   return (
     <motion.div
@@ -70,9 +70,9 @@ export function PortfolioCard({ client, service, image, index = 0 }: PortfolioCa
       </motion.div>
 
       {/* Info */}
-      <div className="p-6 bg-white">
-        <h3 className="text-h5 text-black group-hover:text-brand-pink transition-colors">{client}</h3>
-        <p className="text-body-sm text-slate">{service}</p>
+      <div className="p-6 bg-black/40 backdrop-blur-sm">
+        <h3 className="text-h5 text-white group-hover:text-brand-pink transition-colors">{client}</h3>
+        <p className="text-body-sm text-gray-400">{service}</p>
       </div>
     </motion.div>
   );

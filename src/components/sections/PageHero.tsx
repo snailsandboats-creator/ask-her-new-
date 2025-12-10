@@ -107,10 +107,7 @@ export function PageHero({
           </motion.div>
 
           <motion.h1
-            className={cn(
-              'text-h1 mb-4',
-              isDark ? 'text-white' : 'text-black'
-            )}
+            className="text-h1 mb-4 text-white"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}

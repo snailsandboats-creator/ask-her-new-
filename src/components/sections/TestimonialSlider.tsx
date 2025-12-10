@@ -84,7 +84,7 @@ export function TestimonialSlider({
           {/* Navigation arrows */}
           <button
             onClick={goToPrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-black hover:text-pink hover:scale-110 transition-all duration-300 z-10"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:text-pink hover:border-pink/50 hover:scale-110 transition-all duration-300 z-10"
             aria-label="Previous testimonial"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -92,7 +92,7 @@ export function TestimonialSlider({
 
           <button
             onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-black hover:text-pink hover:scale-110 transition-all duration-300 z-10"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:text-pink hover:border-pink/50 hover:scale-110 transition-all duration-300 z-10"
             aria-label="Next testimonial"
           >
             <ChevronRight className="w-5 h-5" />
@@ -125,7 +125,7 @@ export function TestimonialSlider({
                     'w-3 h-3 rounded-full transition-all duration-300',
                     current === index
                       ? 'bg-pink scale-125'
-                      : 'bg-lightgray group-hover:bg-slate'
+                      : 'bg-white/20 group-hover:bg-white/50'
                   )}
                 />
                 {/* Progress indicator for current */}

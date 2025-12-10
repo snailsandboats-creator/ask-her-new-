@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -8,6 +8,13 @@ import { siteConfig } from "@/lib/constants";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -51,12 +58,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased bg-[var(--background)] text-[var(--foreground)] flex flex-col min-h-dvh w-full max-w-[100vw] overflow-x-hidden m-0 p-0">
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="font-sans antialiased bg-[var(--background)] text-[var(--foreground)] min-h-dvh overflow-x-hidden">
         <Navbar />
-        <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden">{children}</main>
+        <main>{children}</main>
         <Footer />
-        <div className="noise-overlay" aria-hidden="true" />
       </body>
     </html>
   );

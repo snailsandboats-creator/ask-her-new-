@@ -17,11 +17,12 @@ const backgrounds = {
   glass: 'bg-[var(--glass-surface)] backdrop-blur-xl border-y border-white/5',
 };
 
+// Responsive padding using viewport-relative values
 const paddings = {
-  sm: 'py-12 md:py-16',
-  md: 'py-16 md:py-24',
-  lg: 'py-20 md:py-32',
-  xl: 'py-24 md:py-40',
+  sm: 'py-[clamp(3rem,6vw,4rem)]',
+  md: 'py-[clamp(4rem,8vw,6rem)]',
+  lg: 'py-[clamp(5rem,10vw,8rem)]',
+  xl: 'py-[clamp(6rem,12vw,10rem)]',
 };
 
 export function Section({
@@ -35,6 +36,7 @@ export function Section({
     <section
       id={id}
       className={cn(backgrounds[background], paddings[padding], className)}
+      style={{ width: '100%' }}
     >
       {children}
     </section>

@@ -28,7 +28,7 @@ export function ValueCard({ icon, title, description, index = 0 }: ValueCardProp
       >
         {iconMap[icon] || <Target className="w-7 h-7 text-white" />}
       </div>
-      <h3 className="text-h4 text-black mb-3">{title}</h3>
+      <h3 className="text-h4 text-white mb-3">{title}</h3>
       <p className="text-body text-slate">{description}</p>
     </div>
   );

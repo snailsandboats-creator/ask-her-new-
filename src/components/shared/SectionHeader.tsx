@@ -53,10 +53,7 @@ export function SectionHeader({
 
       {headline && (
         <motion.h2
-          className={cn(
-            'text-h2 mb-4',
-            isDark ? 'text-white' : 'text-black'
-          )}
+          className="text-h2 mb-4 text-white"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

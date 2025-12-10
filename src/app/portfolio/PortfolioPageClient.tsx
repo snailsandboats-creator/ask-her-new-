@@ -61,29 +61,29 @@ export function PortfolioPageClient() {
           </FadeUp>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
             <FadeUp delay={0.1}>
-              <div className="aspect-[4/3] bg-lightgray rounded-2xl overflow-hidden">
+              <div className="aspect-[4/3] bg-white/5 rounded-2xl overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-slate">Case Study Image</span>
+                  <span className="text-gray-500">Case Study Image</span>
                 </div>
               </div>
             </FadeUp>
             <FadeUp delay={0.2}>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-h5 text-black mb-2">The Challenge</h3>
-                  <p className="text-body text-slate">
+                  <h3 className="text-h5 text-white mb-2">The Challenge</h3>
+                  <p className="text-body text-gray-400">
                     Bloom Beauty Bar was struggling to stand out in a crowded market. Their social media presence was inconsistent, and they weren't converting followers into actual bookings.
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-h5 text-black mb-2">Our Solution</h3>
-                  <p className="text-body text-slate">
+                  <h3 className="text-h5 text-white mb-2">Our Solution</h3>
+                  <p className="text-body text-gray-400">
                     We developed a cohesive brand identity, created a content strategy focused on before/after transformations, and implemented a booking-focused social media campaign.
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-h5 text-black mb-2">The Results</h3>
-                  <p className="text-body text-slate">
+                  <h3 className="text-h5 text-white mb-2">The Results</h3>
+                  <p className="text-body text-gray-400">
                     Within 90 days, Bloom Beauty Bar saw a 3x increase in online bookings, 200% growth in Instagram followers, and became the top-rated beauty bar in their area.
                   </p>
                 </div>

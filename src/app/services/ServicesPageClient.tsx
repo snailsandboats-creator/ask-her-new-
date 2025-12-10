@@ -40,18 +40,18 @@ export function ServicesPageClient() {
           <Container size="wide">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <FadeUp className={index % 2 === 1 ? 'lg:order-2' : ''}>
-                <div className="w-16 h-16 bg-offwhite rounded-2xl flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
                   {iconMap[service.icon] || <Palette className="w-8 h-8 text-pink" />}
                 </div>
-                <h2 className="text-h2 text-black mb-4">{service.title}</h2>
-                <p className="text-body-lg text-slate mb-8">{service.fullDescription}</p>
+                <h2 className="text-h2 text-white mb-4">{service.title}</h2>
+                <p className="text-body-lg text-gray-400 mb-8">{service.fullDescription}</p>
                 <FeatureList items={service.features} />
               </FadeUp>
               <FadeUp delay={0.2} className={index % 2 === 1 ? 'lg:order-1' : ''}>
-                <div className="aspect-[4/3] bg-lightgray rounded-2xl overflow-hidden">
+                <div className="aspect-[4/3] bg-white/5 rounded-2xl overflow-hidden">
                   {/* Placeholder for service image */}
                   <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-slate">Service Image</span>
+                    <span className="text-gray-500">Service Image</span>
                   </div>
                 </div>
               </FadeUp>

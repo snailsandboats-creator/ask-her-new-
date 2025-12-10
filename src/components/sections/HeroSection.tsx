@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { HeroVisuals } from './HeroVisuals';
@@ -57,38 +57,63 @@ const askHerGradientStyle = {
   filter: 'drop-shadow(0 0 25px rgba(255,46,147,0.5))',
 };
 
-// Generate randomized particles
+// Generate randomized particles - very light
 function generateParticles(count: number) {
   const colors = [
-    'rgba(255, 46, 147, 0.4)',
-    'rgba(255, 182, 193, 0.35)',
-    'rgba(253, 224, 71, 0.3)',
-    'rgba(147, 197, 253, 0.3)',
-    'rgba(110, 231, 183, 0.25)',
-    'rgba(255, 255, 255, 0.3)',
+    'rgba(255, 46, 147, 0.15)',
+    'rgba(255, 182, 193, 0.12)',
+    'rgba(253, 224, 71, 0.10)',
+    'rgba(147, 197, 253, 0.10)',
+    'rgba(110, 231, 183, 0.08)',
+    'rgba(255, 255, 255, 0.12)',
   ];
   
   return Array.from({ length: count }, (_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
     top: `${Math.random() * 100}%`,
-    size: 3 + Math.random() * 5,
-    opacity: 0.2 + Math.random() * 0.4,
+    size: 2 + Math.random() * 3,
+    opacity: 0.08 + Math.random() * 0.12, // Very light: 0.08-0.20
     color: colors[Math.floor(Math.random() * colors.length)],
     delay: Math.random() * 6,
-    duration: 4 + Math.random() * 4,
+    duration: 6 + Math.random() * 6,
   }));
 }
 
-// Generate floating dust particles
+// Generate floating dust particles with depth simulation - subtle but visible
+// Farther = smaller + lower opacity + more blur, Closer = larger + higher opacity + sharp
 function generateDust(count: number) {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    delay: Math.random() * 15,
-    duration: 8 + Math.random() * 12,
-    size: 1 + Math.random() * 2,
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    // Random depth value 0-1 (0 = far, 1 = close)
+    const depth = Math.random();
+    
+    // Size based on depth: far (0.08vw) to close (0.18vw) - small but visible
+    const sizeVw = 0.08 + (depth * 0.10);
+    
+    // Opacity based on depth: far (0.06) to close (0.20) - subtle but visible
+    const opacity = 0.06 + (depth * 0.14);
+    
+    // Blur based on depth: far particles are blurry, close ones are sharp
+    const blur = (1 - depth) * 2; // 0-2px blur (far = blurry, close = sharp)
+    
+    // Slower animation for far particles, faster for close (depth effect)
+    const duration = 15 + ((1 - depth) * 10);
+    
+    return {
+      id: i,
+      // Distribute across full width
+      left: `${Math.random() * 100}vw`,
+      // Scattered across full height
+      top: `${Math.random() * 100}%`,
+      // Staggered start times
+      delay: Math.random() * 8, // Faster start
+      duration,
+      sizeVw,
+      opacity,
+      depth,
+      blur,
+    };
+  });
 }
 
 export function HeroSection({
@@ -98,39 +123,34 @@ export function HeroSection({
   primaryCTA,
   secondaryCTA,
 }: HeroSectionProps) {
-  // Synced mouse position from HeroVisuals
+  // Section ref
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  // Synced state from HeroVisuals (for spotlight AND particle eraser)
+  // On desktop: follows mouse. On mobile: follows lantern position.
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isInRightZone, setIsInRightZone] = useState(false);
   
-  // Refs for particle containers (for eraser mask)
-  const dustContainerRef = useRef<HTMLDivElement>(null);
-  const particleContainerRef = useRef<HTMLDivElement>(null);
+  // Generate particles only on client to avoid hydration mismatch
+  const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
+  const [dustParticles, setDustParticles] = useState<ReturnType<typeof generateDust>>([]);
   
-  // Generate particles once on mount
-  const particles = useMemo(() => generateParticles(18), []);
-  const dustParticles = useMemo(() => generateDust(25), []);
+  useEffect(() => {
+    setParticles(generateParticles(18));
+    setDustParticles(generateDust(150));
+  }, []);
   
-  // Callback to sync spotlight with lens AND update particle eraser
+  // Callback to sync spotlight with lens
   const handleMousePosition = useCallback((x: number, y: number, inRightZone: boolean) => {
     setMousePos({ x, y });
     setIsInRightZone(inRightZone);
-    
-    // Update particle eraser mask position via CSS vars
-    if (dustContainerRef.current) {
-      dustContainerRef.current.style.setProperty('--eraser-x', `${x}px`);
-      dustContainerRef.current.style.setProperty('--eraser-y', `${y}px`);
-    }
-    if (particleContainerRef.current) {
-      particleContainerRef.current.style.setProperty('--eraser-x', `${x}px`);
-      particleContainerRef.current.style.setProperty('--eraser-y', `${y}px`);
-    }
   }, []);
 
   // Render word with special styling
   const renderWord = (word: string, i: number) => {
     const lowerWord = word.toLowerCase();
     
-    // "blurry?" gets blur effect
+    // "blurry?" gets blur effect - keep on same baseline
     if (lowerWord === 'blurry?') {
       return (
         <span
@@ -139,6 +159,8 @@ export function HeroSection({
             filter: 'blur(3px)',
             color: 'rgba(255, 255, 255, 0.7)',
             WebkitTextFillColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'inline',
+            fontSize: '1.05em', // Slightly larger to compensate for blur
           }}
         >
           {word}{' '}
@@ -171,6 +193,7 @@ export function HeroSection({
 
   return (
     <section 
+      ref={sectionRef}
       className="relative w-full min-h-[100dvh] bg-[#050505]"
     >
       
@@ -179,28 +202,28 @@ export function HeroSection({
         className="absolute inset-0 z-[-1] pointer-events-none"
         style={{ overflow: 'hidden' }}
       >
-        {/* Primary grid - dense technical squares */}
+        {/* Primary grid - tight technical squares */}
         <div
           className="absolute inset-0"
           style={{
-            opacity: 0.08,
+            opacity: 0.06,
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+          }}
+        />
+        {/* Secondary grid - micro texture */}
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: 0.035,
             backgroundImage: `
               linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
               linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)
             `,
-            backgroundSize: '30px 30px',
-          }}
-        />
-        {/* Secondary grid - micro detail */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: 0.04,
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '6px 6px',
+            backgroundSize: '8px 8px',
           }}
         />
         {/* Diagonal accent lines */}
@@ -221,24 +244,36 @@ export function HeroSection({
         />
       </div>
 
-      {/* === Z-0: FLOATING DUST (Full screen, with particle eraser) === */}
+      {/* === Z-[15]: LEFT GRADIENT (Desktop only) === */}
       <div 
-        ref={dustContainerRef}
-        className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-hidden particle-eraser"
+        className="absolute top-0 left-0 z-[15] pointer-events-none"
         style={{
-          '--eraser-x': '-1000px',
-          '--eraser-y': '-1000px',
-        } as React.CSSProperties}
+          background: 'linear-gradient(90deg, #050505 0%, #050505 60%, rgba(5,5,5,0.98) 75%, rgba(5,5,5,0.9) 85%, rgba(5,5,5,0.5) 92%, transparent 100%)',
+          width: '50vw',
+          height: '100%',
+        }}
+      />
+
+      {/* === Z-[16]: FLOATING DUST (above gradient, behind content) === */}
+      <div 
+        className="absolute top-0 left-0 w-[100vw] h-full z-[16] pointer-events-none overflow-visible"
+        style={isInRightZone ? {
+          // Lens eraser active - uses synced position (mouse on desktop, lantern on mobile)
+          maskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
+          WebkitMaskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
+        } : {}}
       >
         {dustParticles.map((dust) => (
           <div
             key={`dust-${dust.id}`}
-            className="absolute rounded-full bg-white animate-float-up"
+            className="absolute rounded-full bg-white animate-float-drift"
             style={{
               left: dust.left,
-              bottom: '-10px',
-              width: dust.size,
-              height: dust.size,
+              top: dust.top,
+              width: `${dust.sizeVw}vw`,
+              height: `${dust.sizeVw}vw`,
+              opacity: dust.opacity,
+              filter: dust.blur > 0.5 ? `blur(${dust.blur}px)` : 'none',
               animationDuration: `${dust.duration}s`,
               animationDelay: `${dust.delay}s`,
             }}
@@ -246,14 +281,14 @@ export function HeroSection({
         ))}
       </div>
 
-      {/* === Z-[1]: FLOATING COLOR PARTICLES (Full screen, with particle eraser) === */}
+      {/* === Z-[17]: FLOATING COLOR PARTICLES (above gradient, behind content) === */}
       <div 
-        ref={particleContainerRef}
-        className="absolute inset-0 w-full h-full z-[1] pointer-events-none overflow-hidden particle-eraser"
-        style={{
-          '--eraser-x': '-1000px',
-          '--eraser-y': '-1000px',
-        } as React.CSSProperties}
+        className="absolute inset-0 w-full h-full z-[17] pointer-events-none overflow-hidden"
+        style={isInRightZone ? {
+          // Lens eraser active - uses synced position (mouse on desktop, lantern on mobile)
+          maskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
+          WebkitMaskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
+        } : {}}
       >
         {particles.map((particle) => (
           <motion.div
@@ -283,75 +318,34 @@ export function HeroSection({
         ))}
       </div>
 
-      {/* === Z-5: HERO VISUALS (Macro Lens + Twin Stream) === */}
-      <HeroVisuals onMousePosition={handleMousePosition} />
-
-      {/* === Z-10: Ambient Background Effects === */}
-      <div className="absolute inset-0 z-[5] pointer-events-none" style={{ overflow: 'hidden' }}>
-        {/* Main gradient orb - positioned in left area */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            top: '50%',
-            left: '20%',
-            transform: 'translate(-50%, -50%)',
-            width: 'min(600px, 50vw)',
-            height: 'min(600px, 50vw)',
-            opacity: 0.2,
-            background: 'radial-gradient(circle, rgba(201,28,111,0.5) 0%, transparent 70%)',
-          }}
-          animate={{
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        {/* Secondary orb */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            top: '30%',
-            left: '35%',
-            width: 'min(300px, 30vw)',
-            height: 'min(300px, 30vw)',
-            opacity: 0.15,
-            background: 'radial-gradient(circle, rgba(255,46,147,0.6) 0%, transparent 70%)',
-          }}
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+      {/* === Z-12: HERO VISUALS (Macro Lens + Twin Stream) === */}
+      <div className="absolute inset-0 z-[12]">
+        <HeroVisuals onMousePosition={handleMousePosition} />
       </div>
 
+
       {/* === Z-15: SYNCED SPOTLIGHT (follows lens, only in right zone) === */}
-      {/* Spotlight size matches lens: 35vmin capped at 756px */}
+      {/* Spotlight size matches lens: 18.75vw capped at 600px (reduced 25%) */}
       <div
         className="pointer-events-none absolute inset-0 z-[15] transition-opacity duration-500"
         style={{
           background: isInRightZone 
-            ? `radial-gradient(clamp(0px, 35vmin, 756px) circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,46,147,0.06), transparent 40%)`
+            ? `radial-gradient(clamp(112px, 18.75vw, 600px) circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,46,147,0.06), transparent 40%)`
             : 'none',
           opacity: isInRightZone ? 1 : 0,
         }}
       />
 
-      {/* === Z-20: LEFT CONTENT AREA === */}
+      {/* === Z-20: LEFT CONTENT AREA (Desktop) === */}
       <div 
-        className="relative z-20 w-full min-h-[100dvh] flex items-center"
+        className="relative z-20 w-full min-h-[100dvh] flex items-center pointer-events-none"
       >
         <div 
-          className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-16 sm:py-20"
-          style={{ maxWidth: 'min(650px, 55%)' }}
+          className="py-20 pointer-events-auto w-[45vw]"
+          style={{ 
+            paddingLeft: 'clamp(1rem, 4vw, 6rem)',
+            paddingRight: 'clamp(1rem, 2vw, 3rem)',
+          }}
         >
           <motion.div
             variants={containerVariants}
@@ -368,20 +362,30 @@ export function HeroSection({
               </Badge>
             </motion.div>
 
-            {/* Headline - Massive, tight tracking, fully responsive */}
+            {/* Headline - Massive, tight tracking, scales with viewport */}
             <motion.h1
               variants={itemVariants}
-              className="mt-6 sm:mt-8 mb-4 sm:mb-6 font-bold leading-[0.9] tracking-[-0.04em]"
-              style={{ fontSize: 'clamp(1.75rem, 5vw + 1rem, 4.5rem)' }}
+              className="mt-4 sm:mt-6 md:mt-8 mb-4 sm:mb-6 font-bold leading-[1.1] sm:leading-[0.95] tracking-[-0.03em] sm:tracking-[-0.04em]"
+              style={{ fontSize: 'clamp(1.75rem, 5vw + 1rem, 5rem)' }}
             >
-              {headline.split(' ').map((word, i) => renderWord(word, i))}
+              {/* Split headline: first part wraps, "ASK HER For Clarity" stays together */}
+              {headline.includes('ASK HER') ? (
+                <>
+                  {headline.split('ASK HER')[0].split(' ').map((word, i) => renderWord(word, i))}
+                  <span className="whitespace-nowrap">
+                    {['ASK', 'HER', ...headline.split('ASK HER')[1].trim().split(' ')].map((word, i) => renderWord(word, i + 100))}
+                  </span>
+                </>
+              ) : (
+                headline.split(' ').map((word, i) => renderWord(word, i))
+              )}
             </motion.h1>
 
-            {/* Subheadline - Responsive */}
+            {/* Subheadline - Scales with viewport */}
             <motion.p
               variants={itemVariants}
               className="text-gray-400 mb-8 sm:mb-10 md:mb-12 leading-relaxed"
-              style={{ fontSize: 'clamp(0.875rem, 1vw + 0.5rem, 1.25rem)' }}
+              style={{ fontSize: 'clamp(0.875rem, 1.2vw, 1.5rem)' }}
             >
               {subheadline}
             </motion.p>

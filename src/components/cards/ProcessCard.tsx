@@ -9,7 +9,7 @@ export function ProcessCard({ number, title, description }: ProcessCardProps) {
     <div className="text-center">
       <div className="text-h2 text-pink mb-4">{number}</div>
       <h3 className="text-h4 text-white mb-3">{title}</h3>
-      <p className="text-body text-slate">{description}</p>
+      <p className="text-body text-gray-400">{description}</p>
     </div>
   );
 }

@@ -1,20 +1,35 @@
 'use client';
 
 import { useRef, useEffect, memo } from 'react';
+import Link from 'next/link';
 
 // === CONSTANTS ===
-const SERVICES = ['Strategy', 'Branding', 'Social', 'Content', 'Design', 'Growth', 'Marketing', 'Creative'];
+const SERVICES = ['Strategy', 'Branding', 'Social Media', 'Content Creation', 'Graphic Design', 'Growth', 'Marketing', 'Creativity'];
 const ROW_POSITIONS = ['0%', '12.5%', '25%', '37.5%', '50%', '62.5%', '75%', '87.5%'];
 const WORDS_PER_ROW = 10; // Minimum for ultra-wide screen coverage
-const LENS_SIZE_VMIN = 35;
-const LENS_RADIUS_VMIN = LENS_SIZE_VMIN / 2;
 
-// 4K growth cap: 1vmin at 2160px height = 21.6px
-const VMIN_CAP = 21.6;
+// Word to route mapping
+const WORD_ROUTES: Record<string, string> = {
+  'Strategy': '/about',
+  'Branding': '/services#branding',
+  'Social Media': '/portfolio',
+  'Content Creation': '/services#content',
+  'Graphic Design': '/services#web-design',
+  'Growth': '/services',
+  'Marketing': '/services',
+  'Creativity': '/portfolio',
+};
+
+// Lens size as percentage of viewport width (18.75vw = 0.1875, reduced 25% from original)
+const LENS_SIZE_VW = 0.1875;
+const LENS_RADIUS_VW = LENS_SIZE_VW / 2; // 9.375vw
+
+// This component is desktop-only. Mobile uses HeroSectionMobile.tsx
 
 // === MEMOIZED COMPONENTS ===
 const TickerRow = memo(function TickerRow({ rowIndex, type, word }: { rowIndex: number; type: 'fog' | 'clarity'; word: string }) {
   const direction = rowIndex % 2 === 0 ? 'left' : 'right';
+  const route = WORD_ROUTES[word] || '/services';
   
   return (
     <div
@@ -24,7 +39,7 @@ const TickerRow = memo(function TickerRow({ rowIndex, type, word }: { rowIndex: 
         left: 0,
         width: '100%',
         height: '12.5%',
-        overflow: 'hidden',
+        overflow: 'visible', // Allow text to overflow for proper scaling
       }}
     >
       <div 
@@ -38,23 +53,34 @@ const TickerRow = memo(function TickerRow({ rowIndex, type, word }: { rowIndex: 
           <div key={setIndex} className="flex items-center">
             {Array.from({ length: WORDS_PER_ROW }, (_, i) => {
               const seed = (rowIndex * 17) + (i * 37);
-              return (
+              const content = (
                 <span
-                  key={`${setIndex}-${i}`}
-                  className={`flex-shrink-0 font-bold tracking-tighter select-none ${type === 'clarity' ? `gemstone-word gem-path-${(seed % 3) + 1}` : ''}`}
+                  className={`flex-shrink-0 font-bold tracking-tighter cursor-pointer hover:scale-105 transition-transform ticker-word ${type === 'clarity' ? `gemstone-word gem-path-${(seed % 3) + 1}` : ''}`}
                   style={{
-                    fontSize: 'clamp(0px, 11vmin, 238px)',
-                    lineHeight: 1.1,
-                    marginLeft: 'clamp(0px, 2vmin, 43px)',
-                    marginRight: 'clamp(0px, 2vmin, 43px)',
+                    // Desktop: original size. Mobile: uses CSS override in globals.css
+                    fontSize: 'clamp(1.5rem, 6vw, 12rem)',
+                    lineHeight: 1.2,
+                    marginLeft: 'clamp(0.5rem, 1.5vw, 3rem)',
+                    marginRight: 'clamp(0.5rem, 1.5vw, 3rem)',
                     ...(type === 'fog'
-                      ? { color: 'rgba(255,255,255,0.2)', filter: 'blur(1vmin)' }
+                      ? { color: 'rgba(255,255,255,0.2)', filter: 'blur(0.6vw)' }
                       : { '--word-seed': seed, animationDelay: `${-(seed % 6)}s` } as React.CSSProperties
                     ),
                   }}
                 >
                   {word}
                 </span>
+              );
+              
+              // Wrap ALL words in links (both fog and clarity layers)
+              return (
+                <Link 
+                  key={`${setIndex}-${i}`} 
+                  href={route}
+                  className="inline-block"
+                >
+                  {content}
+                </Link>
               );
             })}
           </div>
@@ -125,14 +151,15 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
       const clarity = clarityRef.current;
       
       if (bezel && fog && clarity) {
-        const x = mouse.x;
-        const y = mouse.y;
         const w = window.innerWidth;
         const h = window.innerHeight;
-        // Calculate vmin, but CAP it at 21.6px (the 4K equivalent)
-        const rawVmin = Math.min(w, h) / 100;
-        const vmin = Math.min(rawVmin, VMIN_CAP);
-        const r = vmin * LENS_RADIUS_VMIN;
+        
+        // === MOUSE TRACKING ===
+        const x = mouse.x;
+        const y = mouse.y;
+        // Calculate lens radius based on viewport width (capped for very large screens)
+        const lensRadius = Math.min(w * LENS_RADIUS_VW, 300); // 9.375vw capped at 300px
+        const r = lensRadius;
 
         // === LENS (reuse transform string pattern) ===
         bezel.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-50%)';
@@ -150,14 +177,14 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
         clarity.style.setProperty('--mx', mx);
         clarity.style.setProperty('--my', my);
 
-        // === OPACITY (vmin-locked to match layout, using capped vmin) ===
+        // === OPACITY (viewport-width locked to match layout) ===
         // All boundaries use container-relative coordinates (relX, relY)
-        // Left boundary: match the 75vmin gradient width
-        const LEFT_BOUNDARY = 65 * vmin;  // Where lens hits 0 opacity (relative to container)
-        const FADE_DISTANCE = 10 * vmin;   // 10vmin fade zone (from 65vmin to 75vmin)
+        // Left boundary: match the 50vw gradient width (lens fades as it approaches left content)
+        const LEFT_BOUNDARY = w * 0.40;  // Where lens hits 0 opacity (40% of viewport width)
+        const FADE_DISTANCE = w * 0.10;   // 10vw fade zone (from 40vw to 50vw)
         
-        // Bottom boundary: fade before hero bottom
-        const BOTTOM_FADE_ZONE = 15 * vmin;
+        // Bottom boundary: fade before hero bottom (15% of viewport height)
+        const BOTTOM_FADE_ZONE = h * 0.15;
         
         // X-axis fade (left side) - using container-relative X
         const distFromLeft = relX - LEFT_BOUNDARY;
@@ -180,12 +207,13 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
           if (innerRingRef.current) innerRingRef.current.style.opacity = opStr;
           if (glintRef.current) glintRef.current.style.opacity = opStr;
           
-          // Clarity layer (reveal effect)
+          // Clarity layer (reveal effect) - only clickable when visible inside lens
           clarity.style.opacity = opStr;
+          clarity.style.pointerEvents = op > 0.5 ? 'auto' : 'none';
           
           // Fog layer mask radius - shrink to 0 when fading out
           // This eliminates the "black circle" when lens disappears
-          const maskRadius = (LENS_RADIUS_VMIN * op) + 'vmin';
+          const maskRadius = (9.375 * op) + 'vw'; // 9.375vw matches lens radius
           fog.style.setProperty('--mr', maskRadius);
           
           // Pass container-relative coordinates for spotlight/particle alignment
@@ -207,26 +235,27 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
     };
   }, []);
 
-  // Fog mask uses --mr (dynamic radius that shrinks to 0 when fading)
-  // Clarity mask uses clamped radius to cap at 4K (17.5vmin → 378px max)
-  const fogMask = `linear-gradient(to right,transparent 0%,black 25%,black 100%),radial-gradient(circle var(--mr) at var(--mx) var(--my),transparent 0%,transparent 98%,black 100%)`;
-  const clarityMask = `linear-gradient(to right,transparent 0%,black 25%,black 100%),radial-gradient(circle clamp(0px, ${LENS_RADIUS_VMIN}vmin, 378px) at var(--mx) var(--my),black 0%,black 98%,transparent 100%)`;
+  // === DESKTOP MASKS: Radial lens following mouse ===
+  const fogMask = `linear-gradient(to right,transparent 0%,black 25%,black 100%),radial-gradient(circle var(--mr) at var(--mx) var(--my),transparent 0%,transparent 85%,black 100%)`;
+  
+  const clarityMask = `linear-gradient(to right,transparent 0%,black 25%,black 100%),radial-gradient(circle clamp(56px, 9.375vw, 300px) at var(--mx) var(--my),black 0%,black 85%,transparent 100%)`;
 
   return (
-    <div ref={containerRef} className="absolute top-0 left-0 w-[100vw] h-full">
-      {/* FOG - Simple flat text, blur hides detail (CHEAP) */}
+    <div ref={containerRef} className="absolute top-0 left-0 w-[100vw] h-full overflow-hidden">
+      {/* FOG - Simple flat text, blur hides detail (CHEAP) - NOT clickable */}
       <div 
         ref={fogRef}
         style={{ 
           position: 'absolute',
           inset: 0,
           width: '100vw',
-          overflow: 'hidden',
-          pointerEvents: 'none',
-          zIndex: 0,
+          height: '100%',
+          overflow: 'visible',
+          pointerEvents: 'none', // Fog words are NOT clickable - only clarity layer is
+          zIndex: 10,
           '--mx': '-999px',
           '--my': '-999px',
-          '--mr': '0vmin',
+          '--mr': '0vw',
           maskImage: fogMask,
           WebkitMaskImage: fogMask,
           maskComposite: 'intersect',
@@ -236,16 +265,17 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
         <FogLayer />
       </div>
 
-      {/* CLARITY - Full gemstone gradients (visible inside lens) */}
+      {/* CLARITY - Full gemstone gradients (visible inside lens) - only clickable inside lens */}
       <div 
         ref={clarityRef}
         style={{
           position: 'absolute',
           inset: 0,
           width: '100vw',
-          overflow: 'hidden',
-          pointerEvents: 'none',
-          zIndex: 5,
+          height: '100%',
+          overflow: 'visible',
+          pointerEvents: 'none', // Only enabled dynamically when lens is visible
+          zIndex: 20,
           opacity: 0,
           '--mx': '-999px',
           '--my': '-999px',
@@ -259,17 +289,17 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
         <ClarityLayer />
       </div>
 
-      {/* LENS BEZEL */}
+      {/* LENS BEZEL - scales with viewport width (18.75vw, reduced 25%) */}
       <div 
         ref={bezelRef}
         style={{
           position: 'fixed',
           top: 0, left: 0,
-          width: 'clamp(0px, 35vmin, 756px)',
-          height: 'clamp(0px, 35vmin, 756px)',
+          width: 'clamp(112px, 18.75vw, 600px)',
+          height: 'clamp(112px, 18.75vw, 600px)',
           borderRadius: '50%',
           border: '1px solid rgba(255,255,255,0.4)',
-          boxShadow: 'inset 0 0 0.2vmin rgba(255,255,255,0.9),inset 0 0 1vmin rgba(255,255,255,0.2),0 0 1.5vmin rgba(255,255,255,0.1)',
+          boxShadow: 'inset 0 0 0.12vw rgba(255,255,255,0.9),inset 0 0 0.6vw rgba(255,255,255,0.2),0 0 0.9vw rgba(255,255,255,0.1)',
           pointerEvents: 'none',
           zIndex: 50,
           opacity: 0,
@@ -285,8 +315,8 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
         style={{
           position: 'fixed',
           top: 0, left: 0,
-          width: 'clamp(0px, calc(35vmin - 0.5vmin), 745px)',
-          height: 'clamp(0px, calc(35vmin - 0.5vmin), 745px)',
+          width: 'clamp(108px, calc(18.75vw - 0.3vw), 592px)',
+          height: 'clamp(108px, calc(18.75vw - 0.3vw), 592px)',
           borderRadius: '50%',
           border: '1px solid rgba(255,255,255,0.2)',
           pointerEvents: 'none',
@@ -303,8 +333,8 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
         style={{
           position: 'fixed',
           top: 0, left: 0,
-          width: 'clamp(0px, 14vmin, 302px)',
-          height: 'clamp(0px, 4.2vmin, 91px)',
+          width: 'clamp(45px, 7.5vw, 240px)',
+          height: 'clamp(14px, 2.25vw, 72px)',
           borderRadius: '50%',
           background: 'linear-gradient(180deg,rgba(255,255,255,0.35) 0%,transparent 100%)',
           pointerEvents: 'none',
@@ -315,17 +345,6 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
         }}
       />
 
-      {/* LEFT PROTECTION - vmin locked to match text scaling, capped at 4K */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: 0, left: 0,
-          width: 'clamp(0px, 75vmin, 1620px)', height: '100%',
-          background: 'linear-gradient(90deg, #050505 0%, #050505 40%, rgba(5,5,5,0.95) 60%, rgba(5,5,5,0.7) 80%, transparent 100%)',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      />
     </div>
   );
 }

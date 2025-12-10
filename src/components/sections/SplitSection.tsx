@@ -107,7 +107,7 @@ export function SplitSection({
                 {overline}
               </Badge>
             )}
-            <h2 className="text-h2 text-black mb-6">{headline}</h2>
+            <h2 className="text-h2 text-white mb-6">{headline}</h2>
             <p className="text-body-lg text-slate mb-6">{body}</p>
             {features && <FeatureList items={features} className="mb-6" />}
             {cta && (

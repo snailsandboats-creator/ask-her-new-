@@ -14,12 +14,12 @@ interface AccordionItemProps {
 
 function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProps) {
   return (
-    <div className="border-b border-lightgray last:border-b-0">
+    <div className="border-b border-white/10 last:border-b-0">
       <button
         onClick={onToggle}
         className="w-full flex justify-between items-center py-6 text-left group"
       >
-        <span className="text-lg font-semibold text-black group-hover:text-pink transition-colors pr-4">
+        <span className="text-lg font-semibold text-white group-hover:text-pink transition-colors pr-4">
           {question}
         </span>
         <motion.div
@@ -39,7 +39,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProp
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <p className="pb-6 text-slate leading-relaxed">
+            <p className="pb-6 text-gray-400 leading-relaxed">
               {answer}
             </p>
           </motion.div>
@@ -73,7 +73,7 @@ export function Accordion({ items, allowMultiple = false, className }: Accordion
   };
 
   return (
-    <div className={cn('divide-y divide-lightgray', className)}>
+    <div className={cn('divide-y divide-white/10', className)}>
       {items.map((item, index) => (
         <AccordionItem
           key={index}

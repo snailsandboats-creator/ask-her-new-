@@ -57,38 +57,39 @@
 
   /* Fonts - Fluid Sans-Serif */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: var(--font-playfair), 'Georgia', serif;
 
-  /* Font Sizes - Massive with Tight Tracking */
-  --text-display: 4.5rem;
+  /* Font Sizes - Responsive with viewport scaling */
+  --text-display: clamp(2.5rem, 5vw + 1rem, 4.5rem);
   --text-display--line-height: 0.95;
   --text-display--letter-spacing: -0.04em;
 
-  --text-h1: 3.5rem;
+  --text-h1: clamp(2rem, 4vw + 0.5rem, 3.5rem);
   --text-h1--line-height: 1;
   --text-h1--letter-spacing: -0.03em;
 
-  --text-h2: 3rem;
+  --text-h2: clamp(1.75rem, 3vw + 0.5rem, 3rem);
   --text-h2--line-height: 1.05;
   --text-h2--letter-spacing: -0.02em;
 
-  --text-h3: 2.25rem;
+  --text-h3: clamp(1.5rem, 2vw + 0.5rem, 2.25rem);
   --text-h3--line-height: 1.1;
   --text-h3--letter-spacing: -0.02em;
 
-  --text-h4: 1.75rem;
+  --text-h4: clamp(1.25rem, 1.5vw + 0.5rem, 1.75rem);
   --text-h4--line-height: 1.15;
   --text-h4--letter-spacing: -0.01em;
 
   --text-h5: 1.5rem;
   --text-h5--line-height: 1.2;
 
-  --text-body-lg: 1.25rem;
+  --text-body-lg: clamp(1.1rem, 0.5vw + 0.9rem, 1.25rem);
   --text-body-lg--line-height: 1.6;
 
-  --text-body: 1rem;
+  --text-body: clamp(0.9rem, 0.3vw + 0.8rem, 1rem);
   --text-body--line-height: 1.6;
 
-  --text-body-sm: 0.875rem;
+  --text-body-sm: clamp(0.8rem, 0.2vw + 0.7rem, 0.875rem);
   --text-body-sm--line-height: 1.5;
 
   --text-caption: 0.75rem;
@@ -123,11 +124,11 @@
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Container widths */
-  --container-narrow: 680px;
-  --container-medium: 960px;
-  --container-wide: 1200px;
-  --container-full: 1440px;
+  /* Container widths - proportional scaling with max cap for ultra-wide */
+  --container-narrow: min(60vw, 1200px);
+  --container-medium: min(70vw, 1600px);
+  --container-wide: min(80vw, 2000px);
+  --container-full: min(85vw, 2400px);
 
   /* Animations */
   --animate-fade-up: fadeUp 0.6s var(--ease-out);
@@ -139,8 +140,16 @@
    ============================================ */
 
 @layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   body {
@@ -149,6 +158,28 @@
     color: var(--foreground);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+  
+  main {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+  }
+  
+  section {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+  }
+  
+  footer {
+    width: 100%;
+    max-width: 100%;
   }
 
   /* Focus styles */
@@ -353,57 +384,42 @@
     font-weight: 600;
   }
 
+  /* Font family utilities */
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
   /* Container classes */
   .container-narrow {
-    max-width: var(--container-narrow);
+    width: var(--container-narrow);
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: clamp(1rem, 2vw, 2rem);
+    padding-right: clamp(1rem, 2vw, 2rem);
   }
 
   .container-medium {
-    max-width: var(--container-medium);
+    width: var(--container-medium);
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: clamp(1rem, 2vw, 2rem);
+    padding-right: clamp(1rem, 2vw, 2rem);
   }
 
   .container-wide {
-    max-width: var(--container-wide);
+    width: var(--container-wide);
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: clamp(1rem, 2vw, 2rem);
+    padding-right: clamp(1rem, 2vw, 2rem);
   }
 
   .container-full {
-    max-width: var(--container-full);
+    width: var(--container-full);
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .container-narrow,
-    .container-medium,
-    .container-wide,
-    .container-full {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .container-narrow,
-    .container-medium,
-    .container-wide,
-    .container-full {
-      padding-left: 3rem;
-      padding-right: 3rem;
-    }
+    padding-left: clamp(1rem, 2vw, 2rem);
+    padding-right: clamp(1rem, 2vw, 2rem);
   }
 }
 
@@ -412,13 +428,34 @@
    ============================================ */
 
 @layer utilities {
-  /* Ticker utilities */
+  /* Ticker utilities - Slow speed for performance */
   .animate-ticker-left {
-    animation: ticker-left 30s linear infinite;
+    animation: ticker-left 120s linear infinite;
   }
   
   .animate-ticker-right {
-    animation: ticker-right 30s linear infinite;
+    animation: ticker-right 120s linear infinite;
+  }
+  
+  /* Mobile ticker - slower, more visible */
+  .animate-ticker-left-slow {
+    animation: ticker-left 80s linear infinite;
+  }
+  
+  .animate-ticker-right-slow {
+    animation: ticker-right 80s linear infinite;
+  }
+  
+  /* Mobile ticker words - fog layer (visible on sides) */
+  .mobile-ticker-word-fog {
+    mask-image: linear-gradient(to right, black 0%, black 25%, transparent 40%, transparent 60%, black 75%, black 100%);
+    -webkit-mask-image: linear-gradient(to right, black 0%, black 25%, transparent 40%, transparent 60%, black 75%, black 100%);
+  }
+  
+  /* Mobile ticker words - clarity layer (visible in center) */
+  .mobile-ticker-word-clarity {
+    mask-image: linear-gradient(to right, transparent 0%, transparent 25%, black 40%, black 60%, transparent 75%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 25%, black 40%, black 60%, transparent 75%, transparent 100%);
   }
 
   /* Hide scrollbar */
@@ -510,7 +547,10 @@
    Cinematic Grain Overlay
    ============================================ */
 
+/* DISABLED FOR PERFORMANCE - mix-blend-mode causes full-screen repaints */
 .noise-overlay {
+  display: none;
+  /* 
   position: fixed;
   top: 0;
   left: 0;
@@ -518,8 +558,119 @@
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.035;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  will-change: transform;
+  transform: translateZ(0);
+  */
+}
+
+/* Floating Dust Animation - subtle upward drift (for spawning particles) */
+@keyframes float-up {
+  0% {
+    transform: translateY(0) translateX(0) scale(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.5;
+    transform: translateY(-5vh) translateX(0) scale(1);
+  }
+  25% {
+    opacity: 0.6;
+    transform: translateY(-25vh) translateX(5px);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-50vh) translateX(-3px);
+  }
+  75% {
+    opacity: 0.35;
+    transform: translateY(-75vh) translateX(4px);
+  }
+  100% {
+    transform: translateY(-110vh) translateX(0) scale(0.3);
+    opacity: 0;
+  }
+}
+
+.animate-float-up {
+  animation: float-up linear infinite;
+}
+
+/* Smooth floating drift - gentle linear motion in one direction */
+@keyframes float-drift-up {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(15px, -60px) scale(1.05);
+    opacity: 0.3;
+  }
+}
+
+@keyframes float-drift-up-left {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(-40px, -50px) scale(1.08);
+    opacity: 0.35;
+  }
+}
+
+@keyframes float-drift-up-right {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translate(50px, -45px) scale(0.95);
+    opacity: 0.32;
+  }
+}
+
+@keyframes float-drift-diagonal {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(35px, -55px) scale(1.1);
+    opacity: 0.28;
+  }
+}
+
+@keyframes float-drift-gentle {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translate(-20px, -40px) scale(1.02);
+    opacity: 0.26;
+  }
+}
+
+.animate-float-drift {
+  animation: float-drift-up ease-in-out infinite;
+}
+
+.animate-float-drift:nth-child(5n) {
+  animation-name: float-drift-up-left;
+}
+
+.animate-float-drift:nth-child(5n+1) {
+  animation-name: float-drift-up-right;
+}
+
+.animate-float-drift:nth-child(5n+2) {
+  animation-name: float-drift-diagonal;
+}
+
+.animate-float-drift:nth-child(5n+3) {
+  animation-name: float-drift-gentle;
 }
 
 /* ============================================
@@ -650,4 +801,306 @@
   background-size: 200% 200%;
   animation: icon-drift 6s ease-in-out infinite;
   animation-delay: -5s;
+}
+
+/* ============================================
+   CLARITY MASK - Uses CSS vars for instant updates
+   ============================================ */
+
+.clarity-mask {
+  clip-path: circle(var(--mask-size, 0px) at var(--mask-x, -500px) var(--mask-y, -500px));
+  transition: clip-path 0.3s ease-out;
+}
+
+/* V2: Uses opacity variable for smooth fade + no clip-path transition lag */
+.clarity-mask-v2 {
+  clip-path: circle(var(--mask-size, 0px) at var(--mask-x, -500px) var(--mask-y, -500px));
+  opacity: var(--reveal-opacity, 0);
+}
+
+/* === CUTOUT ENGINE MASKS === */
+
+/* FOG LAYER: INVERSE MASK (Erases blur under lens - transparent center, visible edges) */
+.fog-inverse-mask {
+  mask-image: radial-gradient(
+    circle 145px at var(--mask-x, -500px) var(--mask-y, -500px), 
+    transparent 0%, 
+    transparent 45%, 
+    black 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 145px at var(--mask-x, -500px) var(--mask-y, -500px), 
+    transparent 0%, 
+    transparent 45%, 
+    black 100%
+  );
+}
+
+/* CLARITY LAYER: REVEAL MASK (Shows sharp text inside lens - visible center, transparent edges) */
+.clarity-reveal-mask {
+  mask-image: radial-gradient(
+    circle 145px at var(--mask-x, -500px) var(--mask-y, -500px), 
+    black 0%, 
+    black 45%, 
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 145px at var(--mask-x, -500px) var(--mask-y, -500px), 
+    black 0%, 
+    black 45%, 
+    transparent 100%
+  );
+  opacity: var(--reveal-opacity, 0);
+}
+
+/* === FLUID MASKS (vmin-based for poster scaling) === */
+
+/* FOG: Fluid inverse mask (15vmin = half of 30vmin lens) */
+.fog-inverse-mask-fluid {
+  mask-image: radial-gradient(
+    circle 15vmin at var(--mask-x, -500px) var(--mask-y, -500px), 
+    transparent 0%, 
+    transparent 45%, 
+    black 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 15vmin at var(--mask-x, -500px) var(--mask-y, -500px), 
+    transparent 0%, 
+    transparent 45%, 
+    black 100%
+  );
+}
+
+/* CLARITY: Fluid reveal mask */
+.clarity-reveal-mask-fluid {
+  mask-image: radial-gradient(
+    circle 15vmin at var(--mask-x, -500px) var(--mask-y, -500px), 
+    black 0%, 
+    black 45%, 
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 15vmin at var(--mask-x, -500px) var(--mask-y, -500px), 
+    black 0%, 
+    black 45%, 
+    transparent 100%
+  );
+  opacity: var(--reveal-opacity, 0);
+}
+
+/* Particle Eraser - Inverse mask that "wipes away" particles inside the lens */
+/* Size matches lens: 9.375vw radius (18.75vw diameter / 2) */
+.particle-eraser {
+  mask-image: radial-gradient(
+    circle clamp(56px, 9.375vw, 300px) at var(--eraser-x, -1000px) var(--eraser-y, -1000px), 
+    transparent 0%, 
+    transparent 85%,
+    black 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle clamp(56px, 9.375vw, 300px) at var(--eraser-x, -1000px) var(--eraser-y, -1000px), 
+    transparent 0%, 
+    transparent 85%,
+    black 100%
+  );
+}
+
+/* ============================================
+   GEMSTONE WORD - "VECTOR CHAOS" ENGINE
+   3 distinct animation paths for varied movement
+   ============================================ */
+
+/* PATH 1: Circular Swirl (Clockwise Orbit) */
+@keyframes path-orbit {
+  0% { 
+    background-position: 
+      10% 10%, 90% 10%, 10% 90%, 90% 90%, 
+      50% 5%, 50% 95%, 5% 50%, 95% 50%, 
+      50% 50%, 0% 0%; 
+  }
+  25% { 
+    background-position: 
+      90% 10%, 90% 90%, 10% 10%, 10% 90%, 
+      95% 50%, 5% 50%, 50% 5%, 50% 95%, 
+      30% 70%, 25% 25%; 
+  }
+  50% { 
+    background-position: 
+      90% 90%, 10% 90%, 90% 10%, 10% 10%, 
+      50% 95%, 50% 5%, 95% 50%, 5% 50%, 
+      70% 70%, 50% 50%; 
+  }
+  75% { 
+    background-position: 
+      10% 90%, 10% 10%, 90% 90%, 90% 10%, 
+      5% 50%, 95% 50%, 50% 95%, 50% 5%, 
+      70% 30%, 75% 75%; 
+  }
+  100% { 
+    background-position: 
+      10% 10%, 90% 10%, 10% 90%, 90% 90%, 
+      50% 5%, 50% 95%, 5% 50%, 95% 50%, 
+      50% 50%, 100% 100%; 
+  }
+}
+
+/* PATH 2: Chaotic Cross-Fire (Diagonal Jumping) */
+@keyframes path-cross {
+  0% { 
+    background-position: 
+      0% 0%, 100% 0%, 0% 100%, 100% 100%, 
+      50% 0%, 50% 100%, 0% 50%, 100% 50%, 
+      50% 50%, 0% 0%; 
+  }
+  33% { 
+    background-position: 
+      100% 100%, 0% 100%, 100% 0%, 0% 0%, 
+      100% 50%, 0% 50%, 50% 100%, 50% 0%, 
+      20% 80%, 33% 33%; 
+  }
+  66% { 
+    background-position: 
+      50% 100%, 50% 0%, 100% 50%, 0% 50%, 
+      0% 0%, 100% 100%, 100% 0%, 0% 100%, 
+      80% 20%, 66% 66%; 
+  }
+  100% { 
+    background-position: 
+      0% 0%, 100% 0%, 0% 100%, 100% 100%, 
+      50% 0%, 50% 100%, 0% 50%, 100% 50%, 
+      50% 50%, 100% 100%; 
+  }
+}
+
+/* PATH 3: Gentle Drift (Calm, Flowing) */
+@keyframes path-drift {
+  0% { 
+    background-position: 
+      20% 10%, 80% 20%, 20% 80%, 80% 80%, 
+      50% 10%, 50% 90%, 10% 50%, 90% 50%, 
+      50% 50%, 0% 0%; 
+  }
+  50% { 
+    background-position: 
+      30% 30%, 70% 40%, 30% 60%, 70% 60%, 
+      60% 30%, 40% 70%, 30% 40%, 70% 60%, 
+      45% 55%, 50% 50%; 
+  }
+  100% { 
+    background-position: 
+      20% 50%, 80% 60%, 20% 40%, 80% 40%, 
+      50% 50%, 50% 50%, 50% 30%, 50% 70%, 
+      55% 45%, 100% 100%; 
+  }
+}
+
+.gemstone-word {
+  /* 1. Color Math (High Luminosity - 95% Sat, 88% Light = Neon Pastels) */
+  --h: calc(var(--word-seed, 0) * 47);
+  --c1: hsl(var(--h), 95%, 88%);
+  --c2: hsl(calc(var(--h) + 30), 95%, 88%);
+  --c3: hsl(calc(var(--h) - 30), 95%, 88%);
+  --c4: hsl(calc(var(--h) + 60), 95%, 88%);
+  --c5: hsl(calc(var(--h) + 90), 95%, 88%);
+
+  /* 2. The 10-Layer Diamond Bead Stack (HIGH DENSITY) */
+  background-image: 
+    /* Corner Beads */
+    radial-gradient(circle at 10% 10%, white 0%, var(--c1) 12%, transparent 20%),
+    radial-gradient(circle at 90% 10%, white 0%, var(--c2) 12%, transparent 20%),
+    radial-gradient(circle at 10% 90%, white 0%, var(--c3) 12%, transparent 20%),
+    radial-gradient(circle at 90% 90%, white 0%, var(--c4) 12%, transparent 20%),
+    
+    /* Edge Beads */
+    radial-gradient(circle at 50% 5%, white 0%, var(--c5) 12%, transparent 20%),
+    radial-gradient(circle at 50% 95%, white 0%, var(--c1) 12%, transparent 20%),
+    radial-gradient(circle at 5% 50%, white 0%, var(--c2) 12%, transparent 20%),
+    radial-gradient(circle at 95% 50%, white 0%, var(--c3) 12%, transparent 20%),
+    
+    /* Center Bead (Slightly larger) */
+    radial-gradient(circle at 50% 50%, white 0%, var(--c4) 12%, transparent 24%),
+    
+    /* Deep Brand Pink Base */
+    linear-gradient(135deg, #C91C6F 0%, #FF2E93 100%);
+
+  /* 3. SCALE: 180% to see bead separation */
+  background-size: 180% 180%;
+  
+  /* 4. MANDATORY TEXT CLIPPING */
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  
+  /* 5. Layout & Performance */
+  white-space: nowrap;
+}
+
+/* PATH VARIANTS - Slower animation = less CPU (barely noticeable difference) */
+.gem-path-1 { animation: path-orbit 12s linear infinite; }
+.gem-path-2 { animation: path-cross 10s ease-in-out infinite alternate; }
+.gem-path-3 { animation: path-drift 8s ease-in-out infinite alternate; }
+
+/* ============================================
+   GEMSTONE SHIMMER - Diamond Iridescent Effect
+   ============================================ */
+
+/* The shimmer animation: Light sweep across the text */
+@keyframes gemstone-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gemstone-shimmer {
+  /* Base: Pale silver/white text */
+  color: #f0f0f0;
+
+  /* Moving iridescent gradient overlay */
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f0f0f0 30%,
+    #00d9ff 45%,      /* Cyan flash */
+    #ff00ff 50%,      /* Magenta flash */
+    #ffd700 55%,      /* Gold flash */
+    #f0f0f0 70%,
+    #f0f0f0 100%
+  );
+
+  /* Enlarge gradient for smooth movement */
+  background-size: 200% auto;
+
+  /* Text clipping to show gradient through text */
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Animate the shimmer - subtle, continuous */
+  animation: gemstone-shimmer 3s linear infinite;
+
+  /* Performance optimization */
+  will-change: background-position;
+}
+
+/* ============================================
+   MOBILE-ONLY STYLES
+   ============================================ */
+@media (max-width: 767px) {
+  /* Prevent horizontal scroll on mobile */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  /* Larger, bolder ticker text for mobile hero */
+  .ticker-word {
+    font-size: clamp(2.5rem, 15vw, 6rem) !important;
+    font-weight: 900 !important;
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
+  }
 }

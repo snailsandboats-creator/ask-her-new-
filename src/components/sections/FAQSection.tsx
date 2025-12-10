@@ -44,8 +44,8 @@ export function FAQSection({ overline, headline, items, faqs }: FAQSectionProps)
 
         <FadeUp delay={0.1}>
           <motion.div
-            className="bg-white rounded-2xl p-6 md:p-8 shadow-lg shadow-black/5"
-            whileHover={{ boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)' }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 md:p-8"
+            whileHover={{ borderColor: 'rgba(255,255,255,0.2)' }}
             transition={{ duration: 0.3 }}
           >
             <Accordion items={faqItems} />
