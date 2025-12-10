@@ -24,7 +24,7 @@ export const fadeUpVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -37,7 +37,7 @@ export const fadeInVariants = {
     opacity: 1,
     transition: {
       duration: 0.5,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -63,7 +63,7 @@ export const staggerItemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -78,7 +78,7 @@ export const slideFromLeftVariants = {
     x: 0,
     transition: {
       duration: 0.6,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -93,7 +93,7 @@ export const slideFromRightVariants = {
     x: 0,
     transition: {
       duration: 0.6,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -108,7 +108,7 @@ export const scaleUpVariants = {
     scale: 1,
     transition: {
       duration: 0.6,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
     },
   },
 };
@@ -123,7 +123,7 @@ export const pageTransitionVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
     },
   },
   exit: {
@@ -131,7 +131,7 @@ export const pageTransitionVariants = {
     y: -10,
     transition: {
       duration: 0.3,
-      ease: [0.4, 0, 1, 1],
+      ease: [0.4, 0, 1, 1] as [number, number, number, number],
     },
   },
 };
