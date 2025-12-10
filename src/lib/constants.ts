@@ -1,5 +1,6 @@
 export const siteConfig = {
   name: 'Ask Her Marketing Group',
+  tagline: 'Ask Her For Anything',
   description: 'Marketing that actually works. We help local businesses get more calls, more clients, and real growth.',
   url: 'https://askhermarketing.com',
   ogImage: '/og-image.jpg',
