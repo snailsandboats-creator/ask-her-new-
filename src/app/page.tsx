@@ -23,7 +23,7 @@ export default function HomePage() {
       {/* Hero Section - Uses HeroWrapper to switch between desktop/mobile */}
       <HeroWrapper
         overline="Brand Vision BLURRY?"
-        headline="ASK HER For Clarity"
+        headline="Brand Vision BLURRY? ASK HER For Clarity"
         subheadline="We Help Service-Based Businesses Get More Calls, More Clients, and More Growth—Without the Agency BS."
         primaryCTA={{ label: "Book a Free Strategy Call", href: "/contact" }}
         secondaryCTA={{ label: "See Our Work", href: "/portfolio" }}

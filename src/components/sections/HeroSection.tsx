@@ -131,6 +131,10 @@ export function HeroSection({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isInRightZone, setIsInRightZone] = useState(false);
   
+  // Lens radius in pixels (9.375vw clamped 56-300px)
+  // Calculated in JS because CSS clamp() cannot be used in radial-gradient circle size
+  const [lensRadius, setLensRadius] = useState(300);
+  
   // Generate particles only on client to avoid hydration mismatch
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
   const [dustParticles, setDustParticles] = useState<ReturnType<typeof generateDust>>([]);
@@ -138,11 +142,31 @@ export function HeroSection({
   useEffect(() => {
     setParticles(generateParticles(12));
     setDustParticles(generateDust(80));
+    
+    // Calculate lens radius based on viewport width
+    const updateLensRadius = () => {
+      const vw = window.innerWidth;
+      // 9.375vw radius, clamped between 56px and 300px
+      setLensRadius(Math.min(Math.max(vw * 0.09375, 56), 300));
+    };
+    updateLensRadius();
+    window.addEventListener('resize', updateLensRadius);
+    return () => window.removeEventListener('resize', updateLensRadius);
   }, []);
   
   // Callback to sync spotlight with lens
-  const handleMousePosition = useCallback((x: number, y: number, inRightZone: boolean) => {
-    setMousePos({ x, y });
+  // Receives VIEWPORT coordinates from HeroVisuals, converts to section-relative for particle mask
+  const handleMousePosition = useCallback((viewportX: number, viewportY: number, inRightZone: boolean) => {
+    // Convert viewport coords to section-relative coords for absolute-positioned particle containers
+    if (sectionRef.current) {
+      const rect = sectionRef.current.getBoundingClientRect();
+      setMousePos({ 
+        x: viewportX - rect.left, 
+        y: viewportY - rect.top 
+      });
+    } else {
+      setMousePos({ x: viewportX, y: viewportY });
+    }
     setIsInRightZone(inRightZone);
   }, []);
 
@@ -258,12 +282,12 @@ export function HeroSection({
       <div
         className="absolute top-0 left-0 w-[100vw] h-full z-[16] pointer-events-none overflow-visible"
         style={{
-          // Lens eraser active - uses synced position (mouse on desktop, lantern on mobile)
+          // Lens eraser - size defined in color stops (not circle shape) since CSS clamp() is invalid there
           maskImage: isInRightZone
-            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
             : 'none',
           WebkitMaskImage: isInRightZone
-            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
             : 'none',
         }}
       >
@@ -289,12 +313,12 @@ export function HeroSection({
       <div
         className="absolute inset-0 w-full h-full z-[17] pointer-events-none overflow-hidden"
         style={{
-          // Lens eraser active - uses synced position (mouse on desktop, lantern on mobile)
+          // Lens eraser - size defined in color stops (not circle shape) since CSS clamp() is invalid there
           maskImage: isInRightZone
-            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
             : 'none',
           WebkitMaskImage: isInRightZone
-            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
             : 'none',
         }}
       >
@@ -333,12 +357,12 @@ export function HeroSection({
 
 
       {/* === Z-15: SYNCED SPOTLIGHT (follows lens, only in right zone) === */}
-      {/* Spotlight size matches lens: 18.75vw capped at 600px (reduced 25%) */}
+      {/* Spotlight size matches lens diameter (lensRadius * 2) */}
       <div
         className="pointer-events-none absolute inset-0 z-[15] transition-opacity duration-500"
         style={{
           background: isInRightZone 
-            ? `radial-gradient(clamp(112px, 18.75vw, 600px) circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,46,147,0.06), transparent 40%)`
+            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,46,147,0.06) 0%, transparent ${lensRadius * 2 * 0.4}px)`
             : 'none',
           opacity: isInRightZone ? 1 : 0,
         }}

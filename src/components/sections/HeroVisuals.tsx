@@ -197,6 +197,10 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
         // Combined (lowest wins), kill if off-screen or outside container
         const op = rect.bottom < 0 || rect.top > h || relX < 0 ? 0 : (opX < opY ? opX : opY);
 
+        // ALWAYS pass position to callback for particle eraser tracking
+        // This must happen on every frame, not just when opacity changes
+        callback.current?.(x, y, op > 0);
+
         // Only update DOM if opacity changed significantly
         if (Math.abs(op - lastOp.current) > 0.01) {
           lastOp.current = op;
@@ -215,9 +219,6 @@ export function HeroVisuals({ onMousePosition }: HeroVisualsProps) {
           // This eliminates the "black circle" when lens disappears
           const maskRadius = (9.375 * op) + 'vw'; // 9.375vw matches lens radius
           fog.style.setProperty('--mr', maskRadius);
-          
-          // Pass container-relative coordinates for spotlight/particle alignment
-          callback.current?.(relX, relY, op > 0);
         }
       }
 
