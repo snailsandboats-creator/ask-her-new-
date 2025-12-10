@@ -66,7 +66,7 @@ export function Navbar() {
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: navOpacity }}
-        transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
+        transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
           isScrolled
@@ -138,7 +138,7 @@ export function Navbar() {
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
             className="fixed inset-0 bg-[var(--background)] z-40 md:hidden pt-20"
           >
             <div className="flex flex-col items-center justify-center h-full gap-8 -mt-20">

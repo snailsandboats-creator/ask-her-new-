@@ -24,12 +24,12 @@ interface SplitSectionProps {
 
 const slideFromLeftVariants = {
   hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number] } },
 };
 
 const slideFromRightVariants = {
   hidden: { opacity: 0, x: 50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number] } },
 };
 
 export function SplitSection({

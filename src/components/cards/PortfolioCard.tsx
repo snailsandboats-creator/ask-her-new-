@@ -32,7 +32,7 @@ export function PortfolioCard({ client, service, image, index = 0 }: PortfolioCa
             rest: { scale: 1 },
             hover: { scale: 1.05 },
           }}
-          transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] }}
+          transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
           className="w-full h-full relative"
         >
           {!imageError ? (

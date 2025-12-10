@@ -50,7 +50,7 @@ export function ContactSection({
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] }}
+            transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
           >
             <Badge variant="pink" className="mb-4 backdrop-blur-sm bg-pink/10">
               {overline}
@@ -70,7 +70,7 @@ export function ContactSection({
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0, 0, 0.2, 1], delay: 0.1 }}
+            transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number], delay: 0.1 }}
           >
             <div className="bg-offwhite rounded-2xl p-8 md:p-10 shadow-lg shadow-black/5">
               <ContactForm />

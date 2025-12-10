@@ -36,7 +36,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProp
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }}
             className="overflow-hidden"
           >
             <p className="pb-6 text-gray-400 leading-relaxed">
