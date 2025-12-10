@@ -1,10 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import { HeroVisuals } from './HeroVisuals';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 interface HeroSectionProps {
   overline: string;
@@ -13,6 +10,9 @@ interface HeroSectionProps {
   primaryCTA: { label: string; href: string };
   secondaryCTA?: { label: string; href: string };
 }
+
+// === DYNAMIC WORDS ===
+const DYNAMIC_WORDS = ['MARKETING', 'STRATEGY', 'BRANDING', 'GROWTH', 'CONTENT', 'ANYTHING'];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -26,7 +26,7 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
@@ -37,7 +37,30 @@ const itemVariants = {
   },
 };
 
-// Splotchy gradient style for "ASK HER" text
+const wordVariants = {
+  enter: {
+    opacity: 0,
+    filter: 'blur(20px)',
+  },
+  center: {
+    opacity: 1,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 1.5,
+      ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
+    },
+  },
+  exit: {
+    opacity: 0,
+    filter: 'blur(20px)',
+    transition: {
+      duration: 1.5,
+      ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
+    },
+  },
+};
+
+// === SPLOTCHY PINK GRADIENT FOR "ASK HER" ===
 const askHerGradientStyle = {
   background: `
     radial-gradient(ellipse 60% 50% at 25% 30%, rgba(255, 46, 147, 0.95) 0%, transparent 55%),
@@ -57,63 +80,16 @@ const askHerGradientStyle = {
   filter: 'drop-shadow(0 0 25px rgba(255,46,147,0.5))',
 };
 
-// Generate randomized particles - very light
+// Generate floating particles
 function generateParticles(count: number) {
-  const colors = [
-    'rgba(255, 46, 147, 0.15)',
-    'rgba(255, 182, 193, 0.12)',
-    'rgba(253, 224, 71, 0.10)',
-    'rgba(147, 197, 253, 0.10)',
-    'rgba(110, 231, 183, 0.08)',
-    'rgba(255, 255, 255, 0.12)',
-  ];
-  
   return Array.from({ length: count }, (_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
     top: `${Math.random() * 100}%`,
-    size: 2 + Math.random() * 3,
-    opacity: 0.08 + Math.random() * 0.12, // Very light: 0.08-0.20
-    color: colors[Math.floor(Math.random() * colors.length)],
-    delay: Math.random() * 6,
-    duration: 6 + Math.random() * 6,
+    size: 2 + Math.random() * 4,
+    duration: 15 + Math.random() * 10,
+    delay: Math.random() * 5,
   }));
-}
-
-// Generate floating dust particles with depth simulation - subtle but visible
-// Farther = smaller + lower opacity + more blur, Closer = larger + higher opacity + sharp
-function generateDust(count: number) {
-  return Array.from({ length: count }, (_, i) => {
-    // Random depth value 0-1 (0 = far, 1 = close)
-    const depth = Math.random();
-    
-    // Size based on depth: far (0.08vw) to close (0.18vw) - small but visible
-    const sizeVw = 0.08 + (depth * 0.10);
-    
-    // Opacity based on depth: far (0.06) to close (0.20) - subtle but visible
-    const opacity = 0.06 + (depth * 0.14);
-    
-    // Blur based on depth: far particles are blurry, close ones are sharp
-    const blur = (1 - depth) * 2; // 0-2px blur (far = blurry, close = sharp)
-    
-    // Slower animation for far particles, faster for close (depth effect)
-    const duration = 15 + ((1 - depth) * 10);
-    
-    return {
-      id: i,
-      // Distribute across full width
-      left: `${Math.random() * 100}vw`,
-      // Scattered across full height
-      top: `${Math.random() * 100}%`,
-      // Staggered start times
-      delay: Math.random() * 8, // Faster start
-      duration,
-      sizeVw,
-      opacity,
-      depth,
-      blur,
-    };
-  });
 }
 
 export function HeroSection({
@@ -123,351 +99,176 @@ export function HeroSection({
   primaryCTA,
   secondaryCTA,
 }: HeroSectionProps) {
-  // Section ref
-  const sectionRef = useRef<HTMLElement>(null);
-  
-  // Synced state from HeroVisuals (for spotlight AND particle eraser)
-  // On desktop: follows mouse. On mobile: follows lantern position.
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isInRightZone, setIsInRightZone] = useState(false);
-  
-  // Lens radius in pixels (9.375vw clamped 56-300px)
-  // Calculated in JS because CSS clamp() cannot be used in radial-gradient circle size
-  const [lensRadius, setLensRadius] = useState(300);
-  
-  // Generate particles only on client to avoid hydration mismatch
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
-  const [dustParticles, setDustParticles] = useState<ReturnType<typeof generateDust>>([]);
-  
+
+  // Generate particles on client
   useEffect(() => {
-    setParticles(generateParticles(12));
-    setDustParticles(generateDust(80));
-    
-    // Calculate lens radius based on viewport width
-    const updateLensRadius = () => {
-      const vw = window.innerWidth;
-      // 9.375vw radius, clamped between 56px and 300px
-      setLensRadius(Math.min(Math.max(vw * 0.09375, 56), 300));
-    };
-    updateLensRadius();
-    window.addEventListener('resize', updateLensRadius);
-    return () => window.removeEventListener('resize', updateLensRadius);
-  }, []);
-  
-  // Callback to sync spotlight with lens
-  // Receives VIEWPORT coordinates from HeroVisuals, converts to section-relative for particle mask
-  const handleMousePosition = useCallback((viewportX: number, viewportY: number, inRightZone: boolean) => {
-    // Convert viewport coords to section-relative coords for absolute-positioned particle containers
-    if (sectionRef.current) {
-      const rect = sectionRef.current.getBoundingClientRect();
-      setMousePos({ 
-        x: viewportX - rect.left, 
-        y: viewportY - rect.top 
-      });
-    } else {
-      setMousePos({ x: viewportX, y: viewportY });
-    }
-    setIsInRightZone(inRightZone);
+    setParticles(generateParticles(30));
   }, []);
 
-  // Render word with special styling
-  const renderWord = (word: string, i: number) => {
-    const lowerWord = word.toLowerCase();
-    
-    // "blurry?" gets blur effect - keep on same baseline
-    if (lowerWord === 'blurry?') {
-      return (
-        <span
-          key={i}
-          style={{
-            filter: 'blur(3px)',
-            color: 'rgba(255, 255, 255, 0.7)',
-            WebkitTextFillColor: 'rgba(255, 255, 255, 0.7)',
-            display: 'inline',
-            fontSize: '1.05em', // Slightly larger to compensate for blur
-          }}
-        >
-          {word}{' '}
-        </span>
-      );
-    }
-    
-    // "ASK" and "HER" get splotchy gradient
-    if (lowerWord === 'ask' || lowerWord === 'her') {
-      return (
-        <span
-          key={i}
-          style={askHerGradientStyle}
-        >
-          {word}{' '}
-        </span>
-      );
-    }
-    
-    // Default styling
-    return (
-      <span
-        key={i}
-        className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50"
-      >
-        {word}{' '}
-      </span>
-    );
-  };
+  // Rotate words every 6 seconds (longer to match slower transitions)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % DYNAMIC_WORDS.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <section 
-      ref={sectionRef}
-      className="relative w-full min-h-[100dvh] bg-[#050505]"
+    <section
+      className="relative min-h-[100dvh] bg-[#080808]"
+      style={{
+        width: '100vw',
+        maxWidth: '100vw',
+        overflow: 'hidden',
+        margin: 0,
+        padding: 0,
+      }}
     >
-      
-      {/* === Z-[-1]: FUTURISTIC TECH GRID (TIGHTER 30px) === */}
-      <div 
-        className="absolute inset-0 z-[-1] pointer-events-none"
-        style={{ overflow: 'hidden' }}
-      >
-        {/* Primary grid - tight technical squares */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: 0.06,
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px',
-          }}
-        />
-        {/* Secondary grid - micro texture */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: 0.035,
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)
-            `,
-            backgroundSize: '8px 8px',
-          }}
-        />
-        {/* Diagonal accent lines */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: 0.025,
-            backgroundImage: `
-              repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 100px,
-                rgba(255,46,147,0.5) 100px,
-                rgba(255,46,147,0.5) 101px
-              )
-            `,
-          }}
-        />
-      </div>
 
-      {/* === Z-[15]: LEFT GRADIENT (Desktop only) === */}
-      <div 
-        className="absolute top-0 left-0 z-[15] pointer-events-none"
+      {/* === GRAIN TEXTURE OVERLAY === */}
+      <div
+        className="absolute inset-0 z-[50] pointer-events-none opacity-[0.035]"
         style={{
-          background: 'linear-gradient(90deg, #050505 0%, #050505 60%, rgba(5,5,5,0.98) 75%, rgba(5,5,5,0.9) 85%, rgba(5,5,5,0.5) 92%, transparent 100%)',
-          width: '50vw',
-          height: '100%',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          mixBlendMode: 'overlay',
         }}
       />
 
-      {/* === Z-[16]: FLOATING DUST (above gradient, behind content) === */}
-      <div
-        className="absolute top-0 left-0 w-[100vw] h-full z-[16] pointer-events-none overflow-visible"
-        style={{
-          // Lens eraser - size defined in color stops (not circle shape) since CSS clamp() is invalid there
-          maskImage: isInRightZone
-            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
-            : 'none',
-          WebkitMaskImage: isInRightZone
-            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
-            : 'none',
-        }}
-      >
-        {dustParticles.map((dust) => (
-          <div
-            key={`dust-${dust.id}`}
-            className="absolute rounded-full bg-white animate-float-drift"
-            style={{
-              left: dust.left,
-              top: dust.top,
-              width: `${dust.sizeVw}vw`,
-              height: `${dust.sizeVw}vw`,
-              opacity: dust.opacity,
-              filter: dust.blur > 0.5 ? `blur(${dust.blur}px)` : 'none',
-              animationDuration: `${dust.duration}s`,
-              animationDelay: `${dust.delay}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* === Z-[17]: FLOATING COLOR PARTICLES (above gradient, behind content) === */}
-      <div
-        className="absolute inset-0 w-full h-full z-[17] pointer-events-none overflow-hidden"
-        style={{
-          // Lens eraser - size defined in color stops (not circle shape) since CSS clamp() is invalid there
-          maskImage: isInRightZone
-            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
-            : 'none',
-          WebkitMaskImage: isInRightZone
-            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent ${lensRadius * 0.85}px, black ${lensRadius}px)`
-            : 'none',
-        }}
-      >
+      {/* === FLOATING PARTICLES === */}
+      <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
         {particles.map((particle) => (
-          <motion.div
+          <div
             key={particle.id}
-            className="absolute rounded-full"
+            className="absolute rounded-full bg-white opacity-[0.08] animate-float-drift"
             style={{
               left: particle.left,
               top: particle.top,
-              width: particle.size,
-              height: particle.size,
-              background: particle.color,
-              filter: `blur(${particle.size * 0.4}px)`,
-              opacity: particle.opacity,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.random() * 20 - 10, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: particle.delay,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              animationDuration: `${particle.duration}s`,
+              animationDelay: `${particle.delay}s`,
             }}
           />
         ))}
       </div>
 
-      {/* === Z-12: HERO VISUALS (Macro Lens + Twin Stream) === */}
-      <div className="absolute inset-0 z-[12]">
-        <HeroVisuals onMousePosition={handleMousePosition} />
-      </div>
-
-
-      {/* === Z-15: SYNCED SPOTLIGHT (follows lens, only in right zone) === */}
-      {/* Spotlight size matches lens diameter (lensRadius * 2) */}
+      {/* === LOWER HALF GRID (Fades to black at top) === */}
       <div
-        className="pointer-events-none absolute inset-0 z-[15] transition-opacity duration-500"
+        className="absolute inset-0 z-[3] pointer-events-none"
         style={{
-          background: isInRightZone 
-            ? `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,46,147,0.06) 0%, transparent ${lensRadius * 2 * 0.4}px)`
-            : 'none',
-          opacity: isInRightZone ? 1 : 0,
+          backgroundImage: `
+            linear-gradient(to top, transparent 0%, #080808 60%, #080808 100%),
+            linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
+          `,
+          backgroundSize: '100% 100%, 40px 40px, 40px 40px',
+          backgroundPosition: '0 0, 0 0, 0 0',
         }}
       />
 
-      {/* === Z-20: LEFT CONTENT AREA (Desktop) === */}
-      <div 
-        className="relative z-20 w-full min-h-[100dvh] flex items-center pointer-events-none"
+      {/* === CENTERED CONTENT === */}
+      <div
+        className="relative z-20 min-h-[100dvh] flex flex-col justify-center items-center py-16"
+        style={{
+          width: '100vw',
+          maxWidth: '100vw',
+          margin: 0,
+          padding: '4rem 0',
+        }}
       >
-        <div 
-          className="py-20 pointer-events-auto w-[45vw]"
-          style={{ 
-            paddingLeft: 'clamp(1rem, 4vw, 6rem)',
-            paddingRight: 'clamp(1rem, 2vw, 3rem)',
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col items-center gap-6"
+          style={{
+            width: '100%',
+            maxWidth: '100%',
+            paddingLeft: '1.5rem',
+            paddingRight: '1.5rem',
+            boxSizing: 'border-box',
           }}
         >
+
+          {/* === EYEBROW TEXT === */}
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+            variants={itemVariants}
+            className="text-white/50 font-light uppercase w-full"
+            style={{
+              letterSpacing: '0.25em',
+              fontSize: 'clamp(0.875rem, 3.5vw, 1.25rem)',
+              textAlign: 'center',
+              display: 'block',
+            }}
           >
-            {/* Overline Badge */}
-            <motion.div variants={itemVariants}>
-              <Badge 
-                variant="pink" 
-                className="bg-[#C91C6F]/20 border border-[#FF2E93]/30 px-3 sm:px-4 py-1.5 sm:py-2 text-[#FF2E93] text-xs sm:text-sm"
-              >
-                {overline}
-              </Badge>
-            </motion.div>
-
-            {/* Headline - Massive, tight tracking, scales with viewport */}
-            <motion.h1
-              variants={itemVariants}
-              className="mt-4 sm:mt-6 md:mt-8 mb-4 sm:mb-6 font-bold leading-[1.1] sm:leading-[0.95] tracking-[-0.03em] sm:tracking-[-0.04em]"
-              style={{ fontSize: 'clamp(1.75rem, 5vw + 1rem, 5rem)' }}
-            >
-              {/* Split headline: first part wraps, "ASK HER For Clarity" stays together */}
-              {headline.includes('ASK HER') ? (
-                <>
-                  {headline.split('ASK HER')[0].split(' ').map((word, i) => renderWord(word, i))}
-                  <span className="whitespace-nowrap">
-                    {['ASK', 'HER', ...headline.split('ASK HER')[1].trim().split(' ')].map((word, i) => renderWord(word, i + 100))}
-                  </span>
-                </>
-              ) : (
-                headline.split(' ').map((word, i) => renderWord(word, i))
-              )}
-            </motion.h1>
-
-            {/* Subheadline - Scales with viewport */}
-            <motion.p
-              variants={itemVariants}
-              className="text-gray-400 mb-8 sm:mb-10 md:mb-12 leading-relaxed"
-              style={{ fontSize: 'clamp(0.875rem, 1.2vw, 1.5rem)' }}
-            >
-              {subheadline}
-            </motion.p>
-
-            {/* CTA Buttons - Living Buttons, responsive layout */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
-            >
-              {/* Primary: Living Button with Fountain Effect */}
-              <Button
-                variant="alive"
-                size="lg"
-                href={primaryCTA.href}
-                className="w-full sm:w-auto text-sm sm:text-base"
-              >
-                {primaryCTA.label}
-              </Button>
-              
-              {/* Secondary: Ghost button */}
-              {secondaryCTA && (
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  href={secondaryCTA.href}
-                  className="w-full sm:w-auto border border-white/20 hover:bg-white/5 hover:border-white/30 text-sm sm:text-base"
-                >
-                  {secondaryCTA.label}
-                </Button>
-              )}
-            </motion.div>
+            BRAND VISION <span style={{ filter: 'blur(2.5px)' }}>BLURRY?</span>
           </motion.div>
-        </div>
+
+          {/* === MAIN HEADLINE === */}
+          <motion.h1
+            variants={itemVariants}
+            className="font-bold tracking-tight leading-[1.1] w-full"
+            style={{
+              fontSize: 'clamp(2.5rem, 12vw, 4rem)',
+              fontWeight: 700,
+              textAlign: 'center',
+              display: 'block',
+            }}
+          >
+            <span style={askHerGradientStyle}>Ask Her</span>{' '}
+            <span className="text-white">For:</span>
+          </motion.h1>
+
+          {/* === DYNAMIC WORD (THE GEM) === */}
+          <div
+            className="relative w-full flex items-center justify-center"
+            style={{
+              fontSize: 'clamp(3rem, 16vw, 6rem)',
+              height: '1.5em',
+            }}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentWordIndex}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                variants={wordVariants}
+                className="gemstone-word gem-path-1 font-bold tracking-tight"
+                style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  letterSpacing: '-0.02em',
+                  '--word-seed': currentWordIndex * 17,
+                  whiteSpace: 'nowrap',
+                  textAlign: 'center',
+                } as React.CSSProperties}
+              >
+                {DYNAMIC_WORDS[currentWordIndex]}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+        </motion.div>
       </div>
 
-      {/* === Z-30: Scroll Indicator === */}
+      {/* === SCROLL INDICATOR === */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-30"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30"
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-5 sm:w-6 h-8 sm:h-10 rounded-full border border-white/20 flex items-start justify-center p-1.5 sm:p-2"
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center p-2"
         >
-          <motion.div className="w-0.5 sm:w-1 h-1.5 sm:h-2 bg-white/40 rounded-full" />
+          <motion.div className="w-1 h-2 bg-white/30 rounded-full" />
         </motion.div>
       </motion.div>
+
     </section>
   );
 }
