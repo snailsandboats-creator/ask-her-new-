@@ -12,7 +12,7 @@ interface HeroSectionMobileProps {
 }
 
 // === DYNAMIC WORDS ===
-const DYNAMIC_WORDS = ['STRATEGY', 'BRANDING', 'GROWTH', 'CONTENT'];
+const DYNAMIC_WORDS = ['MARKETING', 'STRATEGY', 'BRANDING', 'GROWTH', 'CONTENT', 'ANYTHING'];
 
 // === SPLOTCHY PINK GRADIENT FOR "ASK HER" ===
 const askHerGradientStyle = {
