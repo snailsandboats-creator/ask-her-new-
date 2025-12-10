@@ -136,8 +136,8 @@ export function HeroSection({
   const [dustParticles, setDustParticles] = useState<ReturnType<typeof generateDust>>([]);
   
   useEffect(() => {
-    setParticles(generateParticles(18));
-    setDustParticles(generateDust(150));
+    setParticles(generateParticles(12));
+    setDustParticles(generateDust(80));
   }, []);
   
   // Callback to sync spotlight with lens
@@ -255,13 +255,17 @@ export function HeroSection({
       />
 
       {/* === Z-[16]: FLOATING DUST (above gradient, behind content) === */}
-      <div 
+      <div
         className="absolute top-0 left-0 w-[100vw] h-full z-[16] pointer-events-none overflow-visible"
-        style={isInRightZone ? {
+        style={{
           // Lens eraser active - uses synced position (mouse on desktop, lantern on mobile)
-          maskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
-          WebkitMaskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
-        } : {}}
+          maskImage: isInRightZone
+            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            : 'none',
+          WebkitMaskImage: isInRightZone
+            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            : 'none',
+        }}
       >
         {dustParticles.map((dust) => (
           <div
@@ -282,13 +286,17 @@ export function HeroSection({
       </div>
 
       {/* === Z-[17]: FLOATING COLOR PARTICLES (above gradient, behind content) === */}
-      <div 
+      <div
         className="absolute inset-0 w-full h-full z-[17] pointer-events-none overflow-hidden"
-        style={isInRightZone ? {
+        style={{
           // Lens eraser active - uses synced position (mouse on desktop, lantern on mobile)
-          maskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
-          WebkitMaskImage: `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`,
-        } : {}}
+          maskImage: isInRightZone
+            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            : 'none',
+          WebkitMaskImage: isInRightZone
+            ? `radial-gradient(circle clamp(56px, 9.375vw, 300px) at ${mousePos.x}px ${mousePos.y}px, transparent 0%, transparent 85%, black 100%)`
+            : 'none',
+        }}
       >
         {particles.map((particle) => (
           <motion.div
