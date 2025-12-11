@@ -24,10 +24,10 @@ export function Navbar() {
 
       setIsScrolled(scrolled > 50);
 
-      // Fade in navbar as user approaches "What We Do" section
-      // Hero is 395vh tall, start fading at 355vh, fully visible at 395vh
-      const fadeStart = vh * 3.55; // 355vh
-      const fadeEnd = vh * 3.95;   // 395vh
+      // Fade in navbar as user scrolls through hero section
+      // Hero is 100vh tall, start fading at 40vh, fully visible at 70vh
+      const fadeStart = vh * 0.4;  // 40vh
+      const fadeEnd = vh * 0.7;    // 70vh
 
       if (scrolled < fadeStart) {
         setNavOpacity(0);

@@ -432,7 +432,7 @@
   .animate-ticker-left {
     animation: ticker-left 120s linear infinite;
   }
-  
+
   .animate-ticker-right {
     animation: ticker-right 120s linear infinite;
   }
@@ -1040,6 +1040,145 @@
 .gem-path-1 { animation: path-orbit 12s linear infinite; }
 .gem-path-2 { animation: path-cross 10s ease-in-out infinite alternate; }
 .gem-path-3 { animation: path-drift 8s ease-in-out infinite alternate; }
+
+/* ============================================
+   GEMSTONE INJECTION BUTTON
+   Radial sweep effect from center outward
+   ============================================ */
+
+@keyframes inject-sweep {
+  0% {
+    background-size: 100% 100%, 180% 180%;
+  }
+  50% {
+    background-size: 0% 0%, 180% 180%;
+  }
+  100% {
+    background-size: 100% 100%, 180% 180%;
+  }
+}
+
+.gemstone-inject-btn {
+  /* Color Math (same as gemstone-word) */
+  --h: calc(var(--word-seed, 0) * 47);
+  --c1: hsl(var(--h), 95%, 88%);
+  --c2: hsl(calc(var(--h) + 30), 95%, 88%);
+  --c3: hsl(calc(var(--h) - 30), 95%, 88%);
+  --c4: hsl(calc(var(--h) + 60), 95%, 88%);
+  --c5: hsl(calc(var(--h) + 90), 95%, 88%);
+
+  /* Dual-layer background */
+  background-image:
+    /* Layer 1: White overlay (covers gradient initially) */
+    radial-gradient(circle at center, white 0%, white 100%),
+
+    /* Layer 2: Gemstone gradient (revealed on hover) */
+    radial-gradient(circle at 10% 10%, white 0%, var(--c1) 12%, transparent 20%),
+    radial-gradient(circle at 90% 10%, white 0%, var(--c2) 12%, transparent 20%),
+    radial-gradient(circle at 10% 90%, white 0%, var(--c3) 12%, transparent 20%),
+    radial-gradient(circle at 90% 90%, white 0%, var(--c4) 12%, transparent 20%),
+    radial-gradient(circle at 50% 5%, white 0%, var(--c5) 12%, transparent 20%),
+    radial-gradient(circle at 50% 95%, white 0%, var(--c1) 12%, transparent 20%),
+    radial-gradient(circle at 5% 50%, white 0%, var(--c2) 12%, transparent 20%),
+    radial-gradient(circle at 95% 50%, white 0%, var(--c3) 12%, transparent 20%),
+    radial-gradient(circle at 50% 50%, white 0%, var(--c4) 12%, transparent 24%),
+    linear-gradient(135deg, #C91C6F 0%, #FF2E93 100%);
+
+  /* Initial state: white layer covers everything, gradient underneath animates */
+  background-size: 100% 100%, 180% 180%;
+  background-position: center center, 50% 50%;
+
+  /* Text color */
+  color: #050505;
+
+  /* Gradient layer always animates */
+  animation: path-orbit 12s linear infinite;
+
+  /* Border and shadow */
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(255, 46, 147, 0.3);
+
+  /* Display properties */
+  display: inline-block;
+  position: relative;
+  z-index: 100;
+
+  /* Smooth transition */
+  transition: box-shadow 0.3s ease;
+
+  /* Performance */
+  will-change: background-size;
+}
+
+/* Hover state: trigger injection animation */
+.gemstone-inject-btn:hover {
+  animation: inject-sweep 1.2s ease-in-out forwards, path-orbit 12s linear infinite;
+  box-shadow: 0 6px 30px rgba(255, 46, 147, 0.5);
+}
+
+/* ============================================
+   GEM-BUTTON - Simple Blurred White Button
+   ============================================ */
+
+.gem-button {
+  /* Base Button Styles */
+  padding: 16px 48px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+
+  /* White button with black text */
+  background: white;
+  color: #050505;
+
+  /* Much more blurry */
+  filter: blur(8px);
+
+  /* Faster focus transition */
+  transition: filter 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.gem-button:hover,
+.gem-button.unblurred {
+  /* Remove blur on hover or when scrolled */
+  filter: blur(0px);
+}
+
+/* ============================================
+   GEM-BUTTON-PINK - Smaller Pink Button
+   ============================================ */
+
+.gem-button-pink {
+  /* Base Button Styles - Slightly smaller */
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+
+  /* Brand pink gradient with white text */
+  background: linear-gradient(135deg, #C91C6F 0%, #FF2E93 100%);
+  color: white;
+
+  /* Much more blurry */
+  filter: blur(8px);
+
+  /* Faster focus transition */
+  transition: filter 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.gem-button-pink:hover,
+.gem-button-pink.unblurred {
+  /* Remove blur on hover or when scrolled */
+  filter: blur(0px);
+}
 
 /* ============================================
    GEMSTONE SHIMMER - Diamond Iridescent Effect

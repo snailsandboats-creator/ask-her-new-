@@ -5,46 +5,35 @@ interface LogoProps {
   className?: string;
 }
 
+// === SPLOTCHY PINK GRADIENT FOR "ASK HER" ===
+const askHerGradientStyle = {
+  background: `
+    radial-gradient(ellipse 60% 50% at 25% 30%, rgba(255, 46, 147, 0.95) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 75% 70%, rgba(255, 182, 193, 0.9) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 40% at 60% 25%, rgba(253, 224, 71, 0.85) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 45% at 35% 75%, rgba(253, 164, 175, 0.9) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 35% at 80% 40%, rgba(147, 197, 253, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 30% at 15% 55%, rgba(110, 231, 183, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 35% at 50% 50%, rgba(255, 255, 255, 0.7) 0%, transparent 45%),
+    linear-gradient(135deg, #FF2E93 0%, #C91C6F 50%, #FF2E93 100%)
+  `,
+  backgroundSize: '150% 150%',
+  backgroundClip: 'text',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  animation: 'splotch-drift 8s ease-in-out infinite',
+  filter: 'drop-shadow(0 0 25px rgba(255,46,147,0.5))',
+};
+
 export function Logo({ variant = 'dark', className }: LogoProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <div className="relative">
-        {/* Speech bubble icon */}
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="flex-shrink-0"
-        >
-          <path
-            d="M16 4C9.373 4 4 8.373 4 13.5C4 16.12 5.329 18.467 7.5 20.118V26L12.618 22.642C13.712 22.874 14.843 23 16 23C22.627 23 28 18.627 28 13.5C28 8.373 22.627 4 16 4Z"
-            fill="#FF1E9B"
-          />
-          <circle cx="11" cy="13.5" r="1.5" fill="white" />
-          <circle cx="16" cy="13.5" r="1.5" fill="white" />
-          <circle cx="21" cy="13.5" r="1.5" fill="white" />
-        </svg>
-      </div>
-      <div className="flex flex-col">
-        <span
-          className={cn(
-            'text-lg font-bold leading-tight tracking-tight',
-            variant === 'dark' ? 'text-black' : 'text-white'
-          )}
-        >
-          Ask Her
-        </span>
-        <span
-          className={cn(
-            'text-xs tracking-wide',
-            variant === 'dark' ? 'text-slate' : 'text-slate'
-          )}
-        >
-          MARKETING GROUP
-        </span>
-      </div>
+      <span
+        className="text-4xl font-bold leading-tight tracking-tight"
+        style={askHerGradientStyle}
+      >
+        Ask Her
+      </span>
     </div>
   );
 }

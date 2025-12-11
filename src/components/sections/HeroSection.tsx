@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface HeroSectionProps {
   overline: string;
@@ -12,7 +13,17 @@ interface HeroSectionProps {
 }
 
 // === DYNAMIC WORDS ===
-const DYNAMIC_WORDS = ['MARKETING', 'STRATEGY', 'BRANDING', 'GROWTH', 'CONTENT', 'ANYTHING'];
+const DYNAMIC_WORDS = ['MARKETING', 'STRATEGY', 'PRESENCE', 'GROWTH', 'CONTENT', 'ANYTHING'];
+
+// Word to route mapping
+const WORD_ROUTES: Record<string, string> = {
+  'MARKETING': '/services',
+  'STRATEGY': '/about',
+  'PRESENCE': '/services',
+  'GROWTH': '/services',
+  'CONTENT': '/services#content',
+  'ANYTHING': '/contact',
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -101,6 +112,7 @@ export function HeroSection({
 }: HeroSectionProps) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   // Generate particles on client
   useEffect(() => {
@@ -113,6 +125,20 @@ export function HeroSection({
       setCurrentWordIndex((prev) => (prev + 1) % DYNAMIC_WORDS.length);
     }, 6000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Detect scroll and unblur button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -182,7 +208,7 @@ export function HeroSection({
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-col items-center gap-6"
+          className="flex flex-col items-center gap-8"
           style={{
             width: '100%',
             maxWidth: '100%',
@@ -198,12 +224,12 @@ export function HeroSection({
             className="text-white/50 font-light uppercase w-full"
             style={{
               letterSpacing: '0.25em',
-              fontSize: 'clamp(0.875rem, 3.5vw, 1.25rem)',
+              fontSize: 'clamp(1rem, 4vw, 1.5rem)',
               textAlign: 'center',
               display: 'block',
             }}
           >
-            BRAND VISION <span style={{ filter: 'blur(2.5px)' }}>BLURRY?</span>
+            BRAND VISION <span style={{ filter: 'blur(2.25px)' }}>BLURRY?</span>
           </motion.div>
 
           {/* === MAIN HEADLINE === */}
@@ -211,7 +237,7 @@ export function HeroSection({
             variants={itemVariants}
             className="font-bold tracking-tight leading-[1.1] w-full"
             style={{
-              fontSize: 'clamp(2.5rem, 12vw, 4rem)',
+              fontSize: 'clamp(3rem, 13vw, 5rem)',
               fontWeight: 700,
               textAlign: 'center',
               display: 'block',
@@ -225,30 +251,61 @@ export function HeroSection({
           <div
             className="relative w-full flex items-center justify-center"
             style={{
-              fontSize: 'clamp(3rem, 16vw, 6rem)',
+              fontSize: 'clamp(3.5rem, 18vw, 7rem)',
               height: '1.5em',
             }}
           >
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentWordIndex}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                variants={wordVariants}
-                className="gemstone-word gem-path-1 font-bold tracking-tight"
-                style={{
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  letterSpacing: '-0.02em',
-                  '--word-seed': currentWordIndex * 17,
-                  whiteSpace: 'nowrap',
-                  textAlign: 'center',
-                } as React.CSSProperties}
+              <Link
+                href={WORD_ROUTES[DYNAMIC_WORDS[currentWordIndex]] || '/services'}
+                className="inline-block cursor-pointer"
               >
-                {DYNAMIC_WORDS[currentWordIndex]}
-              </motion.div>
+                <motion.div
+                  key={currentWordIndex}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  variants={wordVariants}
+                  className="gemstone-word gem-path-1 font-bold tracking-tight hover:scale-105 transition-transform"
+                  style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    letterSpacing: '-0.02em',
+                    '--word-seed': currentWordIndex * 17,
+                    whiteSpace: 'nowrap',
+                    textAlign: 'center',
+                  } as React.CSSProperties}
+                >
+                  {DYNAMIC_WORDS[currentWordIndex]}
+                </motion.div>
+              </Link>
             </AnimatePresence>
           </div>
+
+          {/* === CTA BUTTONS === */}
+          <motion.div
+            variants={itemVariants}
+            className="mt-4 relative z-[100] flex flex-col items-center gap-4"
+          >
+            <Link
+              href={primaryCTA.href}
+              className="relative inline-block z-[100]"
+            >
+              <button className={`gem-button ${hasScrolled ? 'unblurred' : ''}`}>
+                <span>{primaryCTA.label}</span>
+              </button>
+            </Link>
+
+            {secondaryCTA && (
+              <Link
+                href={secondaryCTA.href}
+                className="relative inline-block z-[100]"
+              >
+                <button className={`gem-button-pink ${hasScrolled ? 'unblurred' : ''}`}>
+                  <span>{secondaryCTA.label}</span>
+                </button>
+              </Link>
+            )}
+          </motion.div>
 
         </motion.div>
       </div>
@@ -260,13 +317,21 @@ export function HeroSection({
         transition={{ delay: 1.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30"
       >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
+        <motion.svg
+          animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center p-2"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-white/40"
         >
-          <motion.div className="w-1 h-2 bg-white/30 rounded-full" />
-        </motion.div>
+          <polyline points="6 9 12 15 18 9" />
+        </motion.svg>
       </motion.div>
 
     </section>

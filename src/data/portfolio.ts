@@ -68,5 +68,3 @@ export const portfolioItems: PortfolioItem[] = [
     ],
   },
 ];
-
-export const featuredCaseStudy = portfolioItems[0];

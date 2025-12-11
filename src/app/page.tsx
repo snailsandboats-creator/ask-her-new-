@@ -64,7 +64,7 @@ export default function HomePage() {
           "No contracts, cancel anytime",
           "Real humans, not a faceless agency",
           "Strategy-first approach",
-          "Transparent pricing",
+          "Flexible pricing",
           "Local to Volusia, born and raised",
           "Full service — web, photo, video, social, SEO, Google, and more",
           "Flexible content options — human-made, AI-assisted, or hybrid",

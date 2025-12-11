@@ -16,7 +16,6 @@ export * from './layout/Footer';
 export * from './shared/Logo';
 export * from './shared/SectionHeader';
 export * from './shared/FeatureList';
-export * from './shared/TrustBar';
 export * from './shared/ContactInfo';
 export * from './shared/ContactForm';
 
