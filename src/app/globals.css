@@ -1242,4 +1242,17 @@
     margin-left: 1.5rem !important;
     margin-right: 1.5rem !important;
   }
+
+  /* Reduce blur on mobile to minimize bounding box effect */
+  .gem-button,
+  .gem-button-pink {
+    filter: blur(6px);
+  }
+
+  .gem-button:hover,
+  .gem-button.unblurred,
+  .gem-button-pink:hover,
+  .gem-button-pink.unblurred {
+    filter: blur(0px);
+  }
 }

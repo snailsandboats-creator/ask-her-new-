@@ -15,6 +15,16 @@ interface HeroSectionMobileProps {
 // === DYNAMIC WORDS ===
 const DYNAMIC_WORDS = ['MARKETING', 'STRATEGY', 'PRESENCE', 'GROWTH', 'CONTENT', 'ANYTHING'];
 
+// Word to route mapping
+const WORD_ROUTES: Record<string, string> = {
+  'MARKETING': '/services',
+  'STRATEGY': '/about',
+  'PRESENCE': '/services',
+  'GROWTH': '/services',
+  'CONTENT': '/services#content',
+  'ANYTHING': '/contact',
+};
+
 // === SPLOTCHY PINK GRADIENT FOR "ASK HER" ===
 const askHerGradientStyle = {
   background: `
@@ -248,23 +258,28 @@ export function HeroSectionMobile({
             }}
           >
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentWordIndex}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                variants={wordVariants}
-                className="gemstone-word gem-path-1 font-bold tracking-tight"
-                style={{
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  letterSpacing: '-0.02em',
-                  '--word-seed': currentWordIndex * 17,
-                  whiteSpace: 'nowrap',
-                  textAlign: 'center',
-                } as React.CSSProperties}
+              <Link
+                href={WORD_ROUTES[DYNAMIC_WORDS[currentWordIndex]] || '/services'}
+                className="inline-block cursor-pointer"
               >
-                {DYNAMIC_WORDS[currentWordIndex]}
-              </motion.div>
+                <motion.div
+                  key={currentWordIndex}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  variants={wordVariants}
+                  className="gemstone-word gem-path-1 font-bold tracking-tight"
+                  style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    letterSpacing: '-0.02em',
+                    '--word-seed': currentWordIndex * 17,
+                    whiteSpace: 'nowrap',
+                    textAlign: 'center',
+                  } as React.CSSProperties}
+                >
+                  {DYNAMIC_WORDS[currentWordIndex]}
+                </motion.div>
+              </Link>
             </AnimatePresence>
           </div>
 

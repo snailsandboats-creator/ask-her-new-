@@ -18,6 +18,20 @@ export function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
+    // On non-home pages, navbar is always visible
+    const isHomePage = pathname === '/';
+
+    if (!isHomePage) {
+      setNavOpacity(1);
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 50);
+      };
+      handleScroll();
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+
+    // On home page, use scroll-based fade
     const handleScroll = () => {
       const scrolled = window.scrollY;
       const vh = window.innerHeight;
@@ -42,7 +56,7 @@ export function Navbar() {
     handleScroll(); // Initial call
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   // Close mobile menu on route change
   useEffect(() => {
