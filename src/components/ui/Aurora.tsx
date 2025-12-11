@@ -102,6 +102,108 @@ export function Aurora({
     return paths[variant - 1] || paths[0];
   };
 
+  // Generate morphing variations for main ribbon 1
+  const getMainRibbon1Morphs = () => {
+    const base = getMainRibbon1();
+    // Create 3 subtle variations by adjusting control points by 20-40px
+    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 30;
+      const dy = (Math.random() - 0.5) * 30;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 35;
+      const dy = (Math.random() - 0.5) * 35;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 25;
+      const dy = (Math.random() - 0.5) * 25;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    return `${base};${v1};${v2};${v3};${base}`;
+  };
+
+  const getMainRibbon2Morphs = () => {
+    const base = getMainRibbon2();
+    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 28;
+      const dy = (Math.random() - 0.5) * 28;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 32;
+      const dy = (Math.random() - 0.5) * 32;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 26;
+      const dy = (Math.random() - 0.5) * 26;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    return `${base};${v1};${v2};${v3};${base}`;
+  };
+
+  const getUpperAccentMorphs = () => {
+    const base = getUpperAccent();
+    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 24;
+      const dy = (Math.random() - 0.5) * 24;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 30;
+      const dy = (Math.random() - 0.5) * 30;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 22;
+      const dy = (Math.random() - 0.5) * 22;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    return `${base};${v1};${v2};${v3};${base}`;
+  };
+
+  const getLowerAccentMorphs = () => {
+    const base = getLowerAccent();
+    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 26;
+      const dy = (Math.random() - 0.5) * 26;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 34;
+      const dy = (Math.random() - 0.5) * 34;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 20;
+      const dy = (Math.random() - 0.5) * 20;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    return `${base};${v1};${v2};${v3};${base}`;
+  };
+
+  const getPinkRibbonMorphs = () => {
+    const base = getPinkRibbon();
+    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 22;
+      const dy = (Math.random() - 0.5) * 22;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 28;
+      const dy = (Math.random() - 0.5) * 28;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
+      const dx = (Math.random() - 0.5) * 24;
+      const dy = (Math.random() - 0.5) * 24;
+      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
+    });
+    return `${base};${v1};${v2};${v3};${base}`;
+  };
+
   return (
     <div
       className={className}
@@ -111,46 +213,6 @@ export function Aurora({
         position: 'relative'
       }}
     >
-      {/* Keyframe animations */}
-      <style>{`
-        @keyframes auroraFlow1 {
-          0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
-          33% { transform: translateX(12px) translateY(-8px) rotate(1.5deg); }
-          66% { transform: translateX(-8px) translateY(6px) rotate(-1deg); }
-        }
-        @keyframes auroraFlow2 {
-          0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
-          50% { transform: translateX(-15px) translateY(10px) rotate(-2deg); }
-        }
-        @keyframes auroraFlow3 {
-          0%, 100% { transform: translateX(0) translateY(0) scale(1); }
-          50% { transform: translateX(18px) translateY(-12px) scale(1.04); }
-        }
-        @keyframes auroraFlow4 {
-          0%, 100% { transform: translateX(0) translateY(0); }
-          50% { transform: translateX(-12px) translateY(8px); }
-        }
-        @keyframes auroraPinkFlow {
-          0%, 100% { transform: translateX(0) translateY(0); opacity: 1; }
-          50% { transform: translateX(10px) translateY(-6px); opacity: 0.75; }
-        }
-        @keyframes auroraPinkPulse {
-          0%, 100% { transform: translateX(0) scale(1); opacity: 1; }
-          50% { transform: translateX(8px) scale(1.1); opacity: 0.7; }
-        }
-        @keyframes auroraWisp1 {
-          0%, 100% { transform: translateX(0); opacity: 0.35; }
-          50% { transform: translateX(-12px); opacity: 0.2; }
-        }
-        @keyframes auroraWisp2 {
-          0%, 100% { transform: translateX(0); opacity: 0.3; }
-          50% { transform: translateX(10px); opacity: 0.18; }
-        }
-        @keyframes auroraWisp3 {
-          0%, 100% { transform: translateX(0); opacity: 0.32; }
-          50% { transform: translateX(-8px); opacity: 0.18; }
-        }
-      `}</style>
 
       <svg
         viewBox="0 0 400 350"
@@ -218,37 +280,65 @@ export function Aurora({
 
         {/* Main ribbon 1 - sweeps from left to right */}
         <path
-          d={getMainRibbon1()}
           fill={`url(#${id}-g1)`}
           filter={`url(#${id}-blur2)`}
-          style={{ animation: 'auroraFlow1 20s ease-in-out infinite' }}
-        />
+        >
+          <animate
+            attributeName="d"
+            dur="25s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+            values={getMainRibbon1Morphs()}
+          />
+        </path>
 
         {/* Main ribbon 2 - counter sweep */}
         <path
-          d={getMainRibbon2()}
           fill={`url(#${id}-g2)`}
           filter={`url(#${id}-blur2)`}
-          style={{ animation: 'auroraFlow2 24s ease-in-out infinite' }}
-        />
+        >
+          <animate
+            attributeName="d"
+            dur="30s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+            values={getMainRibbon2Morphs()}
+          />
+        </path>
 
         {/* Upper accent ribbon */}
         <path
-          d={getUpperAccent()}
           fill={`url(#${id}-g3)`}
           filter={`url(#${id}-blur1)`}
           opacity="0.85"
-          style={{ animation: 'auroraFlow3 18s ease-in-out infinite' }}
-        />
+        >
+          <animate
+            attributeName="d"
+            dur="22s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+            values={getUpperAccentMorphs()}
+          />
+        </path>
 
         {/* Lower accent ribbon */}
         <path
-          d={getLowerAccent()}
           fill={`url(#${id}-g1)`}
           filter={`url(#${id}-blur1)`}
           opacity="0.65"
-          style={{ animation: 'auroraFlow4 22s ease-in-out infinite' }}
-        />
+        >
+          <animate
+            attributeName="d"
+            dur="28s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+            values={getLowerAccentMorphs()}
+          />
+        </path>
 
         {/* ============================================
             PINK ACCENT ELEMENTS
@@ -257,56 +347,64 @@ export function Aurora({
 
         {/* Pink ribbon accent */}
         <path
-          d={getPinkRibbon()}
           fill={`url(#${id}-p2)`}
           filter={`url(#${id}-blur3)`}
-          style={{ animation: 'auroraPinkFlow 15s ease-in-out infinite' }}
-        />
+        >
+          <animate
+            attributeName="d"
+            dur="20s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+            values={getPinkRibbonMorphs()}
+          />
+        </path>
 
         {/* Pink center glow */}
         <ellipse
-          cx="200"
-          cy="185"
-          rx="55"
-          ry="32"
           fill={`url(#${id}-p1)`}
           filter={`url(#${id}-blur3)`}
-          style={{ animation: 'auroraPinkPulse 12s ease-in-out infinite' }}
-        />
+        >
+          <animate attributeName="cx" dur="18s" repeatCount="indefinite" values="200;208;195;203;200" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="cy" dur="16s" repeatCount="indefinite" values="185;178;190;182;185" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="rx" dur="14s" repeatCount="indefinite" values="55;60;52;58;55" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="ry" dur="15s" repeatCount="indefinite" values="32;35;30;34;32" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="opacity" dur="12s" repeatCount="indefinite" values="1;0.7;0.9;0.75;1" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+        </ellipse>
 
         {/* Small pink wisps */}
         <ellipse
-          cx="140"
-          cy="195"
-          rx="28"
-          ry="14"
           fill={pink1}
-          opacity="0.35"
           filter={`url(#${id}-blur3)`}
-          style={{ animation: 'auroraWisp1 10s ease-in-out infinite' }}
-        />
+        >
+          <animate attributeName="cx" dur="13s" repeatCount="indefinite" values="140;132;145;138;140" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="cy" dur="11s" repeatCount="indefinite" values="195;200;192;198;195" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="rx" dur="10s" repeatCount="indefinite" values="28;31;26;29;28" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="ry" dur="12s" repeatCount="indefinite" values="14;16;13;15;14" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="opacity" dur="10s" repeatCount="indefinite" values="0.35;0.2;0.3;0.25;0.35" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+        </ellipse>
 
         <ellipse
-          cx="270"
-          cy="178"
-          rx="22"
-          ry="11"
           fill={pink2}
-          opacity="0.3"
           filter={`url(#${id}-blur3)`}
-          style={{ animation: 'auroraWisp2 11s ease-in-out infinite' }}
-        />
+        >
+          <animate attributeName="cx" dur="14s" repeatCount="indefinite" values="270;278;265;273;270" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="cy" dur="12s" repeatCount="indefinite" values="178;173;182;176;178" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="rx" dur="11s" repeatCount="indefinite" values="22;24;20;23;22" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="ry" dur="13s" repeatCount="indefinite" values="11;12;10;11.5;11" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="opacity" dur="11s" repeatCount="indefinite" values="0.3;0.18;0.25;0.22;0.3" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+        </ellipse>
 
         <ellipse
-          cx="190"
-          cy="212"
-          rx="20"
-          ry="9"
           fill={pink3}
-          opacity="0.32"
           filter={`url(#${id}-blur3)`}
-          style={{ animation: 'auroraWisp3 9s ease-in-out infinite' }}
-        />
+        >
+          <animate attributeName="cx" dur="12s" repeatCount="indefinite" values="190;182;195;188;190" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="cy" dur="10s" repeatCount="indefinite" values="212;218;208;215;212" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="rx" dur="9s" repeatCount="indefinite" values="20;22;19;21;20" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="ry" dur="11s" repeatCount="indefinite" values="9;10;8.5;9.5;9" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+          <animate attributeName="opacity" dur="9s" repeatCount="indefinite" values="0.32;0.18;0.28;0.22;0.32" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
+        </ellipse>
       </svg>
     </div>
   );
