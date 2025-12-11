@@ -16,10 +16,11 @@ interface SplitSectionProps {
   imagePosition: 'left' | 'right';
   overline?: string;
   headline: string;
-  body: string;
+  body?: string;
   cta?: { label: string; href: string };
   features?: string[];
   background?: 'white' | 'offwhite';
+  id?: string;
 }
 
 const slideFromLeftVariants = {
@@ -41,13 +42,14 @@ export function SplitSection({
   cta,
   features,
   background = 'white',
+  id,
 }: SplitSectionProps) {
   const [imageError, setImageError] = useState(false);
   const imageVariants = imagePosition === 'left' ? slideFromLeftVariants : slideFromRightVariants;
   const contentVariants = imagePosition === 'left' ? slideFromRightVariants : slideFromLeftVariants;
 
   return (
-    <Section background={background} padding="lg">
+    <Section background={background} padding="lg" id={id}>
       <Container size="wide">
         <div
           className={cn(
@@ -108,7 +110,7 @@ export function SplitSection({
               </Badge>
             )}
             <h2 className="text-h2 text-white mb-6">{headline}</h2>
-            <p className="text-body-lg text-slate mb-6">{body}</p>
+            {body && <p className="text-body-lg text-slate mb-6">{body}</p>}
             {features && <FeatureList items={features} className="mb-6" />}
             {cta && (
               <Button variant="primary" href={cta.href}>

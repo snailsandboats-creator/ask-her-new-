@@ -3,22 +3,22 @@ import { ProcessStep } from '@/types';
 export const processSteps: ProcessStep[] = [
   {
     number: '01',
-    title: 'Discovery',
-    description: 'We learn about your business, your goals, and your customers. No cookie-cutter solutions here.',
+    title: 'Reach Out',
+    description: 'Schedule a free business assessment at your convenience—no pressure, just a conversation.',
   },
   {
     number: '02',
-    title: 'Strategy',
-    description: 'We build your custom roadmap. Clear milestones, realistic timelines, measurable goals.',
+    title: 'We Learn Your Business',
+    description: 'We get a full scope of your brand, your goals, and what makes you different.',
   },
   {
     number: '03',
-    title: 'Execute',
-    description: 'We launch campaigns, create content, and put the plan into action. You approve, we deliver.',
+    title: 'Build Your Strategy',
+    description: 'Together, we develop a custom plan tailored to your business over the week.',
   },
   {
     number: '04',
-    title: 'Grow',
-    description: "We analyze, optimize, and scale what's working. Continuous improvement, continuous growth.",
+    title: 'Execute',
+    description: 'We launch within the week and start bringing your brand to life.',
   },
 ];
