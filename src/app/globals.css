@@ -1246,7 +1246,9 @@
   /* Reduce blur on mobile to minimize bounding box effect */
   .gem-button,
   .gem-button-pink {
-    filter: blur(6px);
+    filter: blur(3px);
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
 
   .gem-button:hover,
