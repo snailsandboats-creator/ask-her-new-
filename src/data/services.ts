@@ -8,7 +8,7 @@ export const services: Service[] = [
     headline: 'Your website should work as hard as you do.',
     shortDescription: 'Custom websites that look great and actually get results.',
     description: "Your website is often the first impression someone gets of your business. We build sites that look professional, load fast, and turn visitors into customers.",
-    fullDescription: "Your website is often the first impression someone gets of your business. We build sites that look professional, load fast, and turn visitors into customers. Every site is custom-built for your business and your goals.",
+    fullDescription: "Your website is like a flyer... for the internet! We build sites that look professional, load fast, and turn visitors into customers. Every site is custom-built for your business and your goals.",
     features: [
       'Custom Design & Development',
       'Mobile-First & Fast Loading',
@@ -24,7 +24,7 @@ export const services: Service[] = [
     headline: 'Your brand is how people remember you.',
     shortDescription: "A logo that stands out and a brand that feels like you—clear, consistent, and ready to grow.",
     description: "Good branding isn't fancy jargon—it's making sure people know who you are and what you stand for, at a glance.",
-    fullDescription: "Good branding isn't fancy jargon—it's making sure people know who you are and what you stand for, at a glance. We help you look professional and feel authentic.",
+    fullDescription: "You've heard it before: consistency is key—and that's especially true for your brand! We help you look professional and feel authentic through consistent voice and visuals.",
     features: [
       'Logo Design',
       'Brand Identity',
@@ -56,7 +56,7 @@ export const services: Service[] = [
     headline: 'Content that connects with real people.',
     shortDescription: 'Words that sound like you and actually connect with your customers.',
     description: "Content isn't about stuffing in keywords or sounding fancy. It's about talking to people like people and giving them something useful.",
-    fullDescription: "Content isn't about stuffing in keywords or sounding fancy. It's about talking to people like people and giving them something useful. We write blogs, emails, and more—all with your voice, your message.",
+    fullDescription: "We know you have a vision for your brand, but sometimes that's hard to execute. Leave that to us! We save you time by writing your blogs, email campaigns, and social media posts, while keeping your brand's vision and voice as top priority.",
     features: [
       'Blog Posts & Articles',
       'Email Campaigns',
@@ -72,7 +72,7 @@ export const services: Service[] = [
     headline: 'Show your business in action.',
     shortDescription: 'Professional photos and videos that tell your story.',
     description: "People want to see the real you. We shoot photos and videos that capture what makes your business special—your space, your work, your people.",
-    fullDescription: "People want to see the real you. We shoot photos and videos that capture what makes your business special—your space, your work, your people. Perfect for websites, social media, and ads.",
+    fullDescription: "Tell us your vision and we'll bring it to life. Show off what you offer with professional photography and videography—or save money with our hybrid or fully digital generation options. Whatever fits your budget, we've got you covered.",
     features: [
       'Professional Photography',
       'Video Content & Reels',

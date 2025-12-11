@@ -1,9 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { Section } from '@/components/layout/Section';
 import { Container } from '@/components/layout/Container';
-import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
 
 interface PageHeroProps {
@@ -14,6 +14,45 @@ interface PageHeroProps {
   align?: 'center' | 'left';
 }
 
+// Dynamic words for the transitioning effect
+const DYNAMIC_WORDS = ['Grow', 'Succeed', 'Thrive', 'Scale', 'Win'];
+
+// Word transition variants
+const wordVariants = {
+  enter: {
+    opacity: 0,
+    filter: 'blur(20px)',
+  },
+  center: {
+    opacity: 1,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 1.5,
+      ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
+    },
+  },
+  exit: {
+    opacity: 0,
+    filter: 'blur(20px)',
+    transition: {
+      duration: 1.5,
+      ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
+    },
+  },
+};
+
+// Generate floating particles
+function generateParticles(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    size: 2 + Math.random() * 4,
+    duration: 15 + Math.random() * 10,
+    delay: Math.random() * 5,
+  }));
+}
+
 export function PageHero({
   overline,
   headline,
@@ -22,6 +61,27 @@ export function PageHero({
   align = 'center',
 }: PageHeroProps) {
   const isDark = variant === 'dark';
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
+
+  // Generate particles on client
+  useEffect(() => {
+    setParticles(generateParticles(30));
+  }, []);
+
+  // Rotate words every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % DYNAMIC_WORDS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Check if headline contains "grow" and split it
+  const hasTransitionWord = headline.toLowerCase().includes('grow');
+  const headlineParts = hasTransitionWord
+    ? headline.split(/\bgrow\b/i)
+    : null;
 
   return (
     <Section
@@ -31,6 +91,51 @@ export function PageHero({
     >
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
+        {/* Grain texture overlay */}
+        <div
+          className="absolute inset-0 z-[50] pointer-events-none opacity-[0.035]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            mixBlendMode: 'overlay',
+          }}
+        />
+
+        {/* Floating particles */}
+        <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+          {particles.map((particle) => (
+            <div
+              key={particle.id}
+              className={cn(
+                "absolute rounded-full animate-float-drift",
+                isDark ? "bg-white opacity-[0.15]" : "bg-black opacity-[0.1]"
+              )}
+              style={{
+                left: particle.left,
+                top: particle.top,
+                width: `${particle.size * 1.5}px`,
+                height: `${particle.size * 1.5}px`,
+                animationDuration: `${particle.duration}s`,
+                animationDelay: `${particle.delay}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Fade grid */}
+        <div
+          className="absolute inset-0 z-[3] pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'} 1px, transparent 1px),
+              linear-gradient(90deg, ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'} 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px, 40px 40px',
+            backgroundPosition: '0 0, 0 0',
+            maskImage: 'linear-gradient(to top, transparent 0%, black 40%, black 100%)',
+            WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 40%, black 100%)',
+          }}
+        />
+
         {/* Gradient accent */}
         <motion.div
           className={cn(
@@ -49,38 +154,6 @@ export function PageHero({
             ease: 'easeInOut',
           }}
         />
-
-        {/* Decorative dots pattern */}
-        {!isDark && (
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-            }}
-          />
-        )}
-
-        {/* Gradient mesh for dark variant */}
-        {isDark && (
-          <>
-            <div
-              className="absolute inset-0 opacity-[0.05]"
-              style={{
-                backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-                backgroundSize: '40px 40px',
-              }}
-            />
-            <motion.div
-              className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-15"
-              style={{
-                background: 'radial-gradient(circle, rgba(255,110,199,0.5) 0%, transparent 70%)',
-              }}
-              animate={{ x: [0, 20, 0], y: [0, -10, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </>
-        )}
       </div>
 
       <Container size="medium" className="relative z-10">
@@ -90,29 +163,44 @@ export function PageHero({
           transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
           className={cn(align === 'center' ? 'text-center' : 'text-left')}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <Badge
-              variant="pink"
-              className={cn(
-                "mb-6 backdrop-blur-sm px-4 py-2",
-                isDark ? "bg-pink/10 border border-pink/20" : "bg-pink/10"
-              )}
-            >
-              {overline}
-            </Badge>
-          </motion.div>
-
           <motion.h1
             className="text-h1 mb-4 text-white"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {headline}
+            {hasTransitionWord && headlineParts ? (
+              <>
+                {headlineParts[0]}
+                <span className="inline-block relative align-baseline overflow-visible" style={{ width: '9.5rem', verticalAlign: 'baseline', lineHeight: '1.2' }}>
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={currentWordIndex}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      variants={wordVariants}
+                      className="inline-block gemstone-word gem-path-1"
+                      style={{
+                        whiteSpace: 'nowrap',
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        overflow: 'visible',
+                        '--word-seed': currentWordIndex * 17,
+                      } as React.CSSProperties}
+                    >
+                      {DYNAMIC_WORDS[currentWordIndex]}
+                    </motion.span>
+                  </AnimatePresence>
+                  {/* Invisible spacer to maintain layout */}
+                  <span className="invisible">Succeed</span>
+                </span>
+                {headlineParts[1]}
+              </>
+            ) : (
+              headline
+            )}
           </motion.h1>
 
           {subheadline && (

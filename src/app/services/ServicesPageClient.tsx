@@ -22,13 +22,13 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 // Aurora color mapping for each service
-const auroraHues: Record<string, number> = {
-  'website-design': 330,    // Pink/magenta
-  'branding': 270,          // Purple
-  'social-media': 185,      // Cyan
-  'content-creation': 45,   // Gold/yellow
-  'photography-video': 25,  // Orange
-  'seo-google': 155,        // Emerald green
+const auroraColors: Record<string, string> = {
+  'website-design': '#f43f5e',       // Rose-500 (Pink/magenta)
+  'branding': '#a855f7',             // Purple-500
+  'social-media': '#06b6d4',         // Cyan-500
+  'content-creation': '#f59e0b',     // Amber-500 (Gold/yellow)
+  'photography-video': '#f97316',    // Orange-500
+  'seo-google': '#10b981',           // Emerald-500 (Green)
 };
 
 export function ServicesPageClient() {
@@ -36,8 +36,8 @@ export function ServicesPageClient() {
     <>
       <PageHero
         overline="Our Services"
-        headline="Everything you need to grow."
-        subheadline="We offer comprehensive marketing services designed specifically for local businesses. No cookie-cutter solutions—just strategies that work for your unique business."
+        headline="Everything You Need to Grow."
+        subheadline="Let Us Be Your One Stop Shop for Online Presence"
       />
 
       {/* Services Detail Sections */}
@@ -49,12 +49,13 @@ export function ServicesPageClient() {
           <div key={service.id} className="relative">
             <Section
               id={service.id}
-              background={index % 2 === 0 ? 'white' : 'offwhite'}
+              background="black"
               padding="lg"
+              className="relative"
             >
-              <Container size="wide">
+              <Container size="wide" className="relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                  <FadeUp className={index % 2 === 1 ? 'lg:order-2' : ''}>
+                  <FadeUp className={`text-center lg:text-left flex flex-col items-center lg:items-start ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
                       {iconMap[service.icon] || <Palette className="w-8 h-8 text-pink" />}
                     </div>
@@ -63,15 +64,25 @@ export function ServicesPageClient() {
                     <FeatureList items={service.features} />
                   </FadeUp>
                   <FadeUp delay={0.2} className={index % 2 === 1 ? 'lg:order-1' : ''}>
-                    <div className="aspect-[4/3] rounded-2xl overflow-visible relative">
-                      {/* Aurora node marker on the connecting line */}
-                      <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-pink shadow-lg shadow-pink/50 z-10 pointer-events-none" />
-                      <Aurora
-                        hue={auroraHues[service.id] || 330}
-                        id={`aurora-${service.id}`}
-                        variant={index + 1}
-                        className="absolute inset-0"
-                      />
+                    <div className="aspect-[4/3] overflow-visible relative flex items-center justify-center">
+                      {/* Single Aurora - positioned at center, extends left/right alternately, moved down 10% */}
+                      <div
+                        className={`absolute left-1/2 w-[484px] h-[484px] lg:w-[440px] lg:h-[440px] pointer-events-none -translate-y-1/2 -translate-x-[50%] ${
+                          service.id === 'seo-google' ? 'lg:-translate-x-[70%]' :
+                          service.id === 'photography-video' ? 'lg:-translate-x-[35%]' :
+                          service.id === 'content-creation' ? 'lg:-translate-x-[75%] lg:top-[65%]' :
+                          service.id === 'social-media' ? 'lg:-translate-x-[35%]' :
+                          service.id === 'branding' ? 'lg:-translate-x-[75%]' :
+                          service.id === 'website-design' ? 'lg:-translate-x-[38%]' :
+                          index % 2 === 0 ? 'lg:-translate-x-[50%]' : 'lg:-translate-x-[60%]'
+                        } ${service.id === 'content-creation' ? 'top-[70%]' : 'top-[70%] lg:top-[60%]'}`}
+                        style={{ zIndex: 0 }}
+                      >
+                        <Aurora
+                          mainColor={auroraColors[service.id] || '#f43f5e'}
+                          opacity={0.7}
+                        />
+                      </div>
                     </div>
                   </FadeUp>
                 </div>
@@ -88,36 +99,36 @@ export function ServicesPageClient() {
             <div className="text-center">
               <SectionHeader
                 overline="Pricing"
-                headline="Transparent pricing, no surprises."
-                description="Every business is different, so we create custom packages based on your specific needs and goals. Here's what you can expect:"
+                headline="Flexible Pricing, No Surprises."
+                description="Every business is different, so we customize our pricing based on your specific needs and goals. Most of our clients invest between $1,000 - $2,500/month depending on the scope of services. We're happy to provide a free brand assessment — Call Today!"
                 centered
                 dark
               />
               <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
                 <StaggerItem>
                   <div className="text-center">
-                    <div className="text-h3 text-pink mb-2">$1,500+</div>
-                    <div className="text-body text-white">Monthly Retainers</div>
-                    <div className="text-body-sm text-slate mt-2">Ongoing marketing support</div>
+                    <div className="text-h3 text-pink mb-2">$850+</div>
+                    <div className="text-body text-white">Website Projects</div>
+                    <div className="text-body-sm text-slate mt-2">Custom web design</div>
                   </div>
                 </StaggerItem>
                 <StaggerItem>
                   <div className="text-center">
-                    <div className="text-h3 text-pink mb-2">$3,000+</div>
+                    <div className="text-h3 text-pink mb-2">$1,200+</div>
                     <div className="text-body text-white">Brand Packages</div>
                     <div className="text-body-sm text-slate mt-2">Complete brand identity</div>
                   </div>
                 </StaggerItem>
                 <StaggerItem>
                   <div className="text-center">
-                    <div className="text-h3 text-pink mb-2">$5,000+</div>
-                    <div className="text-body text-white">Website Projects</div>
-                    <div className="text-body-sm text-slate mt-2">Custom web design</div>
+                    <div className="text-h3 text-pink mb-2">$2,000+</div>
+                    <div className="text-body text-white">Monthly Retainers</div>
+                    <div className="text-body-sm text-slate mt-2">Ongoing marketing support</div>
                   </div>
                 </StaggerItem>
               </StaggerContainer>
               <p className="text-body text-slate mt-12">
-                All packages are customized to your needs. Book a call to get a personalized quote.
+                Remember, All Packages are customized to your needs. Book a call to get your brands assessment!
               </p>
             </div>
           </FadeUp>
@@ -127,13 +138,13 @@ export function ServicesPageClient() {
       {/* FAQ */}
       <FAQSection
         overline="Questions?"
-        headline="We've got answers."
+        headline="We've Got Answers."
         faqs={faqItems}
       />
 
       {/* CTA */}
       <CTABlock
-        headline="Let's talk about your goals."
+        headline="Let's Talk About Your Goals."
         description="Book a free strategy call and we'll create a custom plan for your business."
         primaryCta={{ label: "Book Your Free Call", href: "/contact" }}
       />

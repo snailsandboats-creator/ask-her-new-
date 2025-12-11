@@ -15,7 +15,7 @@ export const faqItems: FAQItem[] = [
   },
   {
     question: 'What makes Ask Her different from other agencies?',
-    answer: "We're not a faceless agency. You'll work directly with our team, get honest feedback, and see real results. No long-term contracts, no jargon, no BS. Just marketing that works.",
+    answer: "We're not a faceless agency. You'll work directly with our team, get honest feedback, and see real results.",
   },
   {
     question: 'Do you offer ongoing support?',
