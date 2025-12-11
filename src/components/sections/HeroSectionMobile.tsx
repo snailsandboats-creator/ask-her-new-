@@ -130,9 +130,9 @@ export function HeroSectionMobile({
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-unblur buttons over 7 seconds on page load
+  // Auto-unblur buttons over 5.5 seconds on page load
   useEffect(() => {
-    const duration = 7000; // 7 seconds
+    const duration = 5500; // 5.5 seconds
     const startTime = Date.now();
 
     const animate = () => {
