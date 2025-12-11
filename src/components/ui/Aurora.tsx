@@ -1,421 +1,262 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+
 /**
- * Aurora Component
+ * Aurora Effect Component - Optimized Canvas-Based Animation
  *
- * Flowing, aurora-style gradient element with pink accents.
- * Uses SVG paths to create ribbon-like shapes, NOT circles or orbs.
- *
- * IMPORTANT: The key to this effect is the PATH shapes - they create
- * flowing ribbons that sweep across the canvas, not circular blobs.
+ * Features:
+ * - IntersectionObserver for performance (pauses when off-screen)
+ * - Transparent background (section colors show through)
+ * - Randomized start times (desync for multiple instances)
+ * - Mouse interaction and parallax scrolling
+ * - Hardcoded pink highlights with customizable main color
  */
 
 interface AuroraProps {
-  /** Base hue (0-360) for the main color */
-  hue?: number;
-  /** Size of the aurora container in pixels */
-  size?: number;
-  /** Unique ID for gradient definitions (required when rendering multiple) */
-  id?: string;
+  /** The dominant color of the blobs (matches your section color) */
+  mainColor?: string;
+  /** Transparency of the blobs (0.0 - 1.0) */
+  opacity?: number;
   /** Optional className for styling */
   className?: string;
-  /** Variant determines the path shapes (1-6) */
-  variant?: number;
+}
+
+interface Node {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  color: string;
+  baseRadius: number;
+  currentRadius: number;
+  wanderRange: number;
+  phaseX: number;
+  phaseY: number;
+  phaseR: number;
+  speedX: number;
+  speedY: number;
+  speedR: number;
+}
+
+interface Layer {
+  nodes: Node[];
+  tether: number;
 }
 
 export function Aurora({
-  hue = 155,
-  size = 400,
-  id = 'aurora',
-  className = '',
-  variant = 1
+  mainColor = '#ef4444',
+  opacity = 0.7,
+  className = ''
 }: AuroraProps) {
-  // Generate color palette from base hue
-  const c1 = `hsl(${hue}, 75%, 55%)`;
-  const c2 = `hsl(${hue + 15}, 70%, 48%)`;
-  const c3 = `hsl(${hue - 10}, 80%, 62%)`;
-  const c4 = `hsl(${hue + 8}, 72%, 58%)`;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Pink accents (consistent across all auroras)
-  const pink1 = '#FF69B4';
-  const pink2 = '#FF8DC7';
-  const pink3 = '#D64B91';
+  // Refs for state
+  const mouse = useRef({ x: -1000, y: -1000, isActive: false });
+  const scroll = useRef(0);
+  const requestRef = useRef<number | undefined>(undefined);
+  const isVisible = useRef(false); // Optimization: Track if on screen
+  const timeOffset = useRef(Math.random() * 10000); // DESYNC: Random start time
 
-  // Define different path variants for each service
-  const getMainRibbon1 = () => {
-    const paths = [
-      "M -20,180 C 60,120 120,100 200,130 C 280,160 340,140 420,100 C 420,140 340,180 280,190 C 200,205 100,200 40,220 C -10,235 -20,210 -20,180 Z",
-      "M -20,160 C 70,110 140,95 210,125 C 290,155 350,130 420,85 C 420,125 350,170 290,185 C 210,200 110,195 50,215 C 0,230 -20,190 -20,160 Z",
-      "M -20,190 C 50,135 110,115 190,140 C 270,165 330,150 420,115 C 420,155 330,190 270,200 C 190,215 90,208 30,228 C -15,240 -20,220 -20,190 Z",
-      "M -20,170 C 65,125 125,105 205,135 C 285,165 345,145 420,105 C 420,145 345,185 285,195 C 205,210 105,203 45,223 C -5,238 -20,200 -20,170 Z",
-      "M -20,185 C 55,130 115,110 195,138 C 275,168 335,148 420,110 C 420,150 335,188 275,198 C 195,213 95,206 35,226 C -12,238 -20,215 -20,185 Z",
-      "M -20,175 C 58,118 118,98 198,128 C 278,158 338,138 420,98 C 420,138 338,178 278,188 C 198,203 98,198 38,218 C -8,233 -20,205 -20,175 Z"
-    ];
-    return paths[variant - 1] || paths[0];
+  // CONSTANTS
+  const HIGHLIGHT_COLOR = '#db2777'; // Pink must always stay pink
+
+  // PHYSICS CONFIG
+  const TETHER_STRENGTH = { deep: 0.015, main: 0.005, highlight: 0.003 };
+  const MOUSE_REACTION_RANGE = 500;
+  const MOUSE_FORCE = 0.6;
+  const SPEED_SCALE = 0.15;
+
+  const createNodes = (count: number, color: string, radiusBase: number, wanderRange: number, speedMod: number = 1): Node[] => {
+    const nodes: Node[] = [];
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        x: 0, y: 0, vx: 0, vy: 0,
+        color: color,
+        baseRadius: radiusBase + Math.random() * 40,
+        currentRadius: radiusBase,
+        wanderRange: wanderRange,
+        phaseX: Math.random() * Math.PI * 2,
+        phaseY: Math.random() * Math.PI * 2,
+        phaseR: Math.random() * Math.PI * 2,
+        speedX: (0.001 + Math.random() * 0.002) * SPEED_SCALE * speedMod,
+        speedY: (0.001 + Math.random() * 0.002) * SPEED_SCALE * speedMod,
+        speedR: (0.002 + Math.random() * 0.003) * SPEED_SCALE
+      });
+    }
+    return nodes;
   };
 
-  const getMainRibbon2 = () => {
-    const paths = [
-      "M 420,200 C 350,160 280,150 200,170 C 120,190 60,170 -20,140 C -20,180 60,210 120,220 C 200,235 300,225 360,200 C 400,185 420,190 420,200 Z",
-      "M 420,210 C 340,165 270,155 190,175 C 110,195 50,175 -20,145 C -20,185 50,215 110,225 C 190,240 290,230 350,205 C 395,190 420,200 420,210 Z",
-      "M 420,195 C 355,155 285,145 205,165 C 125,185 65,165 -20,135 C -20,175 65,205 125,215 C 205,230 305,220 365,195 C 405,180 420,185 420,195 Z",
-      "M 420,205 C 345,162 275,152 195,172 C 115,192 55,172 -20,142 C -20,182 55,212 115,222 C 195,237 295,227 355,202 C 398,187 420,195 420,205 Z",
-      "M 420,198 C 352,158 282,148 202,168 C 122,188 62,168 -20,138 C -20,178 62,208 122,218 C 202,233 302,223 362,198 C 402,183 420,188 420,198 Z",
-      "M 420,203 C 348,163 278,153 198,173 C 118,193 58,173 -20,143 C -20,183 58,213 118,223 C 198,238 298,228 358,203 C 400,188 420,193 420,203 Z"
-    ];
-    return paths[variant - 1] || paths[0];
-  };
+  // Initialize layers based on the passed 'mainColor' prop
+  const layers = useRef<Layer[]>([
+    // 1. Deep Core (same as main color, relies on opacity for depth)
+    { nodes: createNodes(4, mainColor, 90, 60, 0.8), tether: TETHER_STRENGTH.deep },
+    // 2. Main Body (The requested Main Color)
+    { nodes: createNodes(6, mainColor, 110, 180, 1.0), tether: TETHER_STRENGTH.main },
+    // 3. Highlights (ALWAYS PINK)
+    { nodes: createNodes(5, HIGHLIGHT_COLOR, 85, 240, 1.2), tether: TETHER_STRENGTH.highlight }
+  ]);
 
-  const getUpperAccent = () => {
-    const paths = [
-      "M 30,140 C 100,90 180,85 250,110 C 320,135 370,120 400,90 C 390,130 330,155 270,160 C 190,168 110,165 60,175 C 30,182 30,160 30,140 Z",
-      "M 40,135 C 110,85 190,80 260,105 C 330,130 380,115 410,85 C 400,125 340,150 280,155 C 200,163 120,160 70,170 C 40,177 40,155 40,135 Z",
-      "M 25,145 C 95,95 175,90 245,115 C 315,140 365,125 395,95 C 385,135 325,160 265,165 C 185,173 105,170 55,180 C 25,187 25,165 25,145 Z",
-      "M 35,138 C 105,88 185,83 255,108 C 325,133 375,118 405,88 C 395,128 335,153 275,158 C 195,166 115,163 65,173 C 35,180 35,158 35,138 Z",
-      "M 32,142 C 102,92 182,87 252,112 C 322,137 372,122 402,92 C 392,132 332,157 272,162 C 192,170 112,167 62,177 C 32,184 32,162 32,142 Z",
-      "M 28,143 C 98,93 178,88 248,113 C 318,138 368,123 398,93 C 388,133 328,158 268,163 C 188,171 108,168 58,178 C 28,185 28,163 28,143 Z"
-    ];
-    return paths[variant - 1] || paths[0];
-  };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-  const getLowerAccent = () => {
-    const paths = [
-      "M 50,240 C 120,210 200,200 280,215 C 340,225 380,215 400,195 C 395,235 340,255 280,258 C 200,262 120,255 70,265 C 40,270 45,255 50,240 Z",
-      "M 60,245 C 130,215 210,205 290,220 C 350,230 390,220 410,200 C 405,240 350,260 290,263 C 210,267 130,260 80,270 C 50,275 55,260 60,245 Z",
-      "M 45,238 C 115,208 195,198 275,213 C 335,223 375,213 395,193 C 390,233 335,253 275,256 C 195,260 115,253 65,263 C 35,268 40,253 45,238 Z",
-      "M 55,242 C 125,212 205,202 285,217 C 345,227 385,217 405,197 C 400,237 345,257 285,260 C 205,264 125,257 75,267 C 45,272 50,257 55,242 Z",
-      "M 52,241 C 122,211 202,201 282,216 C 342,226 382,216 402,196 C 397,236 342,256 282,259 C 202,263 122,256 72,266 C 42,271 47,256 52,241 Z",
-      "M 48,239 C 118,209 198,199 278,214 C 338,224 378,214 398,194 C 393,234 338,254 278,257 C 198,261 118,254 68,264 C 38,269 43,254 48,239 Z"
-    ];
-    return paths[variant - 1] || paths[0];
-  };
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  const getPinkRibbon = () => {
-    const paths = [
-      "M 100,190 C 150,165 200,160 260,175 C 310,188 340,180 360,165 C 350,195 310,210 260,212 C 200,215 150,210 115,218 C 90,223 95,205 100,190 Z",
-      "M 110,195 C 160,170 210,165 270,180 C 320,193 350,185 370,170 C 360,200 320,215 270,217 C 210,220 160,215 125,223 C 100,228 105,210 110,195 Z",
-      "M 95,188 C 145,163 195,158 255,173 C 305,186 335,178 355,163 C 345,193 305,208 255,210 C 195,213 145,208 110,216 C 85,221 90,203 95,188 Z",
-      "M 105,192 C 155,167 205,162 265,177 C 315,190 345,182 365,167 C 355,197 315,212 265,214 C 205,217 155,212 120,220 C 95,225 100,207 105,192 Z",
-      "M 102,191 C 152,166 202,161 262,176 C 312,189 342,181 362,166 C 352,196 312,211 262,213 C 202,216 152,211 117,219 C 92,224 97,206 102,191 Z",
-      "M 98,189 C 148,164 198,159 258,174 C 308,187 338,179 358,164 C 348,194 308,209 258,211 C 198,214 148,209 113,217 C 88,222 93,204 98,189 Z"
-    ];
-    return paths[variant - 1] || paths[0];
-  };
+    let width = container.offsetWidth;
+    let height = container.offsetHeight;
 
-  // Generate morphing variations for main ribbon 1
-  const getMainRibbon1Morphs = () => {
-    const base = getMainRibbon1();
-    // Create 3 subtle variations by adjusting control points by 20-40px
-    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 30;
-      const dy = (Math.random() - 0.5) * 30;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 35;
-      const dy = (Math.random() - 0.5) * 35;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 25;
-      const dy = (Math.random() - 0.5) * 25;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    return `${base};${v1};${v2};${v3};${base}`;
-  };
+    // --- OPTIMIZATION: Intersection Observer ---
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isVisible.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          if (requestRef.current) {
+            cancelAnimationFrame(requestRef.current);
+          }
+          requestRef.current = requestAnimationFrame(animate);
+        }
+      });
+    }, { threshold: 0.1 });
 
-  const getMainRibbon2Morphs = () => {
-    const base = getMainRibbon2();
-    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 28;
-      const dy = (Math.random() - 0.5) * 28;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 32;
-      const dy = (Math.random() - 0.5) * 32;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 26;
-      const dy = (Math.random() - 0.5) * 26;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    return `${base};${v1};${v2};${v3};${base}`;
-  };
+    observer.observe(container);
 
-  const getUpperAccentMorphs = () => {
-    const base = getUpperAccent();
-    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 24;
-      const dy = (Math.random() - 0.5) * 24;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 30;
-      const dy = (Math.random() - 0.5) * 30;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 22;
-      const dy = (Math.random() - 0.5) * 22;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    return `${base};${v1};${v2};${v3};${base}`;
-  };
+    const handleResize = () => {
+      width = container.offsetWidth;
+      height = container.offsetHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
 
-  const getLowerAccentMorphs = () => {
-    const base = getLowerAccent();
-    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 26;
-      const dy = (Math.random() - 0.5) * 26;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 34;
-      const dy = (Math.random() - 0.5) * 34;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 20;
-      const dy = (Math.random() - 0.5) * 20;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    return `${base};${v1};${v2};${v3};${base}`;
-  };
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(container);
 
-  const getPinkRibbonMorphs = () => {
-    const base = getPinkRibbon();
-    const v1 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 22;
-      const dy = (Math.random() - 0.5) * 22;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v2 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 28;
-      const dy = (Math.random() - 0.5) * 28;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    const v3 = base.replace(/(-?\d+),(-?\d+)/g, (match, x, y) => {
-      const dx = (Math.random() - 0.5) * 24;
-      const dy = (Math.random() - 0.5) * 24;
-      return `${parseInt(x) + Math.round(dx)},${parseInt(y) + Math.round(dy)}`;
-    });
-    return `${base};${v1};${v2};${v3};${base}`;
-  };
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.current.x = e.clientX - rect.left;
+      mouse.current.y = e.clientY - rect.top;
+      mouse.current.isActive = true;
+    };
+
+    const handleScroll = () => {
+      scroll.current = window.scrollY;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
+    handleResize();
+
+    const updateNode = (node: Node, time: number, tetherStrength: number, centerX: number, centerY: number) => {
+      // 1. Organic Wandering
+      const offsetX = Math.sin(time * node.speedX + node.phaseX) * node.wanderRange;
+      const offsetY = Math.cos(time * node.speedY + node.phaseY) * (node.wanderRange * 0.8);
+
+      const targetX = centerX + offsetX;
+      const targetY = centerY + offsetY;
+
+      // Breathing Radius
+      node.currentRadius = node.baseRadius + Math.sin(time * node.speedR + node.phaseR) * 20;
+
+      // Tether Force
+      const dxTarget = targetX - node.x;
+      const dyTarget = targetY - node.y;
+      node.vx += dxTarget * tetherStrength;
+      node.vy += dyTarget * tetherStrength;
+
+      // 2. Mouse Interaction
+      const dxMouse = mouse.current.x - node.x;
+      const dyMouse = mouse.current.y - node.y;
+      const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+      if (distMouse < MOUSE_REACTION_RANGE) {
+        const force = (MOUSE_REACTION_RANGE - distMouse) / MOUSE_REACTION_RANGE;
+        const repulsionX = -(dxMouse / distMouse) * force * MOUSE_FORCE;
+        const repulsionY = -(dyMouse / distMouse) * force * MOUSE_FORCE;
+        node.vx += repulsionX;
+        node.vy += repulsionY;
+      }
+
+      // 3. Physics Steps
+      node.vx *= 0.96;
+      node.vy *= 0.96;
+      node.x += node.vx;
+      node.y += node.vy;
+    };
+
+    const drawNode = (node: Node) => {
+      ctx.beginPath();
+      const gradient = ctx.createRadialGradient(
+        node.x, node.y, 0,
+        node.x, node.y, node.currentRadius
+      );
+
+      gradient.addColorStop(0, node.color);
+      gradient.addColorStop(0.4, node.color);
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+      ctx.fillStyle = gradient;
+      ctx.arc(node.x, node.y, node.currentRadius, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    const animate = (timestamp: number) => {
+      if (!isVisible.current) return;
+
+      const time = timestamp + timeOffset.current;
+      ctx.clearRect(0, 0, width, height);
+
+      const centerX = width / 2;
+      // Subtle Parallax: Shifts center slightly based on scroll
+      const centerY = (height / 2) + (Math.sin(scroll.current * 0.002) * 50);
+
+      ctx.globalCompositeOperation = 'screen';
+
+      layers.current.forEach(layer => {
+        layer.nodes.forEach(node => {
+          updateNode(node, time, layer.tether, centerX, centerY);
+          drawNode(node);
+        });
+      });
+
+      requestRef.current = requestAnimationFrame(animate);
+    };
+
+    requestRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      resizeObserver.disconnect();
+      observer.disconnect();
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
+  }, [mainColor]);
 
   return (
     <div
-      className={className}
-      style={{
-        width: size,
-        height: size,
-        position: 'relative'
-      }}
+      ref={containerRef}
+      className={`absolute inset-0 overflow-visible flex items-center justify-center pointer-events-none ${className}`}
     >
-
-      <svg
-        viewBox="0 0 400 350"
-        style={{
-          width: '100%',
-          height: '100%',
-          overflow: 'visible'
-        }}
-      >
-        <defs>
-          {/* Blur filters - extended region to prevent hard edges */}
-          <filter id={`${id}-blur1`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="12" />
-          </filter>
-          <filter id={`${id}-blur2`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="18" />
-          </filter>
-          <filter id={`${id}-blur3`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="8" />
-          </filter>
-
-          {/* Main color gradients - fade to transparent at edges */}
-          <linearGradient id={`${id}-g1`} x1="0%" y1="30%" x2="100%" y2="70%">
-            <stop offset="0%" stopColor={c1} stopOpacity="0" />
-            <stop offset="20%" stopColor={c1} stopOpacity="0.9" />
-            <stop offset="50%" stopColor={c2} stopOpacity="0.75" />
-            <stop offset="80%" stopColor={c3} stopOpacity="0.5" />
-            <stop offset="100%" stopColor={c4} stopOpacity="0" />
-          </linearGradient>
-
-          <linearGradient id={`${id}-g2`} x1="10%" y1="0%" x2="90%" y2="100%">
-            <stop offset="0%" stopColor={c3} stopOpacity="0" />
-            <stop offset="25%" stopColor={c3} stopOpacity="0.8" />
-            <stop offset="60%" stopColor={c1} stopOpacity="0.6" />
-            <stop offset="100%" stopColor={c2} stopOpacity="0" />
-          </linearGradient>
-
-          <linearGradient id={`${id}-g3`} x1="100%" y1="20%" x2="0%" y2="80%">
-            <stop offset="0%" stopColor={c4} stopOpacity="0" />
-            <stop offset="30%" stopColor={c2} stopOpacity="0.7" />
-            <stop offset="70%" stopColor={c1} stopOpacity="0.5" />
-            <stop offset="100%" stopColor={c3} stopOpacity="0" />
-          </linearGradient>
-
-          {/* Pink accent gradients */}
-          <radialGradient id={`${id}-p1`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={pink2} stopOpacity="0.75" />
-            <stop offset="50%" stopColor={pink1} stopOpacity="0.45" />
-            <stop offset="100%" stopColor={pink3} stopOpacity="0" />
-          </radialGradient>
-
-          <linearGradient id={`${id}-p2`} x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor={pink1} stopOpacity="0" />
-            <stop offset="30%" stopColor={pink2} stopOpacity="0.55" />
-            <stop offset="70%" stopColor={pink1} stopOpacity="0.4" />
-            <stop offset="100%" stopColor={pink3} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-
-        {/* ============================================
-            MAIN FLOWING RIBBONS
-            These are PATH shapes, not circles!
-            The curves create the aurora "flow" effect
-            ============================================ */}
-
-        {/* Main ribbon 1 - sweeps from left to right */}
-        <path
-          fill={`url(#${id}-g1)`}
-          filter={`url(#${id}-blur2)`}
-        >
-          <animate
-            attributeName="d"
-            dur="25s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
-            values={getMainRibbon1Morphs()}
-          />
-        </path>
-
-        {/* Main ribbon 2 - counter sweep */}
-        <path
-          fill={`url(#${id}-g2)`}
-          filter={`url(#${id}-blur2)`}
-        >
-          <animate
-            attributeName="d"
-            dur="30s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
-            values={getMainRibbon2Morphs()}
-          />
-        </path>
-
-        {/* Upper accent ribbon */}
-        <path
-          fill={`url(#${id}-g3)`}
-          filter={`url(#${id}-blur1)`}
-          opacity="0.85"
-        >
-          <animate
-            attributeName="d"
-            dur="22s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
-            values={getUpperAccentMorphs()}
-          />
-        </path>
-
-        {/* Lower accent ribbon */}
-        <path
-          fill={`url(#${id}-g1)`}
-          filter={`url(#${id}-blur1)`}
-          opacity="0.65"
-        >
-          <animate
-            attributeName="d"
-            dur="28s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
-            values={getLowerAccentMorphs()}
-          />
-        </path>
-
-        {/* ============================================
-            PINK ACCENT ELEMENTS
-            Woven into the aurora, not sitting on top
-            ============================================ */}
-
-        {/* Pink ribbon accent */}
-        <path
-          fill={`url(#${id}-p2)`}
-          filter={`url(#${id}-blur3)`}
-        >
-          <animate
-            attributeName="d"
-            dur="20s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
-            values={getPinkRibbonMorphs()}
-          />
-        </path>
-
-        {/* Pink center glow */}
-        <ellipse
-          fill={`url(#${id}-p1)`}
-          filter={`url(#${id}-blur3)`}
-        >
-          <animate attributeName="cx" dur="18s" repeatCount="indefinite" values="200;208;195;203;200" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="cy" dur="16s" repeatCount="indefinite" values="185;178;190;182;185" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="rx" dur="14s" repeatCount="indefinite" values="55;60;52;58;55" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="ry" dur="15s" repeatCount="indefinite" values="32;35;30;34;32" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="opacity" dur="12s" repeatCount="indefinite" values="1;0.7;0.9;0.75;1" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-        </ellipse>
-
-        {/* Small pink wisps */}
-        <ellipse
-          fill={pink1}
-          filter={`url(#${id}-blur3)`}
-        >
-          <animate attributeName="cx" dur="13s" repeatCount="indefinite" values="140;132;145;138;140" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="cy" dur="11s" repeatCount="indefinite" values="195;200;192;198;195" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="rx" dur="10s" repeatCount="indefinite" values="28;31;26;29;28" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="ry" dur="12s" repeatCount="indefinite" values="14;16;13;15;14" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="opacity" dur="10s" repeatCount="indefinite" values="0.35;0.2;0.3;0.25;0.35" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-        </ellipse>
-
-        <ellipse
-          fill={pink2}
-          filter={`url(#${id}-blur3)`}
-        >
-          <animate attributeName="cx" dur="14s" repeatCount="indefinite" values="270;278;265;273;270" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="cy" dur="12s" repeatCount="indefinite" values="178;173;182;176;178" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="rx" dur="11s" repeatCount="indefinite" values="22;24;20;23;22" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="ry" dur="13s" repeatCount="indefinite" values="11;12;10;11.5;11" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="opacity" dur="11s" repeatCount="indefinite" values="0.3;0.18;0.25;0.22;0.3" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-        </ellipse>
-
-        <ellipse
-          fill={pink3}
-          filter={`url(#${id}-blur3)`}
-        >
-          <animate attributeName="cx" dur="12s" repeatCount="indefinite" values="190;182;195;188;190" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="cy" dur="10s" repeatCount="indefinite" values="212;218;208;215;212" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="rx" dur="9s" repeatCount="indefinite" values="20;22;19;21;20" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="ry" dur="11s" repeatCount="indefinite" values="9;10;8.5;9.5;9" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-          <animate attributeName="opacity" dur="9s" repeatCount="indefinite" values="0.32;0.18;0.28;0.22;0.32" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1" />
-        </ellipse>
-      </svg>
+      <canvas
+        ref={canvasRef}
+        style={{ opacity: opacity }}
+        className="block w-full h-full blur-[80px] saturate-150"
+      />
     </div>
   );
 }
 
-// Service hue mappings for reference
-export const serviceHues: Record<string, number> = {
-  'website-design': 330,    // Pink/Magenta
-  'branding': 270,          // Purple
-  'social-media': 185,      // Cyan
-  'content-creation': 45,   // Gold
-  'photography': 25,        // Orange
-  'seo': 155,               // Emerald
+// Service color mappings for reference (using hex colors instead of hues)
+export const serviceColors: Record<string, string> = {
+  'website-design': '#f43f5e',    // Rose-500
+  'branding': '#a855f7',          // Purple-500
+  'social-media': '#06b6d4',      // Cyan-500
+  'content-creation': '#f59e0b',  // Amber-500
+  'photography': '#f97316',       // Orange-500
+  'seo': '#10b981',               // Emerald-500
 };

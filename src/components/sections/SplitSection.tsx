@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Section } from '@/components/layout/Section';
 import { Container } from '@/components/layout/Container';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { FeatureList } from '@/components/shared/FeatureList';
 import { cn } from '@/lib/utils';
@@ -104,11 +103,6 @@ export function SplitSection({
             viewport={{ once: true, margin: '-100px' }}
             variants={contentVariants}
           >
-            {overline && (
-              <Badge variant="pink" className="mb-4 bg-pink/10 backdrop-blur-sm">
-                {overline}
-              </Badge>
-            )}
             <h2 className="text-h2 text-white mb-6">{headline}</h2>
             {body && <p className="text-body-lg text-slate mb-6">{body}</p>}
             {features && <FeatureList items={features} className="mb-6" />}

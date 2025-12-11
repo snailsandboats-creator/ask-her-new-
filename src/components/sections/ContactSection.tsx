@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Section } from '@/components/layout/Section';
 import { Container } from '@/components/layout/Container';
-import { Badge } from '@/components/ui/Badge';
 import { ContactInfo } from '@/components/shared/ContactInfo';
 import { ContactForm } from '@/components/shared/ContactForm';
 import { siteConfig } from '@/lib/constants';
@@ -52,9 +51,6 @@ export function ContactSection({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
           >
-            <Badge variant="pink" className="mb-4 backdrop-blur-sm bg-pink/10">
-              {overline}
-            </Badge>
             <h2 className="text-h2 text-black mb-4">{headline}</h2>
             <p className="text-body-lg text-slate mb-8">{subheadline}</p>
 
