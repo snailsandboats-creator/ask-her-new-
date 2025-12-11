@@ -115,6 +115,7 @@ export function HeroSectionMobile({
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [autoFocusProgress, setAutoFocusProgress] = useState(0);
 
   // Generate particles on client
   useEffect(() => {
@@ -127,6 +128,25 @@ export function HeroSectionMobile({
       setCurrentWordIndex((prev) => (prev + 1) % DYNAMIC_WORDS.length);
     }, 6000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Auto-unblur buttons over 7 seconds on page load
+  useEffect(() => {
+    const duration = 7000; // 7 seconds
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      setAutoFocusProgress(progress);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
   }, []);
 
   // Detect scroll and unblur buttons
@@ -292,7 +312,13 @@ export function HeroSectionMobile({
               href={primaryCTA.href}
               className="relative inline-block z-[100]"
             >
-              <button className={`gem-button ${hasScrolled ? 'unblurred' : ''}`}>
+              <button
+                className={`gem-button ${hasScrolled ? 'unblurred' : ''}`}
+                style={{
+                  filter: hasScrolled ? 'blur(0px)' : `blur(${3 * (1 - autoFocusProgress)}px)`,
+                  transition: 'none',
+                }}
+              >
                 <span>{primaryCTA.label}</span>
               </button>
             </Link>
@@ -302,7 +328,13 @@ export function HeroSectionMobile({
                 href={secondaryCTA.href}
                 className="relative inline-block z-[100]"
               >
-                <button className={`gem-button-pink ${hasScrolled ? 'unblurred' : ''}`}>
+                <button
+                  className={`gem-button-pink ${hasScrolled ? 'unblurred' : ''}`}
+                  style={{
+                    filter: hasScrolled ? 'blur(0px)' : `blur(${3 * (1 - autoFocusProgress)}px)`,
+                    transition: 'none',
+                  }}
+                >
                   <span>{secondaryCTA.label}</span>
                 </button>
               </Link>
