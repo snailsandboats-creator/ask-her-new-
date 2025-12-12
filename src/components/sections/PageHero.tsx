@@ -16,7 +16,7 @@ interface PageHeroProps {
 
 // Dynamic words for the transitioning effect
 const DYNAMIC_WORDS_GROW = ['Grow', 'Succeed', 'Thrive', 'Scale', 'Win'];
-const DYNAMIC_WORDS_BUSINESS = ['business', 'goals', 'vision', 'strategy', 'growth'];
+const DYNAMIC_WORDS_BUSINESS = ['businesses.', 'companies.', 'brands.', 'clients.', 'partners.'];
 
 // Word transition variants
 const wordVariants = {
@@ -78,12 +78,12 @@ export function PageHero({
     return () => clearInterval(interval);
   }, []);
 
-  // Check if headline contains "grow" or "business" and split it
+  // Check if headline contains "grow" or "business/businesses" and split it
   const hasGrow = headline.toLowerCase().includes('grow');
   const hasBusiness = headline.toLowerCase().includes('business');
   const hasTransitionWord = hasGrow || hasBusiness;
   const headlineParts = hasTransitionWord
-    ? headline.split(hasGrow ? /\bgrow\b/i : /\bbusiness\b/i)
+    ? headline.split(hasGrow ? /\bgrow\b/i : /\bbusinesses?\b/i)
     : null;
 
   // Use the appropriate word list
@@ -178,7 +178,7 @@ export function PageHero({
             {hasTransitionWord && headlineParts ? (
               <>
                 {headlineParts[0]}
-                <span className="inline-block relative align-baseline overflow-visible" style={{ width: '9.5rem', verticalAlign: 'baseline', lineHeight: '1.2' }}>
+                <span className="inline-block relative align-baseline overflow-visible" style={{ verticalAlign: 'baseline', lineHeight: '1.2' }}>
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={currentWordIndex}
@@ -199,8 +199,8 @@ export function PageHero({
                       {DYNAMIC_WORDS[currentWordIndex]}
                     </motion.span>
                   </AnimatePresence>
-                  {/* Invisible spacer to maintain layout */}
-                  <span className="invisible">Succeed</span>
+                  {/* Invisible spacer to maintain layout - use longest word from current word list */}
+                  <span className="invisible">{hasBusiness ? 'businesses.' : 'Succeed'}</span>
                 </span>
                 {headlineParts[1]}
               </>
