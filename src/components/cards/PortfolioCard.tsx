@@ -11,15 +11,16 @@ interface PortfolioCardProps {
   service: string;
   image: string;
   index?: number;
+  url?: string;
 }
 
-export function PortfolioCard({ client, service, image, index = 0 }: PortfolioCardProps) {
+export function PortfolioCard({ client, service, image, index = 0, url }: PortfolioCardProps) {
   const [imageError, setImageError] = useState(false);
 
   // Get deterministic gradient class based on index
   const gradientClass = getIconGradientClass(index);
 
-  return (
+  const cardContent = (
     <motion.div
       whileHover="hover"
       initial="rest"
@@ -76,4 +77,14 @@ export function PortfolioCard({ client, service, image, index = 0 }: PortfolioCa
       </div>
     </motion.div>
   );
+
+  if (url) {
+    return (
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        {cardContent}
+      </a>
+    );
+  }
+
+  return cardContent;
 }

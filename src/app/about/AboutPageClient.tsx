@@ -4,13 +4,11 @@ import { PageHero } from '@/components/sections/PageHero';
 import { Section } from '@/components/layout/Section';
 import { Container } from '@/components/layout/Container';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { SplitSection } from '@/components/sections/SplitSection';
-import { TeamCard } from '@/components/cards/TeamCard';
 import { ValueCard } from '@/components/cards/ValueCard';
 import { CTABlock } from '@/components/sections/CTABlock';
 import { FadeUp } from '@/components/motion/FadeUp';
 import { StaggerContainer, StaggerItem } from '@/components/motion/StaggerContainer';
-import { teamMembers } from '@/data/team';
+import { Aurora } from '@/components/ui/Aurora';
 import { values } from '@/data/values';
 
 export function AboutPageClient() {
@@ -22,18 +20,31 @@ export function AboutPageClient() {
         subheadline="We're not your typical marketing agency. We're a team of strategists, creatives, and business nerds who believe local businesses deserve the same quality marketing as the big brands."
       />
 
-      {/* Our Story */}
-      <SplitSection
-        overline="Our Story"
-        headline="Started from frustration, built on purpose."
-        body="Ask Her Marketing Group was born out of frustration. After years of watching local businesses get burned by agencies that overpromised and underdelivered, we decided to do something about it. We believe that great marketing shouldn't require a Fortune 500 budget. Every local business deserves a partner who genuinely cares about their success—not just their monthly retainer."
-        image={{ src: "/images/founders.jpg", alt: "Ask Her Marketing founders" }}
-        imagePosition="right"
-        background="white"
-      />
-
       {/* Values */}
-      <Section background="offwhite" padding="lg">
+      <Section background="offwhite" padding="md" className="relative overflow-visible">
+        {/* Aurora 1 - Purple */}
+        <div
+          className="absolute left-[12%] top-[5%] w-[300px] h-[300px] pointer-events-none -translate-y-1/2 -translate-x-1/2"
+          style={{ zIndex: 0 }}
+        >
+          <Aurora
+            mainColor="#a855f7"
+            opacity={0.6}
+            blur={66}
+          />
+        </div>
+
+        {/* Aurora 2 - Cyan */}
+        <div
+          className="absolute left-[115%] top-[105%] w-[320px] h-[320px] pointer-events-none -translate-y-1/2 -translate-x-1/2"
+          style={{ zIndex: 0 }}
+        >
+          <Aurora
+            mainColor="#06b6d4"
+            opacity={0.6}
+            blur={66}
+          />
+        </div>
         <Container>
           <FadeUp>
             <SectionHeader
@@ -57,33 +68,19 @@ export function AboutPageClient() {
         </Container>
       </Section>
 
-      {/* Team */}
-      <Section background="white" padding="lg">
-        <Container>
-          <FadeUp>
-            <SectionHeader
-              overline="The Team"
-              headline="Meet the humans behind the magic."
-              description="We're a small but mighty team of marketing experts who genuinely love what we do."
-              centered
-            />
-          </FadeUp>
-          <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-            {teamMembers.map((member) => (
-              <StaggerItem key={member.id}>
-                <TeamCard
-                  name={member.name}
-                  title={member.title}
-                  image={member.image}
-                />
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </Container>
-      </Section>
-
       {/* Why Work With Us */}
-      <Section background="black" padding="lg">
+      <Section background="black" padding="md" className="relative overflow-visible">
+        {/* Aurora 3 - Pink */}
+        <div
+          className="absolute right-[45%] top-[100%] w-[340px] h-[340px] pointer-events-none -translate-y-1/2 -translate-x-1/2"
+          style={{ zIndex: 0 }}
+        >
+          <Aurora
+            mainColor="#f43f5e"
+            opacity={0.5}
+            blur={66}
+          />
+        </div>
         <Container size="narrow">
           <FadeUp>
             <div className="text-center">

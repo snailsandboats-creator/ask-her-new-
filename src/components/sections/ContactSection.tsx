@@ -11,9 +11,8 @@ interface ContactSectionProps {
   overline?: string;
   headline?: string;
   subheadline?: string;
-  phone?: string;
-  email?: string;
-  address?: string[];
+  phones?: string[];
+  emails?: string[];
   responseTime?: string;
 }
 
@@ -21,12 +20,8 @@ export function ContactSection({
   overline = "Get in Touch",
   headline = "Ready to grow your business?",
   subheadline = "Fill out the form below and we'll get back to you within 24 hours.",
-  phone = siteConfig.phone,
-  email = siteConfig.email,
-  address = [
-    `${siteConfig.address.street}, ${siteConfig.address.suite}`,
-    `${siteConfig.address.city}, ${siteConfig.address.state} ${siteConfig.address.zip}`,
-  ],
+  phones = siteConfig.phones,
+  emails = siteConfig.emails,
   responseTime = "We typically respond within 24 hours.",
 }: ContactSectionProps) {
   return (
@@ -51,13 +46,12 @@ export function ContactSection({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
           >
-            <h2 className="text-h2 text-black mb-4">{headline}</h2>
+            <h2 className="text-h2 text-white mb-4">{headline}</h2>
             <p className="text-body-lg text-slate mb-8">{subheadline}</p>
 
             <ContactInfo
-              phone={phone}
-              email={email}
-              address={address}
+              phones={phones}
+              emails={emails}
               responseTime={responseTime}
             />
           </motion.div>

@@ -1,4 +1,4 @@
-import { Target, MessageCircle, HeartHandshake } from 'lucide-react';
+import { Target, MessageCircle, HeartHandshake, Lightbulb } from 'lucide-react';
 import { getIconGradientClass, cn } from '@/lib/utils';
 
 interface ValueCardProps {
@@ -12,6 +12,7 @@ const iconMap: Record<string, React.ReactNode> = {
   target: <Target className="w-7 h-7 text-white" />,
   'message-circle': <MessageCircle className="w-7 h-7 text-white" />,
   'heart-handshake': <HeartHandshake className="w-7 h-7 text-white" />,
+  lightbulb: <Lightbulb className="w-7 h-7 text-white" />,
 };
 
 export function ValueCard({ icon, title, description, index = 0 }: ValueCardProps) {

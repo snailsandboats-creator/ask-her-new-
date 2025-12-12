@@ -48,7 +48,7 @@ export function SplitSection({
   const contentVariants = imagePosition === 'left' ? slideFromRightVariants : slideFromLeftVariants;
 
   return (
-    <Section background={background} padding="lg" id={id}>
+    <Section background={background} padding="md" id={id}>
       <Container size="wide">
         <div
           className={cn(
@@ -70,7 +70,7 @@ export function SplitSection({
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover"
+                  className="object-cover object-top"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   onError={() => setImageError(true)}
                 />

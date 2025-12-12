@@ -66,22 +66,26 @@ export function Footer() {
               Get in Touch
             </h4>
             <ul className="space-y-3 text-slate">
-              <li>
-                <a
-                  href={`tel:${siteConfig.phone.replace(/[^0-9]/g, '')}`}
-                  className="hover:text-pink transition-colors"
-                >
-                  {siteConfig.phone}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${siteConfig.email}`}
-                  className="hover:text-pink transition-colors"
-                >
-                  {siteConfig.email}
-                </a>
-              </li>
+              {siteConfig.phones.map((phone, index) => (
+                <li key={`phone-${index}`}>
+                  <a
+                    href={`tel:${phone.replace(/[^0-9]/g, '')}`}
+                    className="hover:text-pink transition-colors"
+                  >
+                    {phone}
+                  </a>
+                </li>
+              ))}
+              {siteConfig.emails.map((email, index) => (
+                <li key={`email-${index}`}>
+                  <a
+                    href={`mailto:${email}`}
+                    className="hover:text-pink transition-colors"
+                  >
+                    {email}
+                  </a>
+                </li>
+              ))}
               <li>
                 <address className="not-italic">
                   {siteConfig.address.street}<br />

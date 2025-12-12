@@ -199,15 +199,18 @@ export function Navbar() {
                   Let&apos;s Talk
                 </Button>
               </motion.div>
-              <motion.a
-                href={`tel:${siteConfig.phone.replace(/[^0-9]/g, '')}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.3 }}
-                className="text-slate mt-4 hover:text-brand-pink transition-colors"
-              >
-                {siteConfig.phone}
-              </motion.a>
+              {siteConfig.phones.map((phone, index) => (
+                <motion.a
+                  key={`phone-${index}`}
+                  href={`tel:${phone.replace(/[^0-9]/g, '')}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 + index * 0.1, duration: 0.3 }}
+                  className="text-slate hover:text-brand-pink transition-colors"
+                >
+                  {phone}
+                </motion.a>
+              ))}
             </div>
           </motion.div>
         )}

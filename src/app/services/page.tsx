@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ServicesPageClient } from './ServicesPageClient';
+import { ServicesPageClientMobile } from './ServicesPageClientMobile';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -7,5 +8,17 @@ export const metadata: Metadata = {
 };
 
 export default function ServicesPage() {
-  return <ServicesPageClient />;
+  return (
+    <>
+      {/* Mobile version - shown on screens smaller than lg */}
+      <div className="lg:hidden">
+        <ServicesPageClientMobile />
+      </div>
+
+      {/* Desktop version - shown on lg screens and above */}
+      <div className="hidden lg:block">
+        <ServicesPageClient />
+      </div>
+    </>
+  );
 }

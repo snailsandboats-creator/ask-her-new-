@@ -25,6 +25,7 @@ export interface PortfolioItem {
   image: string;
   description?: string;
   results?: { value: string; label: string }[];
+  url?: string;
 }
 
 export interface TeamMember {

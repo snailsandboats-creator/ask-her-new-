@@ -15,7 +15,8 @@ interface PageHeroProps {
 }
 
 // Dynamic words for the transitioning effect
-const DYNAMIC_WORDS = ['Grow', 'Succeed', 'Thrive', 'Scale', 'Win'];
+const DYNAMIC_WORDS_GROW = ['Grow', 'Succeed', 'Thrive', 'Scale', 'Win'];
+const DYNAMIC_WORDS_BUSINESS = ['business', 'goals', 'vision', 'strategy', 'growth'];
 
 // Word transition variants
 const wordVariants = {
@@ -69,19 +70,24 @@ export function PageHero({
     setParticles(generateParticles(30));
   }, []);
 
-  // Rotate words every 3 seconds
+  // Rotate words every 4.5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentWordIndex((prev) => (prev + 1) % DYNAMIC_WORDS.length);
-    }, 3000);
+    }, 4500);
     return () => clearInterval(interval);
   }, []);
 
-  // Check if headline contains "grow" and split it
-  const hasTransitionWord = headline.toLowerCase().includes('grow');
+  // Check if headline contains "grow" or "business" and split it
+  const hasGrow = headline.toLowerCase().includes('grow');
+  const hasBusiness = headline.toLowerCase().includes('business');
+  const hasTransitionWord = hasGrow || hasBusiness;
   const headlineParts = hasTransitionWord
-    ? headline.split(/\bgrow\b/i)
+    ? headline.split(hasGrow ? /\bgrow\b/i : /\bbusiness\b/i)
     : null;
+
+  // Use the appropriate word list
+  const DYNAMIC_WORDS = hasBusiness ? DYNAMIC_WORDS_BUSINESS : DYNAMIC_WORDS_GROW;
 
   return (
     <Section

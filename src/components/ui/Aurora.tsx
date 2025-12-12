@@ -18,6 +18,8 @@ interface AuroraProps {
   mainColor?: string;
   /** Transparency of the blobs (0.0 - 1.0) */
   opacity?: number;
+  /** Blur amount in pixels (default: 72) */
+  blur?: number;
   /** Optional className for styling */
   className?: string;
 }
@@ -47,6 +49,7 @@ interface Layer {
 export function Aurora({
   mainColor = '#ef4444',
   opacity = 0.7,
+  blur = 72,
   className = ''
 }: AuroraProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -244,8 +247,8 @@ export function Aurora({
     >
       <canvas
         ref={canvasRef}
-        style={{ opacity: opacity }}
-        className="block w-full h-full blur-[80px] saturate-150"
+        style={{ opacity: opacity, filter: `blur(${blur}px) saturate(150%)` }}
+        className="block w-full h-full"
       />
     </div>
   );

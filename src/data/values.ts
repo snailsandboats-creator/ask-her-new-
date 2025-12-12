@@ -11,9 +11,9 @@ export const values: Value[] = [
     description: "We measure everything. If something isn't working, we fix it. Your success is the only metric that matters.",
   },
   {
-    icon: 'message-circle',
-    title: 'No BS',
-    description: 'No jargon. No empty promises. No smoke and mirrors. Just honest work and straight talk.',
+    icon: 'lightbulb',
+    title: 'Creative Problem Solvers',
+    description: 'Every business is different. We craft custom strategies that actually fit your goals, your budget, and your vision.',
   },
   {
     icon: 'heart-handshake',

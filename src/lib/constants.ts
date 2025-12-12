@@ -4,8 +4,8 @@ export const siteConfig = {
   description: 'Marketing that actually works. We help local businesses get more calls, more clients, and real growth.',
   url: 'https://askhermarketing.com',
   ogImage: '/og-image.jpg',
-  phone: '(555) 123-4567',
-  email: 'hello@askhermarketing.com',
+  phones: ['(386) 690-9284', '(407) 627-4354'],
+  emails: ['drita@askhermarketing.com', 'che@askhermarketing.com'],
   address: {
     street: '123 Main Street',
     suite: 'Suite 100',
