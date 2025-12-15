@@ -13,7 +13,7 @@ export function PortfolioPageClient() {
     <>
       <PageHero
         overline="Our Work"
-        headline="Real results for real businesses."
+        headline="Real results for real businesses"
         subheadline="We don't just make things look pretty—we create marketing that drives real business growth. Here's a look at what we've done for clients like you."
       />
 

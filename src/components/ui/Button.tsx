@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
 interface ButtonProps {
@@ -20,20 +19,43 @@ interface ButtonProps {
   type?: 'button' | 'submit';
 }
 
-const variants = {
-  primary: 'bg-gradient-to-r from-pink-deep to-pink text-white hover:brightness-110 hover:shadow-[0_0_40px_rgba(255,46,147,0.4)]',
-  secondary: 'bg-transparent text-black border border-black hover:bg-black hover:text-white',
-  ghost: 'bg-transparent text-slate hover:text-white',
-  white: 'bg-white text-black hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]',
-  alive: 'btn-alive text-white', // The Living Button
+const getVariantStyles = (variant: string) => {
+  const baseStyles = {
+    primary: {
+      background: 'linear-gradient(to right, #C91C6F, #FF2E93)',
+      color: '#FFFFFF',
+    },
+    secondary: {
+      background: 'transparent',
+      color: '#050505',
+      border: '1px solid #050505',
+    },
+    ghost: {
+      background: 'transparent',
+      color: '#888888',
+    },
+    white: {
+      background: '#FFFFFF',
+      color: '#050505',
+    },
+    alive: {
+      background: 'linear-gradient(135deg, #C91C6F 0%, #FF2E93 100%)',
+      color: '#FFFFFF',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      boxShadow: '0 0 30px rgba(255, 46, 147, 0.3)',
+    },
+  };
+  return baseStyles[variant as keyof typeof baseStyles] || baseStyles.primary;
 };
 
-const sizes = {
-  sm: 'px-5 py-2.5 text-sm',
-  md: 'px-7 py-3.5 text-base',
-  lg: 'px-9 py-4 text-lg',
+const getSizeStyles = (size: string) => {
+  const sizes = {
+    sm: { padding: '0.625rem 1.25rem', fontSize: '0.875rem' },
+    md: { padding: '0.875rem 1.75rem', fontSize: '1rem' },
+    lg: { padding: '1rem 2.25rem', fontSize: '1.125rem' },
+  };
+  return sizes[size as keyof typeof sizes] || sizes.md;
 };
-
 
 export function Button({
   variant = 'primary',
@@ -49,18 +71,41 @@ export function Button({
   className,
   type = 'button',
 }: ButtonProps) {
-  const classes = cn(
-    'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-300 relative overflow-hidden',
-    variants[variant],
-    sizes[size],
-    fullWidth && 'w-full',
-    (disabled || loading) && 'opacity-50 cursor-not-allowed pointer-events-none',
-    className
-  );
+  const variantStyles = getVariantStyles(variant);
+  const sizeStyles = getSizeStyles(size);
+
+  const baseStyle: React.CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    fontWeight: '600',
+    borderRadius: '0.75rem',
+    transition: 'all 0.3s',
+    position: 'relative',
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+    cursor: disabled || loading ? 'not-allowed' : 'pointer',
+    opacity: disabled || loading ? 0.5 : 1,
+    pointerEvents: disabled || loading ? 'none' : 'auto',
+    width: fullWidth ? '100%' : 'auto',
+    border: 'none',
+    textDecoration: 'none',
+    ...variantStyles,
+    ...sizeStyles,
+  };
 
   const content = (
-    <span className="relative z-10 inline-flex items-center gap-2">
-      {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+    <span
+      style={{
+        position: 'relative',
+        zIndex: 10,
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+      }}
+    >
+      {loading && <Loader2 style={{ width: '1rem', height: '1rem', animation: 'spin 1s linear infinite' }} />}
       {icon && iconPosition === 'left' && !loading && icon}
       {children}
       {icon && iconPosition === 'right' && !loading && icon}
@@ -69,7 +114,7 @@ export function Button({
 
   if (href && !disabled) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} style={baseStyle} className={className}>
         {content}
       </Link>
     );
@@ -80,7 +125,8 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={classes}
+      style={baseStyle}
+      className={className}
       whileHover={{ scale: disabled ? 1 : 1.02 }}
       whileTap={{ scale: disabled ? 1 : 0.98 }}
     >

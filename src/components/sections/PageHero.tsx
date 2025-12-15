@@ -16,7 +16,8 @@ interface PageHeroProps {
 
 // Dynamic words for the transitioning effect
 const DYNAMIC_WORDS_GROW = ['Grow', 'Succeed', 'Thrive', 'Scale', 'Win'];
-const DYNAMIC_WORDS_BUSINESS = ['businesses.', 'companies.', 'brands.', 'clients.', 'partners.'];
+const DYNAMIC_WORDS_BUSINESS = ['businesses.', 'companies.', 'brands.', 'people.', 'partners.'];
+const DYNAMIC_WORDS_DIFFERENT = ['different.', 'easy.', 'custom.', 'intuitive.', 'awesome.'];
 
 // Word transition variants
 const wordVariants = {
@@ -78,16 +79,17 @@ export function PageHero({
     return () => clearInterval(interval);
   }, []);
 
-  // Check if headline contains "grow" or "business/businesses" and split it
+  // Check if headline contains "grow", "business/businesses", or "different" and split it
   const hasGrow = headline.toLowerCase().includes('grow');
   const hasBusiness = headline.toLowerCase().includes('business');
-  const hasTransitionWord = hasGrow || hasBusiness;
+  const hasDifferent = headline.toLowerCase().includes('different');
+  const hasTransitionWord = hasGrow || hasBusiness || hasDifferent;
   const headlineParts = hasTransitionWord
-    ? headline.split(hasGrow ? /\bgrow\b/i : /\bbusinesses?\b/i)
+    ? headline.split(hasGrow ? /\bgrow\b/i : hasBusiness ? /\bbusinesses?\b/i : /\bdifferent\b/i)
     : null;
 
   // Use the appropriate word list
-  const DYNAMIC_WORDS = hasBusiness ? DYNAMIC_WORDS_BUSINESS : DYNAMIC_WORDS_GROW;
+  const DYNAMIC_WORDS = hasDifferent ? DYNAMIC_WORDS_DIFFERENT : hasBusiness ? DYNAMIC_WORDS_BUSINESS : DYNAMIC_WORDS_GROW;
 
   return (
     <Section
@@ -167,7 +169,7 @@ export function PageHero({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
-          className={cn(align === 'center' ? 'text-center' : 'text-left')}
+          className={cn('text-center', align === 'left' && 'md:text-left')}
         >
           <motion.h1
             className="text-h1 mb-4 text-white"
@@ -200,9 +202,8 @@ export function PageHero({
                     </motion.span>
                   </AnimatePresence>
                   {/* Invisible spacer to maintain layout - use longest word from current word list */}
-                  <span className="invisible">{hasBusiness ? 'businesses.' : 'Succeed'}</span>
+                  <span className="invisible">{hasDifferent ? 'intuitive.' : hasBusiness ? 'businesses.' : 'Succeed'}</span>
                 </span>
-                {headlineParts[1]}
               </>
             ) : (
               headline
@@ -212,8 +213,8 @@ export function PageHero({
           {subheadline && (
             <motion.p
               className={cn(
-                'text-body-lg text-slate max-w-2xl',
-                align === 'center' && 'mx-auto'
+                'text-body-lg text-slate max-w-2xl mx-auto',
+                align === 'left' && 'md:mx-0'
               )}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

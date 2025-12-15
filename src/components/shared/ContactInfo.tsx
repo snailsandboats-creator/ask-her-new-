@@ -8,20 +8,56 @@ interface ContactInfoProps {
 
 export function ContactInfo({ phones, emails, responseTime }: ContactInfoProps) {
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Phones */}
       {phones.map((phone, index) => (
         <a
           key={`phone-${index}`}
           href={`tel:${phone.replace(/[^0-9]/g, '')}`}
-          className="flex items-center gap-4 group"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            textDecoration: 'none',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            const textElement = e.currentTarget.querySelector('.contact-text') as HTMLElement;
+            if (textElement) textElement.style.color = '#FF2E93';
+          }}
+          onMouseLeave={(e) => {
+            const textElement = e.currentTarget.querySelector('.contact-text') as HTMLElement;
+            if (textElement) textElement.style.color = '#FFFFFF';
+          }}
         >
-          <div className="w-12 h-12 bg-offwhite rounded-lg flex items-center justify-center flex-shrink-0">
-            <Phone className="w-5 h-5 text-pink" />
+          <div
+            style={{
+              width: '3rem',
+              height: '3rem',
+              backgroundColor: '#0A0A0A',
+              borderRadius: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Phone style={{ width: '1.25rem', height: '1.25rem', color: '#FF2E93' }} />
           </div>
           <div>
-            <div className="text-body-sm text-slate">Give us a call</div>
-            <div className="text-body font-medium text-white group-hover:text-pink transition-colors">
+            <div style={{ fontSize: '0.875rem', lineHeight: '1.5', color: '#888888' }}>
+              Give us a call
+            </div>
+            <div
+              className="contact-text"
+              style={{
+                fontSize: '1rem',
+                lineHeight: '1.6',
+                fontWeight: '500',
+                color: '#FFFFFF',
+                transition: 'color 0.2s',
+              }}
+            >
               {phone}
             </div>
           </div>
@@ -33,14 +69,50 @@ export function ContactInfo({ phones, emails, responseTime }: ContactInfoProps) 
         <a
           key={`email-${index}`}
           href={`mailto:${email}`}
-          className="flex items-center gap-4 group"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            textDecoration: 'none',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            const textElement = e.currentTarget.querySelector('.contact-text') as HTMLElement;
+            if (textElement) textElement.style.color = '#FF2E93';
+          }}
+          onMouseLeave={(e) => {
+            const textElement = e.currentTarget.querySelector('.contact-text') as HTMLElement;
+            if (textElement) textElement.style.color = '#FFFFFF';
+          }}
         >
-          <div className="w-12 h-12 bg-offwhite rounded-lg flex items-center justify-center flex-shrink-0">
-            <Mail className="w-5 h-5 text-pink" />
+          <div
+            style={{
+              width: '3rem',
+              height: '3rem',
+              backgroundColor: '#0A0A0A',
+              borderRadius: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Mail style={{ width: '1.25rem', height: '1.25rem', color: '#FF2E93' }} />
           </div>
           <div>
-            <div className="text-body-sm text-slate">Send us an email</div>
-            <div className="text-body font-medium text-white group-hover:text-pink transition-colors">
+            <div style={{ fontSize: '0.875rem', lineHeight: '1.5', color: '#888888' }}>
+              Send us an email
+            </div>
+            <div
+              className="contact-text"
+              style={{
+                fontSize: '1rem',
+                lineHeight: '1.6',
+                fontWeight: '500',
+                color: '#FFFFFF',
+                transition: 'color 0.2s',
+              }}
+            >
               {email}
             </div>
           </div>
@@ -48,7 +120,17 @@ export function ContactInfo({ phones, emails, responseTime }: ContactInfoProps) 
       ))}
 
       {responseTime && (
-        <p className="text-caption text-slate mt-8 pt-6 border-t border-lightgray">
+        <p
+          style={{
+            fontSize: '0.75rem',
+            lineHeight: '1.4',
+            color: '#888888',
+            marginTop: '2rem',
+            paddingTop: '1.5rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            margin: 0,
+          }}
+        >
           {responseTime}
         </p>
       )}

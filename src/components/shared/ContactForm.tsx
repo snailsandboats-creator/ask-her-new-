@@ -25,7 +25,6 @@ export function ContactForm() {
     setError(null);
 
     try {
-      // Get form data
       const formData = new FormData(e.currentTarget);
       const data = {
         name: formData.get('name') as string,
@@ -35,7 +34,6 @@ export function ContactForm() {
         message: formData.get('message') as string,
       };
 
-      // Submit to API
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -60,10 +58,30 @@ export function ContactForm() {
 
   if (isSubmitted) {
     return (
-      <div className="bg-white rounded-2xl p-8 md:p-12 text-center">
-        <div className="w-16 h-16 bg-pink/10 rounded-full flex items-center justify-center mx-auto mb-6">
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '0.75rem',
+          padding: '2.5rem',
+          textAlign: 'center',
+          width: '100%',
+          boxSizing: 'border-box',
+        }}
+      >
+        <div
+          style={{
+            width: '4rem',
+            height: '4rem',
+            backgroundColor: 'rgba(255, 46, 147, 0.1)',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 1.5rem',
+          }}
+        >
           <svg
-            className="w-8 h-8 text-pink"
+            style={{ width: '2rem', height: '2rem', color: '#FF2E93' }}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -76,8 +94,25 @@ export function ContactForm() {
             />
           </svg>
         </div>
-        <h3 className="text-h4 text-black mb-4">Thanks for reaching out!</h3>
-        <p className="text-body text-slate mb-6">
+        <h3
+          style={{
+            fontSize: 'clamp(1.5rem, 3vw, 1.75rem)',
+            fontWeight: '600',
+            color: '#050505',
+            marginBottom: '1rem',
+            lineHeight: '1.15',
+          }}
+        >
+          Thanks for reaching out!
+        </h3>
+        <p
+          style={{
+            fontSize: '1rem',
+            lineHeight: '1.6',
+            color: '#888888',
+            marginBottom: '1.5rem',
+          }}
+        >
           We&apos;ve received your message and will get back to you within 24 hours.
         </p>
         <Button variant="secondary" href="/portfolio">
@@ -88,62 +123,102 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 md:p-12 space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        backgroundColor: '#FFFFFF',
+        borderRadius: '0.75rem',
+        padding: '2rem',
+        width: '100%',
+        boxSizing: 'border-box',
+      }}
+    >
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm text-red-600">{error}</p>
+        <div
+          style={{
+            backgroundColor: '#fef2f2',
+            border: '1px solid #fecaca',
+            borderRadius: '0.5rem',
+            padding: '1rem',
+            marginBottom: '1.25rem',
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        >
+          <p style={{ fontSize: '0.875rem', color: '#dc2626', margin: 0 }}>{error}</p>
         </div>
       )}
 
-      <Input
-        label="Your Name"
-        name="name"
-        type="text"
-        placeholder="John Smith"
-        required
-      />
+      <div style={{ marginBottom: '1.25rem' }}>
+        <Input
+          label="Your Name"
+          name="name"
+          type="text"
+          placeholder="John Smith"
+          required
+        />
+      </div>
 
-      <Input
-        label="Email Address"
-        name="email"
-        type="email"
-        placeholder="john@example.com"
-        required
-      />
+      <div style={{ marginBottom: '1.25rem' }}>
+        <Input
+          label="Email Address"
+          name="email"
+          type="email"
+          placeholder="john@example.com"
+          required
+        />
+      </div>
 
-      <Input
-        label="Phone Number"
-        name="phone"
-        type="tel"
-        placeholder="(555) 123-4567"
-      />
+      <div style={{ marginBottom: '1.25rem' }}>
+        <Input
+          label="Phone Number"
+          name="phone"
+          type="tel"
+          placeholder="(555) 123-4567"
+        />
+      </div>
 
-      <Select
-        label="What can we help you with?"
-        name="service"
-        options={serviceOptions}
-        placeholder="Select a service..."
-      />
+      <div style={{ marginBottom: '1.25rem' }}>
+        <Select
+          label="What can we help you with?"
+          name="service"
+          options={serviceOptions}
+          placeholder="Select a service..."
+        />
+      </div>
 
-      <Textarea
-        label="Tell us about your project"
-        name="message"
-        placeholder="What are your goals? What challenges are you facing?"
-        rows={5}
-        required
-      />
+      <div style={{ marginBottom: '1.25rem' }}>
+        <Textarea
+          label="Tell us about your project"
+          name="message"
+          placeholder="What are your goals? What challenges are you facing?"
+          rows={5}
+          required
+        />
+      </div>
 
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        fullWidth
-        loading={isSubmitting}
+      <div style={{ paddingTop: '0.5rem', marginBottom: '1rem' }}>
+        <Button
+          type="submit"
+          variant="primary"
+          size="md"
+          fullWidth
+          loading={isSubmitting}
+        >
+          {isSubmitting ? 'Sending...' : 'Send Message'}
+        </Button>
+      </div>
+
+      <p
+        style={{
+          fontSize: '0.75rem',
+          lineHeight: '1.4',
+          color: '#888888',
+          textAlign: 'center',
+          width: '100%',
+          margin: 0,
+        }}
       >
-        {isSubmitting ? 'Sending...' : 'Send Message'}
-      </Button>
-
-      <p className="text-caption text-slate text-center">
         By submitting this form, you agree to our privacy policy.
       </p>
     </form>

@@ -1,7 +1,6 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { cn } from '@/lib/utils';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -9,27 +8,57 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className, ...props }, ref) => {
+  ({ label, error, style, ...props }, ref) => {
     return (
-      <div className="w-full">
-        <label className="block mb-2 text-sm font-medium text-black">
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          overflow: 'hidden',
+          boxSizing: 'border-box',
+        }}
+      >
+        <label
+          style={{
+            display: 'block',
+            marginBottom: '0.5rem',
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            color: '#050505',
+          }}
+        >
           {label}
-          {props.required && <span className="text-pink ml-1">*</span>}
+          {props.required && <span style={{ color: '#FF2E93', marginLeft: '0.25rem' }}>*</span>}
         </label>
         <input
           ref={ref}
-          className={cn(
-            'w-full px-4 py-4 bg-white border rounded-lg text-black',
-            'placeholder:text-slate',
-            'focus:outline-none focus:border-pink focus:ring-2 focus:ring-pink/20',
-            'transition-all duration-200',
-            error ? 'border-red-500' : 'border-lightgray',
-            className
-          )}
+          style={{
+            width: '100%',
+            maxWidth: '100%',
+            minWidth: 0,
+            padding: '0.75rem',
+            backgroundColor: '#FFFFFF',
+            border: error ? '1px solid #dc2626' : '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '0.5rem',
+            color: '#050505',
+            fontSize: '0.875rem',
+            boxSizing: 'border-box',
+            outline: 'none',
+            transition: 'all 0.2s',
+            ...style,
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#FF2E93';
+            e.target.style.boxShadow = '0 0 0 2px rgba(255, 46, 147, 0.2)';
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = error ? '#dc2626' : 'rgba(255, 255, 255, 0.1)';
+            e.target.style.boxShadow = 'none';
+          }}
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-red-500">{error}</p>
+          <p style={{ marginTop: '0.25rem', fontSize: '0.875rem', color: '#dc2626' }}>{error}</p>
         )}
       </div>
     );

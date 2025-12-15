@@ -81,6 +81,28 @@ export function AboutPageClient() {
             blur={66}
           />
         </div>
+        {/* Aurora 4 - Blue (smaller) */}
+        <div
+          className="absolute left-[5%] top-[80%] w-[204px] h-[204px] pointer-events-none -translate-y-1/2 -translate-x-1/2"
+          style={{ zIndex: 0 }}
+        >
+          <Aurora
+            mainColor="#06b6d4"
+            opacity={0.6}
+            blur={66}
+          />
+        </div>
+        {/* Aurora 5 - Yellow (smaller, top right) */}
+        <div
+          className="absolute right-[-15%] top-[5%] w-[204px] h-[204px] pointer-events-none -translate-y-1/2 -translate-x-1/2"
+          style={{ zIndex: 0 }}
+        >
+          <Aurora
+            mainColor="#fde047"
+            opacity={0.6}
+            blur={66}
+          />
+        </div>
         <Container size="narrow">
           <FadeUp>
             <div className="text-center">
@@ -109,9 +131,9 @@ export function AboutPageClient() {
                 </FadeUp>
                 <FadeUp delay={0.3}>
                   <div className="border-l-2 border-pink pl-6">
-                    <h3 className="text-h5 text-white mb-2">Real Humans</h3>
+                    <h3 className="text-h5 text-white mb-2">Custom Content</h3>
                     <p className="text-body text-slate">
-                      No AI-generated fluff or outsourced work. Real people who know your business.
+                      We offer human, AI-assisted, and hybrid content options—you pick what fits your goals and budget.
                     </p>
                   </div>
                 </FadeUp>
