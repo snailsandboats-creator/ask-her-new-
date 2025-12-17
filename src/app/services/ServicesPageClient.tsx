@@ -128,7 +128,7 @@ export function ServicesPageClient() {
                 </StaggerItem>
               </StaggerContainer>
               <p className="text-body text-slate mt-12">
-                Remember, All Packages are customized to your needs. Book a call to get your brands assessment!
+                Remember, All Packages are customized to your needs. Book a call to get your brand's assessment!
               </p>
             </div>
           </FadeUp>

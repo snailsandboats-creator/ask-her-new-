@@ -86,11 +86,13 @@ export function Footer() {
                   </a>
                 </li>
               ))}
-              <li>
-                <address className="not-italic">
-                  {siteConfig.address.street}<br />
-                  {siteConfig.address.city}, {siteConfig.address.state} {siteConfig.address.zip}
-                </address>
+              <li className="mt-4">
+                <Link
+                  href="/contact"
+                  className="text-pink hover:text-white transition-colors font-medium"
+                >
+                  Ready to grow your business? Let's talk! →
+                </Link>
               </li>
             </ul>
           </div>

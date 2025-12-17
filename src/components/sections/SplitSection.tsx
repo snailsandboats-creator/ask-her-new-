@@ -1,14 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Section } from '@/components/layout/Section';
 import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
 import { FeatureList } from '@/components/shared/FeatureList';
+import { Aurora } from '@/components/ui/Aurora';
 import { cn } from '@/lib/utils';
-import { Users, Sparkles } from 'lucide-react';
 
 interface SplitSectionProps {
   image: { src: string; alt: string };
@@ -43,7 +41,6 @@ export function SplitSection({
   background = 'white',
   id,
 }: SplitSectionProps) {
-  const [imageError, setImageError] = useState(false);
   const imageVariants = imagePosition === 'left' ? slideFromLeftVariants : slideFromRightVariants;
   const contentVariants = imagePosition === 'left' ? slideFromRightVariants : slideFromLeftVariants;
 
@@ -56,7 +53,7 @@ export function SplitSection({
             imagePosition === 'right' && 'md:[&>*:first-child]:order-2'
           )}
         >
-          {/* Image */}
+          {/* Aurora Background */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -64,36 +61,18 @@ export function SplitSection({
             variants={imageVariants}
             className="relative"
           >
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-              {!imageError ? (
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover object-top"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  onError={() => setImageError(true)}
+            <div className="aspect-[4/3] overflow-visible relative flex items-center justify-center">
+              {/* Aurora - positioned at center */}
+              <div
+                className="absolute left-1/2 top-1/2 w-[484px] h-[484px] lg:w-[440px] lg:h-[440px] pointer-events-none -translate-y-1/2 -translate-x-1/2"
+                style={{ zIndex: 0 }}
+              >
+                <Aurora
+                  mainColor="#a855f7"
+                  opacity={0.7}
                 />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#FF2E93] via-[#FFB3D9] to-white flex items-center justify-center relative overflow-hidden">
-                  {/* Pattern overlay */}
-                  <div
-                    className="absolute inset-0 opacity-10"
-                    style={{
-                      backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                      backgroundSize: '20px 20px',
-                    }}
-                  />
-                  <div className="text-center text-white relative z-10">
-                    <Users className="w-16 h-16 mx-auto mb-4 opacity-80" />
-                    <span className="text-lg font-medium opacity-90">{image.alt}</span>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
-
-            {/* Decorative element */}
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-pink/10 rounded-2xl -z-10" />
           </motion.div>
 
           {/* Content */}

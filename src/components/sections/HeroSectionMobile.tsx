@@ -251,7 +251,7 @@ export function HeroSectionMobile({
               display: 'block',
             }}
           >
-            BRAND VISION <span style={{ filter: 'blur(2.25px)' }}>BLURRY?</span>
+            {/* Text removed per client request */}
           </motion.div>
 
           {/* === MAIN HEADLINE === */}

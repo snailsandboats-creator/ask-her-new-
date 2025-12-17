@@ -14,11 +14,11 @@ export const processSteps: ProcessStep[] = [
   {
     number: '03',
     title: 'Build Your Strategy',
-    description: 'Together, we develop a custom plan tailored to your business over the week.',
+    description: 'Together, we develop a custom plan tailored to your business within 3-5 days.',
   },
   {
     number: '04',
     title: 'Execute',
-    description: 'We launch within the week and start bringing your brand to life.',
+    description: 'We launch within 7 days and start bringing your brand to life.',
   },
 ];
