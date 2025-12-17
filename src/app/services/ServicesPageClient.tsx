@@ -27,7 +27,7 @@ const auroraColors: Record<string, string> = {
   'branding': '#a855f7',             // Purple-500
   'social-media': '#06b6d4',         // Cyan-500
   'content-creation': '#f59e0b',     // Amber-500 (Gold/yellow)
-  'photography-video': '#f97316',    // Orange-500
+  'photography-video': '#ff5722',    // Deep Orange (Red-orange)
   'seo-google': '#10b981',           // Emerald-500 (Green)
 };
 
