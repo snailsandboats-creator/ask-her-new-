@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { Briefcase, ArrowUpRight } from 'lucide-react';
 import { getIconGradientClass, cn } from '@/lib/utils';
 
@@ -16,71 +14,47 @@ interface PortfolioCardProps {
 
 export function PortfolioCard({ client, service, image, index = 0, url }: PortfolioCardProps) {
   const [imageError, setImageError] = useState(false);
-
-  // Get deterministic gradient class based on index
   const gradientClass = getIconGradientClass(index);
 
   const cardContent = (
-    <motion.div
-      whileHover="hover"
-      initial="rest"
-      className="group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300"
-    >
-      {/* Image or Placeholder */}
-      <div className="aspect-[4/3] overflow-hidden">
-        <motion.div
-          variants={{
-            rest: { scale: 1 },
-            hover: { scale: 1.05 },
-          }}
-          transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] as [number, number, number, number] }}
-          className="w-full h-full relative"
-        >
-          {!imageError ? (
-            <Image
-              src={image}
-              alt={`${client} project`}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <div className={cn("w-full h-full flex items-center justify-center", gradientClass)}>
-              <div className="text-center text-white">
-                <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-80" />
-                <span className="text-lg font-medium opacity-90">{client}</span>
-              </div>
+    <div className="group relative cursor-pointer transition-all duration-300">
+      {/* Thumbnail Container - Fixed height with proper image fitting */}
+      <div className="w-full h-[350px] p-4">
+        <img
+          src={image}
+          alt={`${client} portfolio thumbnail`}
+          width="400"
+          height="300"
+          onError={() => setImageError(true)}
+        />
+        {imageError && (
+          <div className={cn("w-full h-full flex items-center justify-center", gradientClass)}>
+            <div className="text-center text-white">
+              <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-80" />
+              <span className="text-lg font-medium opacity-90">{client}</span>
             </div>
-          )}
-        </motion.div>
+          </div>
+        )}
       </div>
 
-      {/* Overlay */}
-      <motion.div
-        variants={{
-          rest: { opacity: 0 },
-          hover: { opacity: 1 },
-        }}
-        transition={{ duration: 0.3 }}
-        className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm"
-      >
+      {/* Hover Overlay */}
+      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm z-10">
         <div className="flex items-center gap-2 text-white font-medium bg-white/20 px-4 py-2 rounded-full">
           View Project <ArrowUpRight className="w-4 h-4" />
         </div>
-      </motion.div>
-
-      {/* Info */}
-      <div className="p-6 bg-black/40 backdrop-blur-sm">
-        <h3 className="text-h5 text-white group-hover:text-brand-pink transition-colors">{client}</h3>
-        <p className="text-body-sm text-gray-400">{service}</p>
       </div>
-    </motion.div>
+
+      {/* Info Bar */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent z-10 text-center">
+        <h3 className="text-xl font-semibold text-white group-hover:text-pink-500 transition-colors">{client}</h3>
+        <p className="text-sm text-gray-300">{service}</p>
+      </div>
+    </div>
   );
 
   if (url) {
     return (
-      <a href={url} target="_blank" rel="noopener noreferrer">
+      <a href={url} target="_blank" rel="noopener noreferrer" className="block">
         {cardContent}
       </a>
     );

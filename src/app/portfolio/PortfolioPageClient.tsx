@@ -18,11 +18,11 @@ export function PortfolioPageClient() {
       />
 
       {/* Portfolio Grid */}
-      <Section background="white" padding="lg">
+      <Section background="transparent" padding="lg">
         <Container size="wide">
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {portfolioItems.map((item, index) => (
-              <StaggerItem key={item.id}>
+              <StaggerItem key={item.id} className="max-w-md mx-auto w-full">
                 <PortfolioCard
                   client={item.client}
                   service={item.service}

@@ -28,12 +28,26 @@ const askHerGradientStyle = {
 export function Logo({ variant = 'dark', className }: LogoProps) {
   return (
     <div className={cn('flex items-start gap-2', className)}>
-      <span
-        className="text-4xl font-bold leading-tight tracking-tight"
-        style={askHerGradientStyle}
-      >
-        Ask Her
-      </span>
+      <div className="flex flex-col">
+        <span
+          className="text-4xl font-bold leading-tight tracking-tight"
+          style={askHerGradientStyle}
+        >
+          Ask Her
+        </span>
+        <span
+          className="text-white font-light uppercase"
+          style={{
+            letterSpacing: '0.25em',
+            fontSize: '0.625rem',
+            marginTop: '-4px',
+            textAlign: 'center',
+            marginLeft: '18px',
+          }}
+        >
+          marketing
+        </span>
+      </div>
       <svg
         width="34"
         height="34"

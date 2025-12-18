@@ -12,7 +12,7 @@ export function Footer() {
           <div>
             <Logo variant="light" className="mb-4" />
             <p className="text-slate mb-6">
-              Marketing that actually works.
+              Proudly created in New Smyrna Beach, FL
             </p>
             <p className="text-slate text-sm">
               © {new Date().getFullYear()} {siteConfig.name}
