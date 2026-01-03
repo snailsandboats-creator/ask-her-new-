@@ -41,7 +41,7 @@ export const portfolioItems: PortfolioItem[] = [
     id: '4',
     client: "Gator's Dockside DeLand",
     service: 'Web Design & Branding',
-    image: '/images/gators thumbnail.png',
+    image: '/images/gators thumbnail (Custom).png',
     description: 'Modern website for DeLand\'s hometown restaurant, serving the best wings in town since 1989.',
     results: [
       { value: '200%', label: 'Online Orders' },

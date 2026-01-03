@@ -23,8 +23,7 @@ export function PortfolioCard({ client, service, image, index = 0, url }: Portfo
         <img
           src={image}
           alt={`${client} portfolio thumbnail`}
-          width="400"
-          height="300"
+          className="w-[400px] aspect-video object-contain"
           onError={() => setImageError(true)}
         />
         {imageError && (
