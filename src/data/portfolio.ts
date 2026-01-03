@@ -25,4 +25,28 @@ export const portfolioItems: PortfolioItem[] = [
     ],
     url: 'https://cafedavincideland.com',
   },
+  {
+    id: '3',
+    client: "Peanuts Sports Bar",
+    service: 'Web Design & Branding',
+    image: '/images/peaunuts thumbnail; .png',
+    description: 'Vibrant website for New Smyrna Beach\'s iconic sports bar, cracking nuts and serving great times since 1987.',
+    results: [
+      { value: '180%', label: 'Online Visibility' },
+      { value: '5K+', label: 'Monthly Visitors' },
+    ],
+    url: 'https://peanutsbarnsb.com',
+  },
+  {
+    id: '4',
+    client: "Gator's Dockside DeLand",
+    service: 'Web Design & Branding',
+    image: '/images/gators thumbnail.png',
+    description: 'Modern website for DeLand\'s hometown restaurant, serving the best wings in town since 1989.',
+    results: [
+      { value: '200%', label: 'Online Orders' },
+      { value: '8K+', label: 'Monthly Visitors' },
+    ],
+    url: 'https://delandgatorsdockside.com',
+  },
 ];
