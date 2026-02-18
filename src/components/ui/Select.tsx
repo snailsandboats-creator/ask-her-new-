@@ -12,6 +12,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, options, placeholder, error, style, ...props }, ref) => {
+    const selectId = props.id || props.name || label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div
         style={{
@@ -22,6 +23,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         }}
       >
         <label
+          htmlFor={selectId}
           style={{
             display: 'block',
             marginBottom: '0.5rem',
@@ -36,6 +38,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <div style={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
           <select
             ref={ref}
+            id={selectId}
             style={{
               width: '100%',
               maxWidth: '100%',

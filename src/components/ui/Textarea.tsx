@@ -9,6 +9,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, style, ...props }, ref) => {
+    const textareaId = props.id || props.name || label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div
         style={{
@@ -19,6 +20,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         }}
       >
         <label
+          htmlFor={textareaId}
           style={{
             display: 'block',
             marginBottom: '0.5rem',
@@ -32,6 +34,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         </label>
         <textarea
           ref={ref}
+          id={textareaId}
           style={{
             width: '100%',
             maxWidth: '100%',

@@ -9,6 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, style, ...props }, ref) => {
+    const inputId = props.id || props.name || label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div
         style={{
@@ -19,6 +20,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         }}
       >
         <label
+          htmlFor={inputId}
           style={{
             display: 'block',
             marginBottom: '0.5rem',
@@ -32,6 +34,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         </label>
         <input
           ref={ref}
+          id={inputId}
           style={{
             width: '100%',
             maxWidth: '100%',

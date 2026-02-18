@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+/* Skip to content link - ADA compliance */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: #FF2E93;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  z-index: 10000;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
 /* ============================================
    ASK HER MARKETING - 2030 HOLOGRAPHIC SYSTEM
    "Holographic Luxury" Design Language

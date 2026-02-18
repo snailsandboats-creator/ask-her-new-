@@ -76,7 +76,7 @@ export function Navbar() {
   }, [isMobileMenuOpen]);
 
   return (
-    <>
+    <header>
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: navOpacity }}
@@ -215,6 +215,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </header>
   );
 }
