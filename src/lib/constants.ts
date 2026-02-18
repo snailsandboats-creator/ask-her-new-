@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: 'Ask Her For Anything',
   description: 'Marketing that actually works. We help local businesses get more calls, more clients, and real growth.',
   url: 'https://askhermarketing.com',
-  ogImage: '/og-image.jpg',
+  ogImage: '/og-image.png',
   phones: ['(386) 690-9284', '(407) 627-4354'],
   emails: ['drita@askhermarketing.com', 'che@askhermarketing.com'],
   address: {
