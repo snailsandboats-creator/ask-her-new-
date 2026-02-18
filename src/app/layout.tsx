@@ -19,7 +19,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://askhermarketing.com"),
-  alternates: { canonical: "./" },
+  alternates: { canonical: "https://askhermarketing.com/" },
   title: {
     default: `${siteConfig.name} | ${siteConfig.tagline}`,
     template: `%s | ${siteConfig.name}`,
@@ -32,12 +32,13 @@ export const metadata: Metadata = {
     "local business marketing",
     "brand strategy",
     "content creation",
-    "Houston marketing",
+    "Volusia County marketing",
   ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
   openGraph: {
     type: "website",
+    url: "https://askhermarketing.com",
     locale: "en_US",
     siteName: siteConfig.name,
     title: `${siteConfig.name} | ${siteConfig.tagline}`,
