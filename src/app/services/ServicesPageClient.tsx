@@ -12,13 +12,16 @@ import { FeatureList } from '@/components/shared/FeatureList';
 import { Aurora } from '@/components/ui/Aurora';
 import { services } from '@/data/services';
 import { faqItems } from '@/data/faq';
-import { Palette, Instagram, FileText, Globe } from 'lucide-react';
+import { Palette, Instagram, FileText, Globe, CalendarDays, Sparkles, Gift } from 'lucide-react';
 
 const iconMap: Record<string, React.ReactNode> = {
   palette: <Palette className="w-8 h-8 text-pink" />,
   instagram: <Instagram className="w-8 h-8 text-pink" />,
   'file-text': <FileText className="w-8 h-8 text-pink" />,
   globe: <Globe className="w-8 h-8 text-pink" />,
+  calendar: <CalendarDays className="w-8 h-8 text-pink" />,
+  sparkles: <Sparkles className="w-8 h-8 text-pink" />,
+  gift: <Gift className="w-8 h-8 text-pink" />,
 };
 
 // Aurora color mapping for each service
@@ -29,6 +32,9 @@ const auroraColors: Record<string, string> = {
   'content-creation': '#f59e0b',     // Amber-500 (Gold/yellow)
   'photography-video': '#ff5722',    // Deep Orange (Red-orange)
   'seo-google': '#10b981',           // Emerald-500 (Green)
+  'event-management': '#ec4899',     // Pink-500
+  'ai-solutions': '#8b5cf6',         // Violet-500
+  'promotional-items': '#f97316',    // Orange-500
 };
 
 export function ServicesPageClient() {

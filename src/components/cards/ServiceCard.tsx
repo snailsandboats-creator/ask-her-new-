@@ -1,6 +1,6 @@
 'use client';
 
-import { Megaphone, Palette, Monitor, Pencil, ArrowUpRight } from 'lucide-react';
+import { Megaphone, Palette, Monitor, Pencil, ArrowUpRight, CalendarDays, Sparkles, Gift } from 'lucide-react';
 import Link from 'next/link';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { getIconGradientClass, cn } from '@/lib/utils';
@@ -19,6 +19,9 @@ const iconMap: Record<string, React.ReactNode> = {
   palette: <Palette className="w-7 h-7" />,
   monitor: <Monitor className="w-7 h-7" />,
   pencil: <Pencil className="w-7 h-7" />,
+  calendar: <CalendarDays className="w-7 h-7" />,
+  sparkles: <Sparkles className="w-7 h-7" />,
+  gift: <Gift className="w-7 h-7" />,
 };
 
 export function ServiceCard({ id, icon, title, description, href, index = 0 }: ServiceCardProps) {
