@@ -27,14 +27,17 @@ export function ContactForm() {
     try {
       const formData = new FormData(e.currentTarget);
       const data = {
+        access_key: 'b93123f8-bd75-4413-bb61-31b55506795a',
+        subject: `New Contact Form Submission from ${formData.get('name')}`,
+        from_name: 'Ask Her Marketing Website',
         name: formData.get('name') as string,
         email: formData.get('email') as string,
-        phone: formData.get('phone') as string,
-        service: formData.get('service') as string,
+        phone: (formData.get('phone') as string) || 'Not provided',
+        service: (formData.get('service') as string) || 'Not specified',
         message: formData.get('message') as string,
       };
 
-      const response = await fetch('/api/contact', {
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,8 +47,8 @@ export function ContactForm() {
 
       const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to send message');
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to send message');
       }
 
       setIsSubmitted(true);

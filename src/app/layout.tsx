@@ -55,21 +55,54 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: 'rQUeUZRkhW-_ESFykmL_wzYdftRyIf2nA0sI1xEeJ8E',
+  },
 };
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Ask Her Marketing Group",
-  "url": "https://askhermarketing.com",
-  "telephone": "(386) 690-9284",
-  "email": "drita@askhermarketing.com",
-  "description": "Boutique marketing agency serving Volusia County, FL. Website design, social media management, SEO, and content creation.",
-  "areaServed": {
-    "@type": "AdministrativeArea",
-    "name": "Volusia County, FL"
+  '@context': 'https://schema.org',
+  '@type': 'MarketingAgency',
+  name: 'Ask Her Marketing Group',
+  url: 'https://www.askhermarketing.com',
+  telephone: ['+13866909284', '+14076274354'],
+  email: 'drita@askhermarketing.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '307 Due East St',
+    addressLocality: 'New Smyrna Beach',
+    addressRegion: 'FL',
+    postalCode: '32169',
+    addressCountry: 'US',
   },
-  "serviceType": ["Marketing", "Web Design", "Social Media Management", "SEO", "Content Creation"]
+  areaServed: [
+    'New Smyrna Beach, FL',
+    'Edgewater, FL',
+    'Daytona Beach, FL',
+    'Port Orange, FL',
+    'Ormond Beach, FL',
+    'DeLand, FL',
+    'Deltona, FL',
+    'Holly Hill, FL',
+    'Orange City, FL',
+    'Volusia County, FL',
+  ],
+  description: 'Ask Her Marketing Group is a full-service marketing agency based in New Smyrna Beach, FL, proudly serving businesses across Volusia County. Services include website design, SEO, branding, social media management, photography, video, and AI solutions.',
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Marketing Services',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website Design' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SEO & Google Management' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Social Media Management' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Branding & Logos' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Photography & Video' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Content Creation' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Event Management' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'AI Solutions' } },
+    ],
+  },
+  sameAs: [],
 };
 
 export default function RootLayout({

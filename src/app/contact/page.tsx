@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { ContactPageClient } from './ContactPageClient';
 
 export const metadata: Metadata = {
-  title: 'Contact',
-  description: 'Get in touch with Ask Her Marketing Group. Book a free strategy call or send us a message. We\'d love to hear about your business.',
+  title: 'Contact Ask Her Marketing Group | Free Business Assessment',
+  description: 'Book a free business assessment with Ask Her Marketing Group. No pressure, no sales pitch — just a real conversation about growing your business in Volusia County.',
 };
 
 export default function ContactPage() {

@@ -3,8 +3,8 @@ import { ServicesPageClient } from './ServicesPageClient';
 import { ServicesPageClientMobile } from './ServicesPageClientMobile';
 
 export const metadata: Metadata = {
-  title: 'Services',
-  description: 'Full-service marketing solutions for local businesses. Brand strategy, social media management, content creation, and website design.',
+  title: 'Marketing Services | Web Design, SEO & Branding — Ask Her Marketing',
+  description: 'From website design to SEO and social media management, Ask Her Marketing Group handles it all for Volusia County businesses. Flexible pricing, no surprises.',
 };
 
 export default function ServicesPage() {

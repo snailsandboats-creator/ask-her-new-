@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { PortfolioPageClient } from './PortfolioPageClient';
 
 export const metadata: Metadata = {
-  title: 'Portfolio',
-  description: 'See our work. Real results for real businesses. Browse our portfolio of brand identities, social media campaigns, and website designs.',
+  title: 'Our Work | Ask Her Marketing Group Portfolio',
+  description: 'See how Ask Her Marketing Group has helped Volusia County businesses grow — websites, branding, social media, and more.',
 };
 
 export default function PortfolioPage() {
