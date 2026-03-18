@@ -102,6 +102,8 @@ const jsonLd = {
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'AI Solutions' } },
     ],
   },
+  logo: 'https://www.askhermarketing.com/og-image.png',
+  image: 'https://www.askhermarketing.com/og-image.png',
   sameAs: [],
 };
 
