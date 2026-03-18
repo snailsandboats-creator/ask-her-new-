@@ -18,8 +18,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://askhermarketing.com"),
-  alternates: { canonical: "https://askhermarketing.com/" },
+  metadataBase: new URL("https://www.askhermarketing.com"),
+  alternates: { canonical: "https://www.askhermarketing.com/" },
   title: {
     default: `${siteConfig.name} | ${siteConfig.tagline}`,
     template: `%s | ${siteConfig.name}`,
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   openGraph: {
     type: "website",
-    url: "https://askhermarketing.com",
+    url: "https://www.askhermarketing.com",
     locale: "en_US",
     siteName: siteConfig.name,
     title: `${siteConfig.name} | ${siteConfig.tagline}`,
